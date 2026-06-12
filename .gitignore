@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Firebase
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+*-debug.log
+
+# Secrets — never commit service account keys
+*serviceAccount*.json
+.runtimeconfig.json
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/

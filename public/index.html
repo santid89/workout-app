@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0e14">
+<title>Training</title>
+<style>
+  :root {
+    --bg: #0a0e14;
+    --surface: #141a23;
+    --surface-2: #1a212d;
+    --surface-3: #222b3a;
+    --border: rgba(255,255,255,0.06);
+    --border-strong: rgba(255,255,255,0.12);
+    --text: #e6edf3;
+    --text-muted: #8b95a3;
+    --text-dim: #5f6877;
+
+    --blue: #5b8def;
+    --blue-bg: rgba(91,141,239,0.12);
+    --cyan: #22d3ee;
+    --cyan-bg: rgba(34,211,238,0.12);
+    --amber: #f59e0b;
+    --amber-bg: rgba(245,158,11,0.12);
+    --violet: #a78bfa;
+    --violet-bg: rgba(167,139,250,0.12);
+    --green: #34d399;
+    --green-bg: rgba(52,211,153,0.12);
+    --rose: #fb7185;
+
+    --radius: 14px;
+    --radius-sm: 10px;
+    --radius-lg: 20px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    padding-bottom: 80px;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 20% -10%, rgba(91,141,239,0.08), transparent 50%),
+      radial-gradient(circle at 100% 10%, rgba(167,139,250,0.06), transparent 50%),
+      var(--bg);
+  }
+
+  .container { max-width: 640px; margin: 0 auto; padding: 0 16px; }
+
+  /* ───────────── HEADER ───────────── */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(10,14,20,0.75);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+  }
+  .header-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .picker {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    font-family: inherit;
+    text-align: left;
+    min-height: 56px;
+  }
+  .picker:active { transform: scale(0.99); background: var(--surface-2); }
+
+  .picker-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--blue);
+    box-shadow: 0 0 12px currentColor;
+  }
+  .picker-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .picker-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .picker-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .picker-chev {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+  }
+  .picker.open .picker-chev { transform: rotate(180deg); }
+
+  /* ───────────── DROPDOWN SHEET ───────────── */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 90;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    backdrop-filter: blur(2px);
+  }
+  .backdrop.open { opacity: 1; pointer-events: auto; }
+
+  .sheet {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border-strong);
+    border-bottom-left-radius: var(--radius-lg);
+    border-bottom-right-radius: var(--radius-lg);
+    padding: 12px 16px 20px;
+    transform: translateY(-100%);
+    transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .sheet.open { transform: translateY(0); }
+
+  .sheet-inner { max-width: 640px; margin: 0 auto; }
+
+  .sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 4px 14px;
+  }
+  .sheet-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .sheet-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 6px;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .sheet-section { margin-top: 4px; }
+  .sheet-section + .sheet-section { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+
+  .sheet-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: background 0.12s, border-color 0.12s;
+  }
+  .sheet-item:active { background: var(--surface-2); }
+  .sheet-item.active {
+    background: var(--surface-2);
+    border-color: var(--border-strong);
+  }
+  .sheet-item.today::before {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--rose);
+    margin-left: -8px;
+    margin-top: 8px;
+  }
+
+  .sheet-day {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    min-width: 38px;
+    letter-spacing: 0.5px;
+  }
+  .sheet-item.active .sheet-day { color: var(--text); }
+  .sheet-name {
+    flex: 1;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .sheet-chip {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+  .chip-blue { background: var(--blue-bg); color: var(--blue); }
+  .chip-cyan { background: var(--cyan-bg); color: var(--cyan); }
+  .chip-amber { background: var(--amber-bg); color: var(--amber); }
+  .chip-violet { background: var(--violet-bg); color: var(--violet); }
+  .chip-green { background: var(--green-bg); color: var(--green); }
+  .chip-dim { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+
+  .sheet-today-pill {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 5px;
+    background: var(--rose);
+    color: white;
+    margin-right: 6px;
+  }
+
+  /* ───────────── DAY PANEL ───────────── */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .day-header {
+    padding: 32px 0 12px;
+  }
+  .day-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .day-eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--blue);
+  }
+  .day-title {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .day-sub {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .day-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .day-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .day-tag .tag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); }
+
+  /* Day color theming (when day-{color} is on the panel root) */
+  .day-blue .day-eyebrow .dot, .day-blue .picker-dot { background: var(--blue); color: var(--blue); }
+  .day-cyan .day-eyebrow .dot { background: var(--cyan); color: var(--cyan); }
+  .day-amber .day-eyebrow .dot { background: var(--amber); color: var(--amber); }
+  .day-violet .day-eyebrow .dot { background: var(--violet); color: var(--violet); }
+  .day-green .day-eyebrow .dot { background: var(--green); color: var(--green); }
+
+  /* ───────────── EXERCISE CARD ───────────── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-top: 10px;
+    transition: border-color 0.15s;
+  }
+  .card:hover { border-color: var(--border-strong); }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .card-name {
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .card-sets {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--blue);
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+    font-variant-numeric: tabular-nums;
+  }
+  .card-note {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    line-height: 1.55;
+  }
+  .card-video {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 5px 10px 5px 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .card-video:active { background: var(--surface-3); color: var(--text); }
+  .card-video svg { width: 12px; height: 12px; fill: currentColor; }
+
+  /* ───────────── ROTATION ───────────── */
+  .rotation {
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: var(--amber-bg);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: var(--radius-sm);
+  }
+  .rotation-title {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 8px;
+  }
+  .rotation-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .rotation-row + .rotation-row { border-top: 1px solid rgba(245,158,11,0.1); }
+  .rotation-tag {
+    flex-shrink: 0;
+    background: var(--amber);
+    color: #1a0e00;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .rotation-text b { color: var(--text); font-weight: 700; }
+
+  /* ───────────── RIDE / REST CARDS ───────────── */
+  .big-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    margin-top: 14px;
+  }
+  .big-card-pill {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 5px;
+    margin-bottom: 12px;
+  }
+  .pill-outdoor { background: var(--green-bg); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
+  .pill-indoor { background: var(--violet-bg); color: var(--violet); border: 1px solid rgba(167,139,250,0.2); }
+  .pill-fallback { background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid var(--border); }
+  .big-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .big-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+  .center-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    margin-top: 16px;
+    text-align: center;
+  }
+  .center-card .icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .center-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .center-card p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ───────────── COLLAPSIBLE ───────────── */
+  .accordion {
+    margin-top: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .accordion-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 16px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+  }
+  .accordion-toggle .chev {
+    width: 16px; height: 16px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+  }
+  .accordion-toggle.open .chev { transform: rotate(180deg); }
+  .accordion-body {
+    display: none;
+    padding: 0 18px 18px;
+  }
+  .accordion-body.open { display: block; }
+  .accordion-item {
+    padding: 14px 0;
+    border-top: 1px solid var(--border);
+  }
+  .accordion-item:first-child { border-top: none; padding-top: 6px; }
+  .accordion-item h4 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .accordion-item p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* ───────────── ABOUT / FUEL SECTIONS ───────────── */
+  .section-title {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 28px 0 10px;
+  }
+  .prose {
+    font-size: 14.5px;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin-bottom: 12px;
+  }
+  .prose b { color: var(--text); font-weight: 700; }
+
+  .week-row {
+    display: flex;
+    gap: 14px;
+    padding: 12px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-top: 6px;
+    align-items: center;
+  }
+  .week-row-day {
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    min-width: 36px;
+    flex-shrink: 0;
+  }
+  .week-row-desc { font-size: 14px; color: var(--text); flex: 1; }
+  .week-row-desc b { color: var(--text); font-weight: 700; }
+
+  /* Macro stat card */
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+  .stat-label b { color: var(--text); font-weight: 700; display: block; font-size: 16px; margin-bottom: 2px; }
+  .stat-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--green);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .stat-value.muted { color: var(--text); }
+
+  /* Reused colors for sets accent based on day */
+  .day-cyan .card-sets { color: var(--cyan); }
+  .day-amber .card-sets { color: var(--amber); }
+  .day-violet .card-sets { color: var(--violet); }
+  .day-green .card-sets { color: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- ───────────── HEADER ───────────── -->
+<header class="header">
+  <div class="header-inner">
+    <button class="picker" id="picker" aria-haspopup="listbox" aria-expanded="false">
+      <span class="picker-dot" id="pickerDot"></span>
+      <div class="picker-text">
+        <span class="picker-label" id="pickerLabel">Monday</span>
+        <span class="picker-title" id="pickerTitle">Lower Power</span>
+      </div>
+      <svg class="picker-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- ───────────── DROPDOWN SHEET ───────────── -->
+<div class="backdrop" id="backdrop"></div>
+<div class="sheet" id="sheet" role="listbox">
+  <div class="sheet-inner">
+    <div class="sheet-header">
+      <span class="sheet-title">Choose a day</span>
+      <button class="sheet-close" id="sheetClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="sheet-section" id="sheetDays"></div>
+    <div class="sheet-section" id="sheetRef"></div>
+  </div>
+</div>
+
+<!-- ───────────── MAIN ───────────── -->
+<main>
+
+<!-- ════════════════ MONDAY ════════════════ -->
+<div class="panel day-blue active" id="day-1">
+<div class="container">
+  <div class="day-header">
+    <div class="day-eyebrow"><span class="dot"></span>Strength &middot; Lower</div>
+    <h1 class="day-title">Lower Power</h1>
+    <p class="day-sub">Heavy compound legs. Rotate squat variation each cycle. Rest 2&ndash;3 min on main lift, 90 sec on accessories.</p>
+    <div class="day-tags">
+      <span class="day-tag"><span class="tag-dot"></span>~45&ndash;50 min</span>
+      <span class="day-tag">Optional Z2 spin &middot; 20&ndash;30 min</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Squat (rotation)</span><span class="card-sets">5 &times; 5</span></div>
+    <div class="card-note">Heavy. Warm up thoroughly. Brace hard, full depth, control the descent, drive up with intent.</div>
+    <div class="rotation">
+      <div class="rotation-title">3-week cycle</div>
+      <div class="rotation-row"><span class="rotation-tag">A</span><span class="rotation-text"><b>Back Squat</b> &mdash; bar on traps, shoulder-width.</span></div>
+      <div class="rotation-row"><span class="rotation-tag">B</span><span class="rotation-text"><b>Front Squat</b> &mdash; bar in front rack, elbows high.</span></div>
+      <div class="rotation-row"><span class="rotation-tag">C</span><span class="rotation-text"><b>Tempo Back Squat</b> &mdash; 3-sec descent + 1-sec pause. -15% load.</span></div>
+    </div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=back+squat+barbell+form+tutorial" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Romanian Deadlift</span><span class="card-sets">4 &times; 6</span></div>
+    <div class="card-note">Push hips back, soft knee bend. Lower until you feel a deep hamstring stretch. Drive hips forward. Bar stays close to legs.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=romanian+deadlift+barbell+form+tutorial" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Bulgarian Split Squat (DB)</span><span class="card-sets">3 &times; 8/leg</span></div>
+    <div class="card-note">Rear foot laces-down on bench. Drop back knee straight down, front shin vertical. 2-sec down, 1-sec up.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=bulgarian+split+squat+dumbbell+form" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Standing Calf Raise</span><span class="card-sets">3 &times; 12</span></div>
+    <div class="card-note">Full ROM. 1-sec pause at top, 1-sec pause at full stretch. No bouncing. Controlled throughout.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=standing+calf+raise+form+tutorial" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Neck Harness</span><span class="card-sets">3 &times; 15</span></div>
+    <div class="card-note">Flexion focus today &mdash; chin to chest, slow eccentric. Light load to start; build conservatively. Smooth, never jerky.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=neck+harness+flexion+training+form" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Lying Leg Raise</span><span class="card-sets">3 &times; 12</span></div>
+    <div class="card-note">Lie flat, lower back pressed into the floor. Legs straight, raise to vertical, lower with control. Stop just before heels touch &mdash; keep tension. No momentum.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=lying+leg+raise+form+tutorial" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════ TUESDAY ════════════════ -->
+<div class="panel day-blue" id="day-2">
+<div class="container">
+  <div class="day-header">
+    <div class="day-eyebrow"><span class="dot"></span>Strength &middot; Push</div>
+    <h1 class="day-title">Upper Push &amp; Press</h1>
+    <p class="day-sub">Heavy upper body. Press variation rotates. Rest 2 min on main lifts, 90 sec on accessories.</p>
+    <div class="day-tags">
+      <span class="day-tag"><span class="tag-dot"></span>~40&ndash;45 min</span>
+      <span class="day-tag">Optional Z2 spin &middot; 20&ndash;30 min</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Bench Press (rotation)</span><span class="card-sets">5 &times; 5</span></div>
+    <div class="card-note">Heavy. Scapulae retracted, slight arch, feet planted. 2-sec descent, brief pause on chest, drive up fast.</div>
+    <div class="rotation">
+      <div class="rotation-title">3-week cycle</div>
+      <div class="rotation-row"><span class="rotation-tag">A</span><span class="rotation-text"><b>Barbell Bench Press</b> &mdash; standard grip, full ROM.</span></div>
+      <div class="rotation-row"><span class="rotation-tag">B</span><span class="rotation-text"><b>Close-Grip Bench Press</b> &mdash; hands inside shoulder width.</span></div>
+      <div class="rotation-row"><span class="rotation-tag">C</span><span class="rotation-text"><b>Floor Press</b> &mdash; lockout strength, no leg drive.</span></div>
+    </div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=barbell+bench+press+proper+form" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Standing Overhead Press</span><span class="card-sets">4 &times; 6</span></div>
+    <div class="card-note">Strict press, no leg drive. Brace core, tuck chin to let bar pass, press straight up. Full lockout overhead.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=standing+overhead+press+barbell+form" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Incline DB Press</span><span class="card-sets">3 &times; 8</span></div>
+    <div class="card-note">Bench at 30&ndash;45&deg;. Press straight up from upper chest. Elbows at ~45&deg;, not flared.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=incline+dumbbell+press+form+tutorial" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Lateral Raise (DB)</span><span class="card-sets">3 &times; 12&ndash;15</span></div>
+    <div class="card-note">Slight bend in elbows. Raise to shoulder height max. 3-sec negative on every rep.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=dumbbell+lateral+raise+proper+form" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Bent-Over DB Reverse Fly</span><span class="card-sets">3 &times; 12&ndash;15</span></div>
+    <div class="card-note">Hinge to ~45&deg;, soft knee bend. Light DBs, slight elbow bend. Raise to parallel, leading with elbows. Squeeze rear delts hard, 1-sec hold.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=bent+over+dumbbell+reverse+fly+form+rear+delt" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Hollow Body Hold</span><span class="card-sets">3 &times; 30&ndash;45 sec</span></div>
+    <div class="card-note">Lie flat, lower back pressed into the floor. Lift shoulders and legs slightly off the ground, arms extended overhead. Tight, cohesive shape. Scale by bending knees or shortening arm reach.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=hollow+body+hold+tutorial+form" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════ WEDNESDAY ════════════════ -->
+<div class="panel day-cyan" id="day-3">
+<div class="container">
+  <div class="day-header">
+    <div class="day-eyebrow"><span class="dot" style="background:var(--cyan)"></span>Ride Day</div>
+    <h1 class="day-title">Mid-Week Ride</h1>
+    <p class="day-sub">Outdoor preferred &mdash; get fresh air. No lifting. Engine work for the legs while everything else recovers.</p>
+  </div>
+
+  <div class="big-card">
+    <span class="big-card-pill pill-outdoor">Outdoor &middot; Default</span>
+    <h3>60&ndash;90 min on the Tarmac SL8 or Marlin</h3>
+    <p>Mostly Zone 2 with natural terrain variation. Build the aerobic base. If you feel good, throw in a few harder efforts up climbs &mdash; but the point is volume, not punishment.</p>
+  </div>
+
+  <div class="big-card">
+    <span class="big-card-pill pill-indoor">Indoor &middot; Backup</span>
+    <h3>45&ndash;60 min Zwift structured</h3>
+    <p>Sweet spot intervals (4 &times; 8 min @ 88&ndash;94% FTP) or tempo (3 &times; 12 min @ 76&ndash;87% FTP). FTP: 180W. Quality over duration when indoors.</p>
+  </div>
+
+  <div class="big-card">
+    <span class="big-card-pill pill-fallback">Fallback</span>
+    <h3>30 min recovery spin</h3>
+    <p>If you're toast from Mon/Tue or short on time: easy spin, ~60&ndash;65% FTP, conversational. Still better than skipping.</p>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════ THURSDAY ════════════════ -->
+<div class="panel day-amber" id="day-4">
+<div class="container">
+  <div class="day-header">
+    <div class="day-eyebrow"><span class="dot" style="background:var(--amber)"></span>Power &middot; Athletic</div>
+    <h1 class="day-title">Power &amp; Athletic</h1>
+    <p class="day-sub">Fast, explosive, intentful. Light loads, max speed. Full recovery between sets. Quality over quantity.</p>
+    <div class="day-tags">
+      <span class="day-tag"><span class="tag-dot" style="background:var(--amber)"></span>~35&ndash;40 min</span>
+      <span class="day-tag">Optional Z2 spin &middot; 20&ndash;30 min</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Hang Cleans</span><span class="card-sets">5 &times; 3</span></div>
+    <div class="card-note">Start at mid-thigh. Snap hips forward, shrug, catch in front rack. Reset fully between reps. ~60&ndash;70% of your clean max &mdash; speed is the goal.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=barbell+hang+clean+form+tutorial" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Barbell Push Press</span><span class="card-sets">4 &times; 3</span></div>
+    <div class="card-note">Dip knees slightly, drive through heels, punch the bar overhead. Lock out with ears in front of arms. Aggressive intent.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=push+press+barbell+form+tutorial" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Barbell Jump Squat</span><span class="card-sets">4 &times; 5</span></div>
+    <div class="card-note">Light bar (30&ndash;40% of squat max). Quarter squat, jump as high as you can. Land soft with bent knees, reset, go again.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=barbell+jump+squat+form+tutorial" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Heavy DB Swing</span><span class="card-sets">3 &times; 15</span></div>
+    <div class="card-note">Hold one heavy DB with both hands. Hike between legs, snap hips forward, let it float to chest height. Arms are passive &mdash; hips do the work.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=dumbbell+swing+form+tutorial+hip+hinge" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Farmer Carry</span><span class="card-sets">2 &times; 50 yd</span></div>
+    <div class="card-note">Heaviest DBs you can grip for the distance. Brisk pace, tall posture, don't grind. Grip + structural carryover.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=farmer+carry+dumbbell+form+tutorial" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Band Pallof Press</span><span class="card-sets">3 &times; 10/side</span></div>
+    <div class="card-note">Anti-rotation core. Slow press out, hold 2 sec, return. Resist the band trying to twist you. Brace hard.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=pallof+press+band+form+tutorial" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════ FRIDAY ════════════════ -->
+<div class="panel day-blue" id="day-5">
+<div class="container">
+  <div class="day-header">
+    <div class="day-eyebrow"><span class="dot"></span>Strength &middot; Pull</div>
+    <h1 class="day-title">Posterior &amp; Pull</h1>
+    <p class="day-sub">Heavy posterior chain + back width. Deadlift variation rotates. Rest 2&ndash;3 min on main, 90 sec on accessories.</p>
+    <div class="day-tags">
+      <span class="day-tag"><span class="tag-dot"></span>~45&ndash;50 min</span>
+      <span class="day-tag">Optional Z2 spin &middot; 20&ndash;30 min</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Deadlift (rotation)</span><span class="card-sets">5 &times; 3</span></div>
+    <div class="card-note">Push the floor away. Bar against shins. Full reset on the floor between reps &mdash; no touch-and-go.</div>
+    <div class="rotation">
+      <div class="rotation-title">3-week cycle</div>
+      <div class="rotation-row"><span class="rotation-tag">A</span><span class="rotation-text"><b>Conventional Deadlift</b> &mdash; feet hip-width, grip outside knees.</span></div>
+      <div class="rotation-row"><span class="rotation-tag">B</span><span class="rotation-text"><b>Deficit Deadlift</b> &mdash; stand on a 1&ndash;1.5" plate. -10% load.</span></div>
+      <div class="rotation-row"><span class="rotation-tag">C</span><span class="rotation-text"><b>Snatch-Grip Deadlift</b> &mdash; wide grip, trap stimulus. -15% load.</span></div>
+    </div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=barbell+deadlift+form+tutorial+conventional" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Bent Over Barbell Row</span><span class="card-sets">4 &times; 6</span></div>
+    <div class="card-note">Torso at ~45&deg;. Pull bar to lower chest, squeeze at the top for 1 sec. No momentum, no hitching.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=barbell+bent+over+row+proper+form" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Single-Leg RDL (DB)</span><span class="card-sets">3 &times; 8/leg</span></div>
+    <div class="card-note">Hinge forward on one leg, free leg extends behind you. Keep hips square. Touch a wall for balance if needed.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=single+leg+rdl+dumbbell+form+tutorial" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">DB Pullover</span><span class="card-sets">3 &times; 10</span></div>
+    <div class="card-note">Lie across bench, hips low. Lower the DB behind your head with straight arms until you feel a deep lat stretch. Pull back to start.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=dumbbell+pullover+form+tutorial" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Band Face Pull</span><span class="card-sets">3 &times; 15</span></div>
+    <div class="card-note">Pull band to forehead height. At the end, rotate hands outward so thumbs point behind you. Squeeze for 1 sec.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=band+face+pull+form+rear+delt" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Neck Harness</span><span class="card-sets">3 &times; 15</span></div>
+    <div class="card-note">Extension focus today &mdash; resist by pulling head back. Slow eccentric. The full posterior-chain finisher.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=neck+harness+extension+training" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+
+  <div class="card">
+    <div class="card-top"><span class="card-name">Side Plank</span><span class="card-sets">3 &times; 30&ndash;40 sec/side</span></div>
+    <div class="card-note">Forearm down, body in a straight line from head to heels. Hips up &mdash; don't let them sag. Anti-lateral flexion finisher. Stack feet, or stagger for stability.</div>
+    <a class="card-video" href="https://www.youtube.com/results?search_query=side+plank+form+tutorial" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>How to</a>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════ SATURDAY ════════════════ -->
+<div class="panel day-cyan" id="day-6">
+<div class="container">
+  <div class="day-header">
+    <div class="day-eyebrow"><span class="dot" style="background:var(--cyan)"></span>Long Ride</div>
+    <h1 class="day-title">Long Ride</h1>
+    <p class="day-sub">Signature ride of the week. Outdoor by default &mdash; this is what summer's for.</p>
+  </div>
+
+  <div class="big-card">
+    <span class="big-card-pill pill-outdoor">Outdoor &middot; Default</span>
+    <h3>1.5&ndash;3 hours on the Tarmac SL8 or Marlin</h3>
+    <p>Primarily Zone 2 with natural terrain variation. Build slowly &mdash; if last week was 90 min, this week aim for 100. Keep it fun. Stop for coffee. This is where the bulk of aerobic adaptation and calorie burn happens.</p>
+  </div>
+
+  <div class="big-card">
+    <span class="big-card-pill pill-indoor">Indoor &middot; Backup</span>
+    <h3>90&ndash;120 min Zwift event or structured ride</h3>
+    <p>Group ride or long sweet-spot session if weather forces you inside. Duration matters more than intensity on this day.</p>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════ SUNDAY ════════════════ -->
+<div class="panel day-violet" id="day-7">
+<div class="container">
+  <div class="day-header">
+    <div class="day-eyebrow"><span class="dot" style="background:var(--violet)"></span>Recovery</div>
+    <h1 class="day-title">Recovery</h1>
+    <p class="day-sub">Active rest &mdash; not a skip day. This protects everything else in the program.</p>
+  </div>
+  <div class="center-card">
+    <span class="icon">&#x1F9D8;</span>
+    <h3>Yoga, Mobility, Stretching</h3>
+    <p>20&ndash;30 minutes. Focus on hip flexors, hamstrings, thoracic spine, shoulders, and neck. Optional easy 20&ndash;30 min spin if you want movement, recovery pace only. Sleep matters more than any extra session.</p>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════ FUEL ════════════════ -->
+<div class="panel day-green" id="day-fuel">
+<div class="container">
+  <div class="day-header">
+    <div class="day-eyebrow"><span class="dot" style="background:var(--green)"></span>Nutrition</div>
+    <h1 class="day-title">Fuel &amp; Macros</h1>
+    <p class="day-sub">Cut to 188 lbs by 2026-12-31. Preserve lean mass. Pace ~0.35 lb/week. Set 2026-05-23.</p>
+  </div>
+
+  <div class="stat">
+    <div class="stat-label"><b>Daily Calories</b>~250 kcal below estimated TDEE</div>
+    <div class="stat-value">~2,700</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-label"><b>Protein</b>1.1 g per lb &mdash; non-negotiable</div>
+    <div class="stat-value">220 g</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-label"><b>Fat</b>Floor of ~0.4 g/lb for hormones</div>
+    <div class="stat-value muted">75&ndash;80 g</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-label"><b>Carbs (baseline)</b>Varies by training load &mdash; see below</div>
+    <div class="stat-value muted">285 g</div>
+  </div>
+
+  <div class="section-title">Carbs by Day</div>
+  <div class="week-row"><span class="week-row-day">Mon</span><span class="week-row-desc"><b>~340 g</b> &mdash; squat heavy day</span></div>
+  <div class="week-row"><span class="week-row-day">Tue</span><span class="week-row-desc"><b>~285 g</b> &mdash; upper push</span></div>
+  <div class="week-row"><span class="week-row-day">Wed</span><span class="week-row-desc"><b>~285&ndash;340 g</b> &mdash; scale with ride duration</span></div>
+  <div class="week-row"><span class="week-row-day">Thu</span><span class="week-row-desc"><b>~285 g</b> &mdash; power day</span></div>
+  <div class="week-row"><span class="week-row-day">Fri</span><span class="week-row-desc"><b>~340 g</b> &mdash; deadlift heavy day</span></div>
+  <div class="week-row"><span class="week-row-day">Sat</span><span class="week-row-desc"><b>~340&ndash;400 g</b> &mdash; long ride, scale with duration</span></div>
+  <div class="week-row"><span class="week-row-day">Sun</span><span class="week-row-desc"><b>~220 g</b> &mdash; recovery day</span></div>
+
+  <div class="section-title">Around Training</div>
+  <div class="card">
+    <div class="card-top"><span class="card-name">Pre-Lift Meal</span><span class="card-sets">60&ndash;90 min</span></div>
+    <div class="card-note">~30&ndash;40 g carbs + ~25 g protein. Oatmeal + whey, rice + chicken, or similar. Light enough to lift on.</div>
+  </div>
+  <div class="card">
+    <div class="card-top"><span class="card-name">Post-Lift Meal</span><span class="card-sets">within 60 min</span></div>
+    <div class="card-note">~40&ndash;50 g protein + ~60&ndash;80 g carbs. Eat the bulk of the day's carbs here. Recovery window is real for heavy lifting.</div>
+  </div>
+  <div class="card">
+    <div class="card-top"><span class="card-name">Long Ride Fueling</span><span class="card-sets">50&ndash;80 g/hr</span></div>
+    <div class="card-note">Saturday rides over 90 min: take carbs on the bike. Bars, gels, or a sports drink. Bonking on a 2-hr Z2 ride sets recovery back days.</div>
+  </div>
+
+  <div class="section-title">Check Yourself</div>
+  <div class="card">
+    <div class="card-top"><span class="card-name">Weekly</span></div>
+    <div class="card-note">7-day average weight should trend down ~0.3&ndash;0.4 lb. Stalled for 2+ weeks &rarr; drop calories 100&ndash;150. Losing &gt;0.6 lb/week &rarr; eat more (that pace will cost lean mass).</div>
+  </div>
+  <div class="card">
+    <div class="card-top"><span class="card-name">DEXA</span><span class="card-sets">Jul/Aug 2026</span></div>
+    <div class="card-note">Primary check: lean mass holds at ~138 lb. If lean drops more than ~1 lb between scans, the deficit is too aggressive &mdash; bump calories up by 150&ndash;200 and re-check.</div>
+  </div>
+  <div class="card">
+    <div class="card-top"><span class="card-name">End-of-Year Goal</span><span class="card-sets">188 lbs</span></div>
+    <div class="card-note">Target: 188 lbs by 2026-12-31 at ~138 lb lean / ~42 lb fat / 8 lb bone &asymp; 22% body fat. ~11 lb of fat over ~32 weeks.</div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════ ABOUT ════════════════ -->
+<div class="panel" id="day-about">
+<div class="container">
+  <div class="day-header">
+    <div class="day-eyebrow"><span class="dot" style="background:var(--text-muted)"></span>Reference</div>
+    <h1 class="day-title">About</h1>
+    <p class="day-sub">Goal, philosophy, rotation schedule, and progression rules.</p>
+  </div>
+
+  <div class="section-title">Goal</div>
+  <p class="prose">Build an elite-rugby-player body: <b>strong, powerful, athletic, durable</b>. Heavy compound lifts, Olympic lift derivatives, posterior chain bias, neck and grip work, loaded carries, jumps. Not bodybuilding-isolation, not pure powerlifting. Athletic strength.</p>
+  <p class="prose">Cycling provides the aerobic engine and burns the calories &mdash; weather-driven now that summer's here, with 4+ outdoor rides as the weekly target.</p>
+
+  <div class="section-title">How This Differs from the Old Program</div>
+  <p class="prose"><b>4 strength days, not 5.</b> Frees up Wednesday for a dedicated ride and gives the body real recovery slack.</p>
+  <p class="prose"><b>Lower reps, heavier loads.</b> Main lifts run 3&ndash;6 reps (was 6&ndash;12). Strength bias for the rugby physique.</p>
+  <p class="prose"><b>3-week movement rotation.</b> Each main lift cycles through three variations &mdash; same structure, different stimulus.</p>
+  <p class="prose"><b>Olympic lift derivatives in, isolation out.</b> Hang cleans + push press anchor Thursday. No standalone skull crushers or curls &mdash; arms get hit through compounds.</p>
+  <p class="prose"><b>Neck harness every lift day.</b> You own one, you weren't using it. Rugby-essential.</p>
+  <p class="prose"><b>Cycling weather-driven.</b> Wed and Sat are dedicated rides. Lift-day spins are optional.</p>
+
+  <div class="section-title">Week at a Glance</div>
+  <div class="week-row"><span class="week-row-day">Mon</span><span class="week-row-desc">Lower Power (Squat) + optional Z2 spin</span></div>
+  <div class="week-row"><span class="week-row-day">Tue</span><span class="week-row-desc">Upper Push &amp; Press (Bench) + optional Z2 spin</span></div>
+  <div class="week-row"><span class="week-row-day">Wed</span><span class="week-row-desc">Ride day (60&ndash;90 min, outdoor goal)</span></div>
+  <div class="week-row"><span class="week-row-day">Thu</span><span class="week-row-desc">Power &amp; Athletic (Cleans) + optional Z2 spin</span></div>
+  <div class="week-row"><span class="week-row-day">Fri</span><span class="week-row-desc">Posterior &amp; Pull (Deadlift) + optional Z2 spin</span></div>
+  <div class="week-row"><span class="week-row-day">Sat</span><span class="week-row-desc">Long ride (1.5&ndash;3 hr, outdoor goal)</span></div>
+  <div class="week-row"><span class="week-row-day">Sun</span><span class="week-row-desc">Recovery: yoga, mobility, stretching</span></div>
+
+  <div class="accordion">
+    <button class="accordion-toggle" onclick="toggleAccordion(this)">3-Week Rotation Schedule
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+    <div class="accordion-body">
+      <div class="accordion-item">
+        <h4>Mon &mdash; Squat</h4>
+        <p>Week A: Back Squat &middot; Week B: Front Squat &middot; Week C: Tempo Back Squat (3-sec descent + pause).</p>
+      </div>
+      <div class="accordion-item">
+        <h4>Tue &mdash; Bench Press</h4>
+        <p>Week A: Standard Barbell Bench &middot; Week B: Close-Grip Bench &middot; Week C: Floor Press.</p>
+      </div>
+      <div class="accordion-item">
+        <h4>Fri &mdash; Deadlift</h4>
+        <p>Week A: Conventional &middot; Week B: Deficit (1&ndash;1.5" plate) &middot; Week C: Snatch-Grip.</p>
+      </div>
+      <div class="accordion-item">
+        <h4>Cycle Start</h4>
+        <p>Week A begins the week of <b>2026-05-25</b>. Track the current week in your training log. After Week C, restart at Week A. Accessory lifts stay the same each week &mdash; only the main lift rotates.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <button class="accordion-toggle" onclick="toggleAccordion(this)">Cycling Guidelines
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+    <div class="accordion-body">
+      <div class="accordion-item">
+        <h4>Wednesday &mdash; Dedicated Ride</h4>
+        <p>Outdoor preferred, 60&ndash;90 min, mostly Z2. Indoor backup: Zwift sweet spot or tempo intervals, 45&ndash;60 min. FTP: 180W.</p>
+      </div>
+      <div class="accordion-item">
+        <h4>Saturday &mdash; Long Signature Ride</h4>
+        <p>1.5&ndash;3 hr, outdoor. Build slowly. This is where most of the cycling fitness lives.</p>
+      </div>
+      <div class="accordion-item">
+        <h4>Optional Post-Lift Spins (Mon, Tue, Thu, Fri)</h4>
+        <p>20&ndash;30 min easy. Skip without guilt if short on time or recovery is low. Counts toward the 4+ outdoor weekly target when done outside.</p>
+      </div>
+      <div class="accordion-item">
+        <h4>Weekly Outdoor Target</h4>
+        <p>4+. Wed + Sat = 2 baseline. Hit 2 more on lift days when weather allows. Track in Strava.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <button class="accordion-toggle" onclick="toggleAccordion(this)">Progression &amp; Recovery
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+    <div class="accordion-body">
+      <div class="accordion-item">
+        <h4>Main Lifts</h4>
+        <p>Add 5 lbs to a main lift once you've completed its sets/reps cleanly on two consecutive A-rotations of that movement (i.e., across two full 3-week cycles for the same variation). Don't chase weight inside a cycle.</p>
+      </div>
+      <div class="accordion-item">
+        <h4>Accessories</h4>
+        <p>When the top set hits the upper end of its rep range cleanly, add weight next session. Barbell: +5 lbs. Dumbbell: +2.5 lbs per hand.</p>
+      </div>
+      <div class="accordion-item">
+        <h4>Neck Harness</h4>
+        <p>Start light (5&ndash;10 lbs). Progress slowly &mdash; the neck rewards patience and punishes ego. Add load only when current weight feels easy across all three sets.</p>
+      </div>
+      <div class="accordion-item">
+        <h4>Cycling</h4>
+        <p>Re-test FTP every 6&ndash;8 weeks via Zwift ramp test. Adjust zones.</p>
+      </div>
+      <div class="accordion-item">
+        <h4>Recovery Management</h4>
+        <p>Monitor Whoop weekly. If recovery trends down 5+ days, drop the Wednesday ride to recovery pace first, then de-load the Friday deadlift. Saturday's long ride and Monday's squat are the last things to cut.</p>
+      </div>
+      <div class="accordion-item">
+        <h4>Next Check-In</h4>
+        <p>DEXA scan in July or August 2026.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</main>
+
+<script>
+// Day registry
+const DAYS = [
+  { key: '1', short: 'Mon', name: 'Lower Power', type: 'Strength', chip: 'chip-blue', color: 'blue' },
+  { key: '2', short: 'Tue', name: 'Upper Push & Press', type: 'Strength', chip: 'chip-blue', color: 'blue' },
+  { key: '3', short: 'Wed', name: 'Mid-Week Ride', type: 'Ride', chip: 'chip-cyan', color: 'cyan' },
+  { key: '4', short: 'Thu', name: 'Power & Athletic', type: 'Power', chip: 'chip-amber', color: 'amber' },
+  { key: '5', short: 'Fri', name: 'Posterior & Pull', type: 'Strength', chip: 'chip-blue', color: 'blue' },
+  { key: '6', short: 'Sat', name: 'Long Ride', type: 'Ride', chip: 'chip-cyan', color: 'cyan' },
+  { key: '7', short: 'Sun', name: 'Recovery', type: 'Rest', chip: 'chip-violet', color: 'violet' },
+];
+const REF = [
+  { key: 'fuel', short: 'Fuel', name: 'Macros & Nutrition', type: 'Reference', chip: 'chip-green', color: 'green' },
+  { key: 'about', short: 'About', name: 'Program info', type: 'Reference', chip: 'chip-dim', color: 'dim' },
+];
+
+const COLORS = {
+  blue: '#5b8def', cyan: '#22d3ee', amber: '#f59e0b',
+  violet: '#a78bfa', green: '#34d399', dim: '#5f6877'
+};
+
+// Build the sheet
+function buildSheet() {
+  const todayKey = todayDayKey();
+  const buildItem = (d) => {
+    const isToday = d.key === todayKey;
+    return `
+      <button class="sheet-item" data-day="${d.key}">
+        <span class="sheet-day">${d.short}</span>
+        <span class="sheet-name">${d.name}</span>
+        ${isToday ? '<span class="sheet-today-pill">Today</span>' : ''}
+        <span class="sheet-chip ${d.chip}">${d.type}</span>
+      </button>
+    `;
+  };
+  document.getElementById('sheetDays').innerHTML = DAYS.map(buildItem).join('');
+  document.getElementById('sheetRef').innerHTML = REF.map(buildItem).join('');
+
+  // Wire item clicks
+  document.querySelectorAll('.sheet-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectDay(btn.dataset.day);
+      closeSheet();
+    });
+  });
+}
+
+function todayDayKey() {
+  const jsDay = new Date().getDay();
+  const map = { 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 0: '7' };
+  return map[jsDay];
+}
+
+function selectDay(key) {
+  // Find day data
+  const all = [...DAYS, ...REF];
+  const d = all.find(x => x.key === key);
+  if (!d) return;
+
+  // Switch panels
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('day-' + key);
+  if (panel) panel.classList.add('active');
+
+  // Update sheet active state
+  document.querySelectorAll('.sheet-item').forEach(it => {
+    it.classList.toggle('active', it.dataset.day === key);
+  });
+
+  // Update picker label + dot color
+  const label = document.getElementById('pickerLabel');
+  const title = document.getElementById('pickerTitle');
+  const dot = document.getElementById('pickerDot');
+  const isToday = key === todayDayKey();
+  label.textContent = isToday ? 'Today · ' + d.short : d.short;
+  title.textContent = d.name;
+  dot.style.background = COLORS[d.color];
+  dot.style.color = COLORS[d.color];
+
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// Sheet open/close
+const sheet = document.getElementById('sheet');
+const backdrop = document.getElementById('backdrop');
+const picker = document.getElementById('picker');
+
+function openSheet() {
+  sheet.classList.add('open');
+  backdrop.classList.add('open');
+  picker.classList.add('open');
+  picker.setAttribute('aria-expanded', 'true');
+}
+function closeSheet() {
+  sheet.classList.remove('open');
+  backdrop.classList.remove('open');
+  picker.classList.remove('open');
+  picker.setAttribute('aria-expanded', 'false');
+}
+
+picker.addEventListener('click', () => {
+  if (sheet.classList.contains('open')) closeSheet();
+  else openSheet();
+});
+backdrop.addEventListener('click', closeSheet);
+document.getElementById('sheetClose').addEventListener('click', closeSheet);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && sheet.classList.contains('open')) closeSheet();
+});
+
+// Accordion
+function toggleAccordion(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
+// Boot
+buildSheet();
+selectDay(todayDayKey());
+</script>
+
+</body>
+</html>
