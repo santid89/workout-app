@@ -1,12 +1,29 @@
 rules_version = '2';
 
-// Workout-app data model: each signed-in user owns a private collection of
-// workout logs at  users/{uid}/logs/{logId}.  A user can only ever read or
-// write documents under their own uid — nobody can see anyone else's history.
+// Workout-app data model
+// ----------------------
+//  users/{uid}                 — private profile (holds the share token)
+//  users/{uid}/logs/{logId}    — private workout history
+//  shares/{token}              — read-only JSON export, reachable only by
+//                                someone holding the unguessable token
+//                                (a "capability URL"); writable solely by the
+//                                owner whose uid is stamped on the doc.
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // Everything under a user's own tree: owner-only.
     match /users/{userId}/{document=**} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Public read of the export is intentional — the token is the secret.
+    // Creates/updates must be performed by the owner and must stamp their uid.
+    match /shares/{token} {
+      allow read: if true;
+      allow create: if request.auth != null
+                    && request.resource.data.ownerUid == request.auth.uid;
+      allow update, delete: if request.auth != null
+                    && resource.data.ownerUid == request.auth.uid;
     }
   }
 }
