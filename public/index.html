@@ -1829,14 +1829,24 @@ async function signIn() {
     WA.selectDay("log");
     return;
   }
+  const provider = new GoogleAuthProvider();
+  // Mobile browsers block/mishandle auth popups, so go full-page redirect there
+  // (also the more app-like flow). Desktop keeps the popup, with redirect fallback.
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent)
+    || (navigator.maxTouchPoints > 1 && !window.matchMedia("(pointer:fine)").matches);
+  if (isMobile) {
+    try { await signInWithRedirect(auth, provider); }
+    catch (e) { toast("Sign-in failed: " + (e.code || e.message), "error"); }
+    return;
+  }
   try {
-    await signInWithPopup(auth, new GoogleAuthProvider());
+    await signInWithPopup(auth, provider);
   } catch (e) {
     if (e.code === "auth/popup-closed-by-user" || e.code === "auth/cancelled-popup-request") return;
-    // Popup blocked or unusable (common on mobile) → full-page redirect flow.
+    // Popup blocked or unusable → full-page redirect flow.
     if (e.code === "auth/popup-blocked" || e.code === "auth/operation-not-supported-in-this-environment"
         || e.code === "auth/internal-error") {
-      try { await signInWithRedirect(auth, new GoogleAuthProvider()); return; }
+      try { await signInWithRedirect(auth, provider); return; }
       catch (e2) { toast("Sign-in failed: " + (e2.code || e2.message), "error"); return; }
     }
     toast("Sign-in failed: " + (e.code || e.message), "error");
