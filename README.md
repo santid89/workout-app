@@ -27,17 +27,12 @@ push deploys automatically.
 3. In the left nav, open **Build → Hosting** and click **Get started**
    (you can ignore the CLI instructions it shows — CI handles deploys).
 
-### 2. Point the repo at your project
+### 2. Project ID — already wired
 
-Replace the placeholder in [`.firebaserc`](.firebaserc):
-
-```json
-{ "projects": { "default": "your-project-id" } }
-```
-
-Also add the same ID as a repository **variable** named
-`FIREBASE_PROJECT_ID` (Settings → Secrets and variables → Actions →
-*Variables* tab → New variable), which the workflow reads.
+The project ID `workouts-app-bd756` is already set in
+[`.firebaserc`](.firebaserc) and in the deploy
+[workflow](.github/workflows/firebase-hosting.yml), so there's nothing to
+change here. (If you ever rename the project, update it in both files.)
 
 ### 3. Add the deploy secret
 
@@ -63,7 +58,7 @@ The GitHub Action authenticates with a Firebase service account.
 
 Push to `main` (or the `claude/loving-hypatia-yzfcee` branch) — the
 **Deploy to Firebase Hosting** workflow runs and publishes the site to
-`https://your-project-id.web.app`. You can also trigger it manually from
+<https://workouts-app-bd756.web.app>. You can also trigger it manually from
 the **Actions** tab.
 
 ## Deploying manually instead
@@ -73,7 +68,7 @@ If you'd rather skip CI:
 ```bash
 npm install -g firebase-tools
 firebase login
-firebase use your-project-id
+firebase use workouts-app-bd756
 firebase deploy --only hosting
 ```
 
