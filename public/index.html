@@ -661,6 +661,139 @@
   }
   .account-signout:active { background: var(--surface-3); }
 
+  /* ───────────── LOGIN GATE ───────────── */
+  .auth-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background:
+      radial-gradient(circle at 30% 0%, rgba(91,141,239,0.16), transparent 55%),
+      radial-gradient(circle at 80% 100%, rgba(167,139,250,0.12), transparent 55%),
+      var(--bg);
+  }
+  body.auth-loading .auth-gate,
+  body.signed-out .auth-gate { display: flex; }
+  body.signed-in .auth-gate { display: none; }
+  /* Hide app chrome until signed in, so nothing flashes behind the gate */
+  body.auth-loading .header, body.signed-out .header,
+  body.auth-loading main, body.signed-out main { visibility: hidden; }
+
+  .auth-gate-inner {
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    animation: gateIn 0.4s ease both;
+  }
+  @keyframes gateIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .gate-mark {
+    width: 64px; height: 64px;
+    margin: 0 auto 22px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+  .gate-dot {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--blue); color: var(--blue);
+    box-shadow: 0 0 24px currentColor;
+  }
+  .gate-title {
+    font-size: 30px; font-weight: 800; letter-spacing: -0.02em;
+    color: var(--text); margin-bottom: 10px;
+  }
+  .gate-tagline {
+    font-size: 15px; color: var(--text-muted); line-height: 1.55;
+    margin-bottom: 26px;
+  }
+  .gate-signin {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    background: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 15px;
+    color: #1a1a1a;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.1s, filter 0.15s;
+  }
+  body.signed-out .gate-signin { display: flex; }
+  .gate-signin:active { transform: scale(0.98); filter: brightness(0.95); }
+  .gate-signin svg { width: 20px; height: 20px; }
+  .gate-fine {
+    font-size: 12.5px; color: var(--text-dim); line-height: 1.5;
+    margin-top: 16px;
+  }
+  body.signed-out .gate-fine { display: block; }
+  body.auth-loading .gate-fine { display: none; }
+
+  .gate-spinner {
+    display: none;
+    width: 30px; height: 30px;
+    margin: 8px auto 0;
+    border: 3px solid var(--border-strong);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  body.auth-loading .gate-spinner { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ───────────── API ACCESS (Log tab) ───────────── */
+  .api-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 16px 18px;
+    margin-top: 22px;
+  }
+  .api-card-head {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 800; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .api-card p { font-size: 13px; color: var(--text-muted); line-height: 1.55; margin-bottom: 12px; }
+  .api-url-row { display: flex; gap: 8px; align-items: stretch; }
+  .api-url {
+    flex: 1; min-width: 0;
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 11px 12px;
+    color: var(--cyan);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    white-space: nowrap; overflow-x: auto;
+  }
+  .api-copy {
+    flex-shrink: 0;
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 0 14px;
+    color: var(--text);
+    font-family: inherit; font-size: 13px; font-weight: 700;
+    cursor: pointer;
+  }
+  .api-copy:active { background: var(--surface-3); }
+  .api-hint {
+    margin-top: 12px;
+    font-size: 12.5px; color: var(--text-dim); line-height: 1.55;
+  }
+  .api-hint b { color: var(--text-muted); font-weight: 700; }
+
   /* ───────────── LOG-THIS-WORKOUT BUTTON ───────────── */
   .log-cta {
     display: flex;
@@ -879,7 +1012,19 @@
   .empty-state p { font-size: 14px; line-height: 1.6; }
 </style>
 </head>
-<body>
+<body class="auth-loading">
+
+<!-- ───────────── LOGIN GATE ───────────── -->
+<div class="auth-gate" id="authGate">
+  <div class="auth-gate-inner">
+    <div class="gate-mark"><span class="gate-dot"></span></div>
+    <h1 class="gate-title">Training</h1>
+    <p class="gate-tagline">Your strength &amp; cycling program — and a private log of every session you actually complete.</p>
+    <div class="gate-spinner" aria-label="Loading"></div>
+    <button class="gate-signin" id="gateSignIn"><!-- Google button injected --></button>
+    <p class="gate-fine">Sign in with Google. Your workout history syncs to your account, on every device.</p>
+  </div>
+</div>
 
 <!-- ───────────── HEADER ───────────── -->
 <header class="header">
@@ -1577,7 +1722,7 @@ import {
   getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
-  getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp
+  getFirestore, collection, addDoc, deleteDoc, doc, getDoc, setDoc, onSnapshot, query, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -1608,6 +1753,10 @@ const WORKOUTS = WA.DAYS; // keys '1'..'7' — the loggable sessions
 let auth = null, db = null, currentUser = null;
 let unsubLogs = null;
 let logs = []; // [{ id, date, workoutKey, workoutName, type, color }]
+let shareToken = null; // capability token for the read-only JSON export
+const PROJECT_ID = firebaseConfig.projectId;
+const shareUrl = (token) =>
+  `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/shares/${token}`;
 
 /* ─────────────── Tiny DOM helpers ─────────────── */
 const $ = (id) => document.getElementById(id);
@@ -1873,9 +2022,35 @@ function renderHistory() {
     }
   }
 
+  // API access — a private read-only JSON feed Claude (or any tool) can fetch
+  const url = shareToken ? shareUrl(shareToken) : "";
+  html += `
+    <div class="api-card">
+      <div class="api-card-head">🔗 API access</div>
+      <p>A private, read-only JSON feed of your log. Hand this URL to Claude (or any tool) to have it read your training history.</p>
+      ${shareToken ? `
+      <div class="api-url-row">
+        <div class="api-url" id="apiUrl">${esc(url)}</div>
+        <button class="api-copy" id="apiCopy">Copy</button>
+      </div>
+      <p class="api-hint">Only someone with this exact link can read it (writes stay private to you). Your sessions are a JSON string in the response's <b>json</b> field. Ask me to "rotate my API link" anytime to revoke it.</p>
+      ` : `<p class="api-hint">Preparing your link…</p>`}
+    </div>`;
+
   body.innerHTML = html;
   const addBtn = $("historyAdd");
   if (addBtn) addBtn.addEventListener("click", () => openLogModal(WA.todayDayKey(), todayStr()));
+  const copyBtn = $("apiCopy");
+  if (copyBtn) copyBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      copyBtn.textContent = "Copied";
+      toast("API link copied", "success");
+      setTimeout(() => { copyBtn.textContent = "Copy"; }, 1600);
+    } catch {
+      toast("Copy failed — long-press the link to copy", "error");
+    }
+  });
 }
 
 /* ═══════════════ FIRESTORE SYNC ═══════════════ */
@@ -1887,6 +2062,7 @@ function startLogSync(uid) {
       logs = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
       renderHistory();
       refreshLogButtons();
+      syncShareExport(); // keep the read-only JSON export current
     },
     (err) => {
       toast("Sync error: " + (err.code || err.message), "error");
@@ -1898,15 +2074,70 @@ function stopLogSync() {
   logs = [];
 }
 
+/* ═══════════════ READ-ONLY JSON EXPORT (capability link) ═══════════════
+   Mirrors the user's logs to shares/{token}, a doc readable by anyone holding
+   the unguessable token but writable only by its owner (see firestore.rules).
+   The payload is a plain JSON string so it's trivial for any client — or
+   Claude — to fetch and parse. */
+function randomToken() {
+  if (crypto.randomUUID) return crypto.randomUUID().replace(/-/g, "");
+  const a = new Uint8Array(16); crypto.getRandomValues(a);
+  return [...a].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function ensureShareToken(uid) {
+  // Token lives on the user's profile doc so it's stable across devices.
+  const userRef = doc(db, "users", uid);
+  try {
+    const snap = await getDoc(userRef);
+    let token = snap.exists() ? snap.data().shareToken : null;
+    if (!token) {
+      token = randomToken();
+      await setDoc(userRef, { shareToken: token }, { merge: true });
+    }
+    shareToken = token;
+  } catch (e) {
+    console.warn("[Workout app] Could not set up API link:", e.code || e.message);
+  }
+}
+
+async function syncShareExport() {
+  if (!shareToken || !currentUser) return;
+  const payload = logs.map((l) => ({
+    date: l.date, workout: l.workoutName, key: l.workoutKey, type: l.type,
+  }));
+  try {
+    await setDoc(doc(db, "shares", shareToken), {
+      ownerUid: currentUser.uid,
+      count: payload.length,
+      updatedAt: serverTimestamp(),
+      json: JSON.stringify(payload),
+    });
+  } catch (e) {
+    console.warn("[Workout app] Could not update API export:", e.code || e.message);
+  }
+}
+
 /* ═══════════════ BOOT ═══════════════ */
-function onAuth(user) {
+async function onAuth(user) {
   currentUser = user;
+  document.body.classList.remove("auth-loading");
+  document.body.classList.toggle("signed-in", !!user);
+  document.body.classList.toggle("signed-out", !user);
   renderAuth();
   stopLogSync();
-  if (user) startLogSync(user.uid);
+  shareToken = null;
+  if (user) {
+    await ensureShareToken(user.uid); // resolve token before logs render the API card
+    startLogSync(user.uid);
+  }
   renderHistory();
   refreshLogButtons();
 }
+
+// Gate sign-in button
+$("gateSignIn").innerHTML = `${GOOGLE_SVG}<span>Continue with Google</span>`;
+$("gateSignIn").addEventListener("click", signIn);
 
 buildWorkoutOptions();
 injectLogButtons();
@@ -1916,9 +2147,12 @@ if (CONFIGURED) {
   auth = getAuth(app);
   db = getFirestore(app);
   setPersistence(auth, browserLocalPersistence).catch(() => {});
-  onAuthStateChanged(auth, onAuth);
+  onAuthStateChanged(auth, onAuth); // flips the gate once the session is known
 } else {
-  renderAuth();      // shows a "Sign in" button that points users to setup
+  // No Firebase yet — don't trap the user behind a gate they can't pass.
+  document.body.classList.remove("auth-loading");
+  document.body.classList.add("signed-in");
+  renderAuth();
   renderHistory();   // shows the "connect Firebase" notice
   console.warn("[Workout app] Firebase config not set — paste your web config in index.html to enable login + logging.");
 }

@@ -125,6 +125,48 @@ automatically. If you serve the site from a custom domain, add it under
      `firestore.rules`, and **Publish**; or
    - **CLI:** `firebase deploy --only firestore:rules`
 
-That's it — reload the site, tap **Sign in**, and start logging. Open any
-workout and tap **Log this workout** (defaults to today, adjustable), or use
-the **Log** tab to log a past session and review your history.
+That's it — reload the site, sign in at the **login screen**, and start
+logging. The app is gated: the program and log only appear once you're signed
+in. Open any workout and tap **Log this workout** (defaults to today,
+adjustable), or use the **Log** tab to log a past session and review your
+history. Signing out returns you to the login screen.
+
+> **Heads-up on the rules:** the updated [`firestore.rules`](firestore.rules)
+> add a `shares/{token}` collection used by the read-only API below. If you
+> set up Firestore before that change, re-publish the rules (Console → Rules →
+> paste → Publish, or `firebase deploy --only firestore:rules`).
+
+## Reading your data via API (for Claude, scripts, etc.)
+
+Each signed-in user gets a **private, read-only JSON feed** of their workout
+log — shown in the **Log** tab under **API access**, with a Copy button.
+
+- The URL is a [Firestore REST](https://firebase.google.com/docs/firestore/use-rest-api)
+  document link of the form
+  `https://firestore.googleapis.com/v1/projects/workouts-app-bd756/databases/(default)/documents/shares/<token>`.
+- `<token>` is an unguessable secret generated for your account (a "capability
+  URL"): anyone with the link can **read** the feed, but only you can write to
+  it. Treat the link like a password.
+- The app keeps it in sync automatically — every time you log or remove a
+  workout, the feed updates.
+
+Fetching it returns a Firestore document whose **`json` field is a stringified
+array** of your sessions, e.g.:
+
+```json
+{ "fields": {
+    "count":     { "integerValue": "3" },
+    "updatedAt": { "timestampValue": "2026-06-12T21:40:00Z" },
+    "json":      { "stringValue": "[{\"date\":\"2026-06-12\",\"workout\":\"Lower Power\",\"key\":\"1\",\"type\":\"Strength\"}]" }
+} }
+```
+
+So to consume it, fetch the URL and `JSON.parse` the `fields.json.stringValue`.
+You can literally paste the copied link into a Claude chat and ask things like
+*"here's my workout log API — how many sessions did I do this month, and am I
+keeping up with the program?"*
+
+**Rotating / revoking the link:** ask me to "rotate my API link" (I'll
+regenerate the token), or in the Firebase console delete your
+`shares/<token>` document and the `shareToken` field on your `users/<uid>`
+doc — the app will mint a fresh one on next load.
