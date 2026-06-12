@@ -77,3 +77,54 @@ firebase deploy --only hosting
 Everything lives in [`public/index.html`](public/index.html) — markup,
 styles, and the day-picker logic are all inline. Edit it, commit, push, and
 the deploy runs automatically.
+
+## Google login + workout logging
+
+The site now supports **Google sign-in** and a **workout log** (a "Log" tab in
+the day picker) so you can record which session you actually did each day —
+the Monday workout doesn't have to be logged on a Monday. Logs are stored
+per-user in **Cloud Firestore**, so your history syncs across every device you
+sign in on.
+
+The code is already wired up. It just needs your Firebase project connected,
+which is a one-time, ~5-minute setup you do in the Firebase console (these
+steps need your own Google account, same as the hosting setup above).
+
+### 1. Register a web app & paste the config
+
+1. Firebase console → **⚙ Project settings** → scroll to **Your apps**.
+2. If there's no web app yet, click the **`</>`** (web) icon and register one
+   (any nickname; you don't need Hosting checked here).
+3. Copy the `firebaseConfig` values it shows.
+4. Open [`public/index.html`](public/index.html), find the block marked
+   **`PASTE YOUR FIREBASE WEB CONFIG`** near the bottom, and fill in
+   `apiKey`, `messagingSenderId`, and `appId`. (`projectId`, `authDomain`,
+   and `storageBucket` are already filled in for `workouts-app-bd756`.)
+
+   These values are **public and safe to commit** — Firebase protects your
+   data with security rules (step 3), not by hiding this config. Until you
+   paste them, the app shows a friendly "connect Firebase" notice instead of
+   the login/log features.
+
+### 2. Enable Google sign-in
+
+Firebase console → **Build → Authentication → Get started** →
+**Sign-in method** tab → enable **Google** → save.
+
+(Your `*.web.app` / `*.firebaseapp.com` domains and `localhost` are authorized
+automatically. If you serve the site from a custom domain, add it under
+**Authentication → Settings → Authorized domains**.)
+
+### 3. Create Firestore & publish the security rules
+
+1. Firebase console → **Build → Firestore Database → Create database** →
+   start in **production mode** → pick a location → enable.
+2. Publish the security rules so each user can only read/write their own logs.
+   The rules live in [`firestore.rules`](firestore.rules). Either:
+   - **Console:** open the **Rules** tab in Firestore, paste the contents of
+     `firestore.rules`, and **Publish**; or
+   - **CLI:** `firebase deploy --only firestore:rules`
+
+That's it — reload the site, tap **Sign in**, and start logging. Open any
+workout and tap **Log this workout** (defaults to today, adjustable), or use
+the **Log** tab to log a past session and review your history.
