@@ -1732,13 +1732,7 @@ import {
    ───────────────────────────────────────────────────────────────────────── */
 const firebaseConfig = {
   apiKey: "AIzaSyB14SNULah1Q8F8-qLePTLSiArVDj1lEgw",
-  // authDomain matches the domain the site is served from (not the default
-  // *.firebaseapp.com) so the sign-in popup is SAME-ORIGIN. Browsers that
-  // partition third-party storage (Safari, Chrome w/ 3P-cookie blocking)
-  // break the cross-origin popup flow with "The requested action is invalid".
-  // /__/auth/handler is a reserved path served on every Firebase Hosting
-  // domain of this project, so web.app works as an auth domain.
-  authDomain: "workouts-app-bd756.web.app",
+  authDomain: "workouts-app-bd756.firebaseapp.com",
   projectId: "workouts-app-bd756",
   storageBucket: "workouts-app-bd756.firebasestorage.app",
   messagingSenderId: "406288006001",
