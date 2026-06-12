@@ -1581,22 +1581,21 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 /* ─────────────────────────────────────────────────────────────────────────
-   STEP 1 — PASTE YOUR FIREBASE WEB CONFIG HERE
+   FIREBASE WEB CONFIG (project: workouts-app-bd756)
    ---------------------------------------------------------------------------
-   These values are PUBLIC and safe to commit (Firebase secures data with
-   security rules, not by hiding this config). Get them from:
+   These values are PUBLIC and safe to commit — Firebase secures data with
+   security rules (see firestore.rules), not by hiding this config. To change
+   projects, grab a new config from:
      Firebase console → ⚙ Project settings → "Your apps" → Web app → SDK setup
-   If you haven't registered a web app yet, click the "</>" (web) icon there
-   first. Then copy the values into the fields marked PASTE_… below.
-   projectId / authDomain / storageBucket are already filled for this project.
    ───────────────────────────────────────────────────────────────────────── */
 const firebaseConfig = {
-  apiKey: "PASTE_YOUR_API_KEY",
+  apiKey: "AIzaSyB14SNULah1Q8F8-qLePTLSiArVDj1lEgw",
   authDomain: "workouts-app-bd756.firebaseapp.com",
   projectId: "workouts-app-bd756",
-  storageBucket: "workouts-app-bd756.appspot.com",
-  messagingSenderId: "PASTE_YOUR_SENDER_ID",
-  appId: "PASTE_YOUR_APP_ID",
+  storageBucket: "workouts-app-bd756.firebasestorage.app",
+  messagingSenderId: "406288006001",
+  appId: "1:406288006001:web:fcae4263687413d36294d0",
+  measurementId: "G-19EGTV82DP",
 };
 
 const CONFIGURED = !Object.values(firebaseConfig).some(
