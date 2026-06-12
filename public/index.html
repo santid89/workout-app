@@ -581,6 +581,302 @@
   .day-amber .card-sets { color: var(--amber); }
   .day-violet .card-sets { color: var(--violet); }
   .day-green .card-sets { color: var(--green); }
+
+  /* ───────────── AUTH (header) ───────────── */
+  .auth-area { flex-shrink: 0; display: flex; align-items: center; }
+  .auth-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 0 14px;
+    height: 56px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  }
+  .auth-btn:active { transform: scale(0.97); background: var(--surface-2); }
+  .auth-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .auth-btn .auth-btn-text { white-space: nowrap; }
+  @media (max-width: 460px) { .auth-btn .auth-btn-text { display: none; } .auth-btn { padding: 0 12px; } }
+
+  .avatar-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-2);
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s, border-color 0.15s;
+  }
+  .avatar-btn:active { transform: scale(0.95); }
+  .avatar-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .avatar-fallback {
+    font-size: 16px; font-weight: 800; color: var(--text);
+    text-transform: uppercase;
+  }
+
+  /* Account dropdown */
+  .account-menu {
+    position: fixed;
+    top: 76px;
+    right: 16px;
+    z-index: 110;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    min-width: 220px;
+    padding: 14px;
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+    pointer-events: none;
+    transition: opacity 0.16s, transform 0.16s;
+  }
+  .account-menu.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+  .account-name { font-size: 15px; font-weight: 700; color: var(--text); }
+  .account-email { font-size: 13px; color: var(--text-muted); margin-top: 2px; word-break: break-all; }
+  .account-signout {
+    margin-top: 12px;
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .account-signout:active { background: var(--surface-3); }
+
+  /* ───────────── LOG-THIS-WORKOUT BUTTON ───────────── */
+  .log-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: 100%;
+    margin-top: 16px;
+    background: var(--blue);
+    border: 1px solid var(--blue);
+    border-radius: var(--radius);
+    padding: 14px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.15s, transform 0.1s;
+  }
+  .log-cta:active { transform: scale(0.99); filter: brightness(0.92); }
+  .log-cta svg { width: 18px; height: 18px; }
+  .log-cta.done {
+    background: var(--green-bg);
+    border-color: rgba(52,211,153,0.3);
+    color: var(--green);
+  }
+  .day-cyan .log-cta:not(.done) { background: var(--cyan); border-color: var(--cyan); color: #04222a; }
+  .day-amber .log-cta:not(.done) { background: var(--amber); border-color: var(--amber); color: #1a0e00; }
+  .day-violet .log-cta:not(.done) { background: var(--violet); border-color: var(--violet); color: #1a1030; }
+
+  /* ───────────── MODAL ───────────── */
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(3px);
+    z-index: 200;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+  .modal {
+    width: 100%;
+    max-width: 480px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-top-left-radius: var(--radius-lg);
+    border-top-right-radius: var(--radius-lg);
+    padding: 22px 20px calc(22px + env(safe-area-inset-bottom));
+    transform: translateY(100%);
+    transition: transform 0.28s cubic-bezier(0.32,0.72,0,1);
+    box-shadow: 0 -20px 60px rgba(0,0,0,0.5);
+  }
+  .modal-backdrop.open .modal { transform: translateY(0); }
+  @media (min-width: 520px) {
+    .modal-backdrop { align-items: center; }
+    .modal { border-radius: var(--radius-lg); transform: translateY(20px) scale(0.97); }
+    .modal-backdrop.open .modal { transform: translateY(0) scale(1); }
+  }
+  .modal-title { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 4px; letter-spacing: -0.01em; }
+  .modal-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 18px; }
+  .field { margin-bottom: 16px; }
+  .field-label {
+    display: block;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--text-dim);
+    margin-bottom: 7px;
+  }
+  .field select, .field input[type="date"] {
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 13px 14px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 16px;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor: pointer; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
+  .modal-btn {
+    flex: 1;
+    border-radius: var(--radius);
+    padding: 14px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid var(--border-strong);
+  }
+  .modal-btn.secondary { background: var(--surface-2); color: var(--text); }
+  .modal-btn.secondary:active { background: var(--surface-3); }
+  .modal-btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .modal-btn.primary:active { filter: brightness(0.92); }
+  .modal-btn:disabled { opacity: 0.5; cursor: default; }
+
+  /* ───────────── TOAST ───────────── */
+  .toast-wrap {
+    position: fixed;
+    left: 0; right: 0;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+    padding: 0 16px;
+  }
+  .toast {
+    background: var(--surface-3);
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    padding: 11px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    max-width: 100%;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.success { border-color: rgba(52,211,153,0.4); }
+  .toast.error { border-color: rgba(251,113,133,0.5); }
+
+  /* ───────────── HISTORY / LOG PANEL ───────────── */
+  .notice {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-top: 14px;
+    text-align: center;
+  }
+  .notice h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .notice p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+  .notice code {
+    background: var(--surface-3);
+    padding: 2px 6px; border-radius: 5px;
+    font-size: 12.5px; color: var(--cyan);
+  }
+  .notice .auth-btn { margin: 16px auto 0; }
+
+  .log-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .log-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .log-stat-value {
+    font-size: 26px; font-weight: 800; color: var(--text);
+    font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+  }
+  .log-stat-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+    text-transform: uppercase; color: var(--text-dim); margin-top: 4px;
+  }
+
+  .log-date-group { margin-top: 22px; }
+  .log-date-head {
+    font-size: 12px; font-weight: 800; letter-spacing: 0.5px;
+    color: var(--text-muted); margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .log-date-head .today-tag {
+    font-size: 9px; font-weight: 800; letter-spacing: 0.8px;
+    text-transform: uppercase; padding: 2px 6px; border-radius: 5px;
+    background: var(--rose); color: #fff;
+  }
+  .log-entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 14px 14px 16px;
+    margin-top: 8px;
+  }
+  .log-entry-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 10px currentColor; }
+  .log-entry-name { flex: 1; font-size: 15px; font-weight: 600; color: var(--text); }
+  .log-entry-type {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.6px;
+    text-transform: uppercase; color: var(--text-dim);
+  }
+  .log-entry-del {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 18px; line-height: 1;
+    cursor: pointer;
+  }
+  .log-entry-del:active { background: var(--surface-3); color: var(--rose); }
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+  }
+  .empty-state .icon { font-size: 38px; display: block; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -598,8 +894,16 @@
         <polyline points="6 9 12 15 18 9"></polyline>
       </svg>
     </button>
+    <div class="auth-area" id="authArea"><!-- auth button / avatar injected here --></div>
   </div>
 </header>
+
+<!-- ───────────── ACCOUNT MENU ───────────── -->
+<div class="account-menu" id="accountMenu">
+  <div class="account-name" id="accountName"></div>
+  <div class="account-email" id="accountEmail"></div>
+  <button class="account-signout" id="signOutBtn">Sign out</button>
+</div>
 
 <!-- ───────────── DROPDOWN SHEET ───────────── -->
 <div class="backdrop" id="backdrop"></div>
@@ -1100,7 +1404,42 @@
 </div>
 </div>
 
+<!-- ════════════════ WORKOUT LOG / HISTORY ════════════════ -->
+<div class="panel" id="day-log">
+<div class="container">
+  <div class="day-header">
+    <div class="day-eyebrow"><span class="dot" style="background:var(--green)"></span>Training Log</div>
+    <h1 class="day-title">Workout History</h1>
+    <p class="day-sub">Log the workout you actually did, on the day you actually did it &mdash; the calendar bends, the record stays honest.</p>
+  </div>
+  <div id="logBody"><!-- rendered by app --></div>
+</div>
+</div>
+
 </main>
+
+<!-- ───────────── LOG MODAL ───────────── -->
+<div class="modal-backdrop" id="logModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="logModalTitle">
+    <div class="modal-title" id="logModalTitle">Log a workout</div>
+    <div class="modal-sub">Record which session you completed and when.</div>
+    <div class="field">
+      <label class="field-label" for="logWorkout">Workout</label>
+      <select id="logWorkout"></select>
+    </div>
+    <div class="field">
+      <label class="field-label" for="logDate">Date completed</label>
+      <input type="date" id="logDate">
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn secondary" id="logCancel">Cancel</button>
+      <button class="modal-btn primary" id="logSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ───────────── TOAST ───────────── -->
+<div class="toast-wrap" id="toastWrap"></div>
 
 <script>
 // Day registry
@@ -1114,6 +1453,7 @@ const DAYS = [
   { key: '7', short: 'Sun', name: 'Recovery', type: 'Rest', chip: 'chip-violet', color: 'violet' },
 ];
 const REF = [
+  { key: 'log', short: 'Log', name: 'Workout History', type: 'Log', chip: 'chip-green', color: 'green' },
   { key: 'fuel', short: 'Fuel', name: 'Macros & Nutrition', type: 'Reference', chip: 'chip-green', color: 'green' },
   { key: 'about', short: 'About', name: 'Program info', type: 'Reference', chip: 'chip-dim', color: 'dim' },
 ];
@@ -1219,9 +1559,369 @@ function toggleAccordion(btn) {
   btn.nextElementSibling.classList.toggle('open');
 }
 
+// Expose registry for the Firebase/logging module (loaded separately below)
+window.WorkoutApp = { DAYS, REF, COLORS, todayDayKey, selectDay };
+
+// Expose registry for the Firebase/logging module (loaded separately below)
+window.WorkoutApp = { DAYS, REF, COLORS, todayDayKey, selectDay };
+
 // Boot
 buildSheet();
 selectDay(todayDayKey());
+</script>
+
+<!-- ═══════════════ FIREBASE: GOOGLE LOGIN + WORKOUT LOGGING ═══════════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import {
+  getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+/* ─────────────────────────────────────────────────────────────────────────
+   FIREBASE WEB CONFIG (project: workouts-app-bd756)
+   ---------------------------------------------------------------------------
+   These values are PUBLIC and safe to commit — Firebase secures data with
+   security rules (see firestore.rules), not by hiding this config. To change
+   projects, grab a new config from:
+     Firebase console → ⚙ Project settings → "Your apps" → Web app → SDK setup
+   ───────────────────────────────────────────────────────────────────────── */
+const firebaseConfig = {
+  apiKey: "AIzaSyB14SNULah1Q8F8-qLePTLSiArVDj1lEgw",
+  authDomain: "workouts-app-bd756.firebaseapp.com",
+  projectId: "workouts-app-bd756",
+  storageBucket: "workouts-app-bd756.firebasestorage.app",
+  messagingSenderId: "406288006001",
+  appId: "1:406288006001:web:fcae4263687413d36294d0",
+  measurementId: "G-19EGTV82DP",
+};
+
+const CONFIGURED = !Object.values(firebaseConfig).some(
+  (v) => typeof v === "string" && v.startsWith("PASTE_")
+);
+
+/* ─────────────── App state ─────────────── */
+const WA = window.WorkoutApp;
+const WORKOUTS = WA.DAYS; // keys '1'..'7' — the loggable sessions
+let auth = null, db = null, currentUser = null;
+let unsubLogs = null;
+let logs = []; // [{ id, date, workoutKey, workoutName, type, color }]
+
+/* ─────────────── Tiny DOM helpers ─────────────── */
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => (
+  { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+));
+
+/* ─────────────── Date helpers (local time) ─────────────── */
+function ymd(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+const todayStr = () => ymd(new Date());
+function prettyDate(s) {
+  const [y, m, d] = s.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const diff = Math.round((date - today) / 86400000);
+  if (diff === 0) return "Today";
+  if (diff === -1) return "Yesterday";
+  return date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+}
+
+/* ─────────────── Toast ─────────────── */
+function toast(msg, kind = "") {
+  const el = document.createElement("div");
+  el.className = "toast " + kind;
+  el.textContent = msg;
+  $("toastWrap").appendChild(el);
+  requestAnimationFrame(() => el.classList.add("show"));
+  setTimeout(() => {
+    el.classList.remove("show");
+    setTimeout(() => el.remove(), 250);
+  }, 2600);
+}
+
+/* ═══════════════ AUTH UI ═══════════════ */
+const GOOGLE_SVG = `<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 5.1 29.5 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 5.1 29.5 3 24 3 16 3 9.1 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.2 0 9.9-2 13.5-5.2l-6.2-5.3C29.2 35.9 26.7 37 24 37c-5.3 0-9.7-2.6-11.3-7l-6.5 5C9.1 42.3 16 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.1-2.2 3.9-4 5.2l6.2 5.3C39.9 36 44 30.7 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg>`;
+
+function renderAuth() {
+  const area = $("authArea");
+  if (currentUser) {
+    const photo = currentUser.photoURL;
+    const initial = (currentUser.displayName || currentUser.email || "?").trim().charAt(0);
+    area.innerHTML = `<button class="avatar-btn" id="avatarBtn" aria-label="Account">${
+      photo
+        ? `<img src="${esc(photo)}" alt="" referrerpolicy="no-referrer">`
+        : `<span class="avatar-fallback">${esc(initial)}</span>`
+    }</button>`;
+    $("avatarBtn").addEventListener("click", toggleAccountMenu);
+    $("accountName").textContent = currentUser.displayName || "Signed in";
+    $("accountEmail").textContent = currentUser.email || "";
+  } else {
+    area.innerHTML = `<button class="auth-btn" id="signInBtn">${GOOGLE_SVG}<span class="auth-btn-text">Sign in</span></button>`;
+    $("signInBtn").addEventListener("click", signIn);
+  }
+}
+
+function toggleAccountMenu() {
+  $("accountMenu").classList.toggle("open");
+}
+document.addEventListener("click", (e) => {
+  const menu = $("accountMenu");
+  if (menu.classList.contains("open") &&
+      !menu.contains(e.target) &&
+      !(e.target.closest && e.target.closest("#avatarBtn"))) {
+    menu.classList.remove("open");
+  }
+});
+
+async function signIn() {
+  if (!CONFIGURED) {
+    toast("Firebase isn't connected yet — see the Log tab", "error");
+    WA.selectDay("log");
+    return;
+  }
+  try {
+    await signInWithPopup(auth, new GoogleAuthProvider());
+  } catch (e) {
+    if (e.code !== "auth/popup-closed-by-user" && e.code !== "auth/cancelled-popup-request") {
+      toast("Sign-in failed: " + (e.code || e.message), "error");
+    }
+  }
+}
+
+$("signOutBtn").addEventListener("click", async () => {
+  $("accountMenu").classList.remove("open");
+  try { await signOut(auth); toast("Signed out"); }
+  catch (e) { toast("Sign-out failed", "error"); }
+});
+
+/* ═══════════════ "LOG THIS WORKOUT" BUTTONS (per workout panel) ═══════════════ */
+function injectLogButtons() {
+  WORKOUTS.forEach((w) => {
+    const panel = $("day-" + w.key);
+    if (!panel) return;
+    const container = panel.querySelector(".container");
+    const header = container.querySelector(".day-header");
+    const btn = document.createElement("button");
+    btn.className = "log-cta";
+    btn.dataset.logCta = w.key;
+    header.insertAdjacentElement("afterend", btn);
+    btn.addEventListener("click", () => {
+      if (!currentUser) { signIn(); return; }
+      // Default to today, but if already done today, open the picker to adjust.
+      openLogModal(w.key, todayStr());
+    });
+  });
+  refreshLogButtons();
+}
+
+const CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+const PLUS_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
+
+function refreshLogButtons() {
+  const today = todayStr();
+  document.querySelectorAll("[data-log-cta]").forEach((btn) => {
+    const key = btn.dataset.logCta;
+    const doneToday = currentUser && logs.some((l) => l.workoutKey === key && l.date === today);
+    if (doneToday) {
+      btn.classList.add("done");
+      btn.innerHTML = `${CHECK_SVG}<span>Done today &middot; log again</span>`;
+    } else {
+      btn.classList.remove("done");
+      btn.innerHTML = `${PLUS_SVG}<span>Log this workout</span>`;
+    }
+  });
+}
+
+/* ═══════════════ LOG MODAL ═══════════════ */
+function buildWorkoutOptions() {
+  $("logWorkout").innerHTML = WORKOUTS.map(
+    (w) => `<option value="${w.key}">${esc(w.short)} &middot; ${esc(w.name)}</option>`
+  ).join("");
+}
+
+function openLogModal(workoutKey, dateStr) {
+  $("logWorkout").value = workoutKey;
+  const dateEl = $("logDate");
+  dateEl.max = todayStr();
+  dateEl.value = dateStr || todayStr();
+  $("logModal").classList.add("open");
+}
+function closeLogModal() { $("logModal").classList.remove("open"); }
+
+$("logCancel").addEventListener("click", closeLogModal);
+$("logModal").addEventListener("click", (e) => { if (e.target === $("logModal")) closeLogModal(); });
+$("logSave").addEventListener("click", saveLog);
+
+async function saveLog() {
+  if (!currentUser) { closeLogModal(); signIn(); return; }
+  const workoutKey = $("logWorkout").value;
+  const date = $("logDate").value;
+  if (!date) { toast("Pick a date", "error"); return; }
+  const w = WORKOUTS.find((x) => x.key === workoutKey);
+  const btn = $("logSave");
+  btn.disabled = true;
+  try {
+    await addDoc(collection(db, "users", currentUser.uid, "logs"), {
+      date,
+      workoutKey,
+      workoutName: w.name,
+      type: w.type,
+      color: w.color,
+      createdAt: serverTimestamp(),
+    });
+    closeLogModal();
+    toast(`Logged ${w.name} · ${prettyDate(date)}`, "success");
+  } catch (e) {
+    toast("Couldn't save: " + (e.code || e.message), "error");
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function removeLog(id) {
+  try {
+    await deleteDoc(doc(db, "users", currentUser.uid, "logs", id));
+    toast("Removed");
+  } catch (e) {
+    toast("Couldn't remove: " + (e.code || e.message), "error");
+  }
+}
+window.__removeLog = removeLog; // referenced by inline handlers in the history list
+
+/* ═══════════════ HISTORY PANEL ═══════════════ */
+function renderHistory() {
+  const body = $("logBody");
+
+  if (!CONFIGURED) {
+    body.innerHTML = `
+      <div class="notice">
+        <h3>Connect Firebase to start logging</h3>
+        <p>Your Google login and workout history need a Firebase web config.
+        Open <code>public/index.html</code>, find the block marked
+        <code>PASTE YOUR FIREBASE WEB CONFIG</code>, and paste your values.
+        Full steps are in the README.</p>
+      </div>`;
+    return;
+  }
+
+  if (!currentUser) {
+    body.innerHTML = `
+      <div class="notice">
+        <h3>Sign in to track your workouts</h3>
+        <p>Log the session you actually did each day. Your history syncs to your
+        Google account, so it's there on every device.</p>
+        <button class="auth-btn" id="historySignIn">${GOOGLE_SVG}<span class="auth-btn-text">Sign in with Google</span></button>
+      </div>`;
+    $("historySignIn").addEventListener("click", signIn);
+    return;
+  }
+
+  // Stats
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const weekStart = new Date(today); weekStart.setDate(today.getDate() - 6);
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const inRange = (s, from) => {
+    const [y, m, d] = s.split("-").map(Number);
+    return new Date(y, m - 1, d) >= from;
+  };
+  const weekCount = logs.filter((l) => inRange(l.date, weekStart)).length;
+  const monthCount = logs.filter((l) => inRange(l.date, monthStart)).length;
+
+  let html = `
+    <button class="log-cta" id="historyAdd" style="background:var(--surface-2);border-color:var(--border-strong);color:var(--text)">
+      ${PLUS_SVG}<span>Log a workout</span>
+    </button>
+    <div class="log-summary">
+      <div class="log-stat"><div class="log-stat-value">${weekCount}</div><div class="log-stat-label">Last 7 days</div></div>
+      <div class="log-stat"><div class="log-stat-value">${monthCount}</div><div class="log-stat-label">This month</div></div>
+      <div class="log-stat"><div class="log-stat-value">${logs.length}</div><div class="log-stat-label">All time</div></div>
+    </div>`;
+
+  if (logs.length === 0) {
+    html += `
+      <div class="empty-state">
+        <span class="icon">📓</span>
+        <p>No workouts logged yet.<br>Open a workout and tap <b>Log this workout</b>, or use the button above.</p>
+      </div>`;
+  } else {
+    // Group by date (logs already ordered date desc from Firestore)
+    const groups = [];
+    const byDate = new Map();
+    for (const l of logs) {
+      if (!byDate.has(l.date)) { byDate.set(l.date, []); groups.push(l.date); }
+      byDate.get(l.date).push(l);
+    }
+    const todayS = todayStr();
+    for (const date of groups) {
+      html += `<div class="log-date-group">
+        <div class="log-date-head">${esc(prettyDate(date))}${date === todayS ? '<span class="today-tag">Today</span>' : ""}</div>`;
+      for (const l of byDate.get(date)) {
+        const color = WA.COLORS[l.color] || WA.COLORS.dim;
+        html += `
+          <div class="log-entry">
+            <span class="log-entry-dot" style="background:${color};color:${color}"></span>
+            <span class="log-entry-name">${esc(l.workoutName)}</span>
+            <span class="log-entry-type">${esc(l.type || "")}</span>
+            <button class="log-entry-del" aria-label="Remove" onclick="__removeLog('${esc(l.id)}')">&times;</button>
+          </div>`;
+      }
+      html += `</div>`;
+    }
+  }
+
+  body.innerHTML = html;
+  const addBtn = $("historyAdd");
+  if (addBtn) addBtn.addEventListener("click", () => openLogModal(WA.todayDayKey(), todayStr()));
+}
+
+/* ═══════════════ FIRESTORE SYNC ═══════════════ */
+function startLogSync(uid) {
+  const q = query(collection(db, "users", uid, "logs"), orderBy("date", "desc"));
+  unsubLogs = onSnapshot(
+    q,
+    (snap) => {
+      logs = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      renderHistory();
+      refreshLogButtons();
+    },
+    (err) => {
+      toast("Sync error: " + (err.code || err.message), "error");
+    }
+  );
+}
+function stopLogSync() {
+  if (unsubLogs) { unsubLogs(); unsubLogs = null; }
+  logs = [];
+}
+
+/* ═══════════════ BOOT ═══════════════ */
+function onAuth(user) {
+  currentUser = user;
+  renderAuth();
+  stopLogSync();
+  if (user) startLogSync(user.uid);
+  renderHistory();
+  refreshLogButtons();
+}
+
+buildWorkoutOptions();
+injectLogButtons();
+
+if (CONFIGURED) {
+  const app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  setPersistence(auth, browserLocalPersistence).catch(() => {});
+  onAuthStateChanged(auth, onAuth);
+} else {
+  renderAuth();      // shows a "Sign in" button that points users to setup
+  renderHistory();   // shows the "connect Firebase" notice
+  console.warn("[Workout app] Firebase config not set — paste your web config in index.html to enable login + logging.");
+}
 </script>
 
 </body>
