@@ -1707,9 +1707,6 @@ function toggleAccordion(btn) {
 // Expose registry for the Firebase/logging module (loaded separately below)
 window.WorkoutApp = { DAYS, REF, COLORS, todayDayKey, selectDay };
 
-// Expose registry for the Firebase/logging module (loaded separately below)
-window.WorkoutApp = { DAYS, REF, COLORS, todayDayKey, selectDay };
-
 // Boot
 buildSheet();
 selectDay(todayDayKey());
@@ -1719,7 +1716,7 @@ selectDay(todayDayKey());
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
-  getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence
+  getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
   getFirestore, collection, addDoc, deleteDoc, doc, getDoc, setDoc, onSnapshot, query, orderBy, serverTimestamp
@@ -1735,7 +1732,13 @@ import {
    ───────────────────────────────────────────────────────────────────────── */
 const firebaseConfig = {
   apiKey: "AIzaSyB14SNULah1Q8F8-qLePTLSiArVDj1lEgw",
-  authDomain: "workouts-app-bd756.firebaseapp.com",
+  // authDomain matches the domain the site is served from (not the default
+  // *.firebaseapp.com) so the sign-in popup is SAME-ORIGIN. Browsers that
+  // partition third-party storage (Safari, Chrome w/ 3P-cookie blocking)
+  // break the cross-origin popup flow with "The requested action is invalid".
+  // /__/auth/handler is a reserved path served on every Firebase Hosting
+  // domain of this project, so web.app works as an auth domain.
+  authDomain: "workouts-app-bd756.web.app",
   projectId: "workouts-app-bd756",
   storageBucket: "workouts-app-bd756.firebasestorage.app",
   messagingSenderId: "406288006001",
@@ -1835,9 +1838,14 @@ async function signIn() {
   try {
     await signInWithPopup(auth, new GoogleAuthProvider());
   } catch (e) {
-    if (e.code !== "auth/popup-closed-by-user" && e.code !== "auth/cancelled-popup-request") {
-      toast("Sign-in failed: " + (e.code || e.message), "error");
+    if (e.code === "auth/popup-closed-by-user" || e.code === "auth/cancelled-popup-request") return;
+    // Popup blocked or unusable (common on mobile) → full-page redirect flow.
+    if (e.code === "auth/popup-blocked" || e.code === "auth/operation-not-supported-in-this-environment"
+        || e.code === "auth/internal-error") {
+      try { await signInWithRedirect(auth, new GoogleAuthProvider()); return; }
+      catch (e2) { toast("Sign-in failed: " + (e2.code || e2.message), "error"); return; }
     }
+    toast("Sign-in failed: " + (e.code || e.message), "error");
   }
 }
 
@@ -2147,6 +2155,8 @@ if (CONFIGURED) {
   auth = getAuth(app);
   db = getFirestore(app);
   setPersistence(auth, browserLocalPersistence).catch(() => {});
+  // Surface errors from the redirect fallback flow (success lands via onAuthStateChanged).
+  getRedirectResult(auth).catch((e) => toast("Sign-in failed: " + (e.code || e.message), "error"));
   onAuthStateChanged(auth, onAuth); // flips the gate once the session is known
 } else {
   // No Firebase yet — don't trap the user behind a gate they can't pass.
