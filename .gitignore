@@ -1,6 +1,13 @@
 # Dependencies
 node_modules/
 
+# Build output
+dist/
+
+# Local env overrides (the committed .env holds the public Firebase config)
+.env.local
+.env.*.local
+
 # Firebase
 .firebase/
 firebase-debug.log
@@ -16,3 +23,6 @@ firebase-debug.*.log
 *.swp
 .idea/
 .vscode/
+
+# TS build info
+*.tsbuildinfo
