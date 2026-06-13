@@ -11,6 +11,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { getDbOrNull } from './app';
+import { PROGRAM_DETAIL } from '@/data/programDetail';
 import type { LogEntry } from '@/types';
 
 export interface NewLog {
@@ -88,24 +89,50 @@ export async function ensureShareToken(uid: string): Promise<string | null> {
   }
 }
 
-/** Writes the current logs to the public read-only export doc. */
+/**
+ * Writes the current logs to the public read-only export doc. Each session
+ * carries its full exercise detail inline (self-contained for any consumer),
+ * and the whole program is included once for overall context.
+ */
 export async function syncShareExport(
   token: string,
   ownerUid: string,
+  athlete: string | null,
   logs: LogEntry[]
 ): Promise<void> {
   const db = getDbOrNull();
   if (!db) return;
-  const payload = logs.map((l) => ({
-    date: l.date,
-    workout: l.workoutName,
-    key: l.workoutKey,
-    type: l.type,
-  }));
+
+  const sessions = logs.map((l) => {
+    const d = PROGRAM_DETAIL[l.workoutKey];
+    const s: Record<string, unknown> = {
+      date: l.date,
+      day: l.workoutKey,
+      weekday: d?.day ?? null,
+      workout: l.workoutName,
+      type: l.type,
+      focus: d?.focus ?? null,
+      summary: d?.summary ?? null,
+    };
+    if (d?.tags && d.tags.length) s.tags = d.tags;
+    if (d?.exercises) s.exercises = d.exercises;
+    if (d?.rideOptions) s.rideOptions = d.rideOptions;
+    if (d?.recovery) s.recovery = d.recovery;
+    return s;
+  });
+
+  const payload = {
+    athlete,
+    generatedAt: new Date().toISOString(),
+    count: sessions.length,
+    sessions,
+    program: PROGRAM_DETAIL, // the full 7-day plan with every exercise, for reference
+  };
+
   try {
     await setDoc(doc(db, 'shares', token), {
       ownerUid,
-      count: payload.length,
+      count: sessions.length,
       updatedAt: serverTimestamp(),
       json: JSON.stringify(payload),
     });

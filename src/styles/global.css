@@ -1360,14 +1360,20 @@ body.auth-loading .gate-spinner {
   color: #fff;
 }
 .log-entry {
-  display: flex;
-  align-items: center;
-  gap: 12px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 14px 14px 14px 16px;
   margin-top: 8px;
+  overflow: hidden;
+}
+.log-entry-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px 14px 16px;
+}
+.log-entry.expandable .log-entry-row {
+  cursor: pointer;
 }
 .log-entry-dot {
   width: 9px;
@@ -1389,6 +1395,16 @@ body.auth-loading .gate-spinner {
   text-transform: uppercase;
   color: var(--text-dim);
 }
+.log-entry-chev {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+.log-entry.open .log-entry-chev {
+  transform: rotate(180deg);
+}
 .log-entry-del {
   flex-shrink: 0;
   width: 32px;
@@ -1404,6 +1420,32 @@ body.auth-loading .gate-spinner {
 .log-entry-del:active {
   background: var(--surface-3);
   color: var(--rose);
+}
+.log-entry-detail {
+  display: none;
+  padding: 4px 16px 14px;
+}
+.log-entry.open .log-entry-detail {
+  display: block;
+}
+.ex-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+}
+.ex-name {
+  font-size: 14px;
+  color: var(--text);
+}
+.ex-sets {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 .empty-state {
   text-align: center;

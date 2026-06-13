@@ -34,12 +34,13 @@ export function useLogSync() {
       if (cancelled) return;
       setShareToken(token);
 
+      const athlete = user.displayName || user.email || null;
       unsub = subscribeLogs(
         user.uid,
         (logs) => {
           setLogs(logs);
           // Keep the read-only JSON export current.
-          if (token) syncShareExport(token, user.uid, logs);
+          if (token) syncShareExport(token, user.uid, athlete, logs);
         },
         (msg) => toast(msg, 'error')
       );

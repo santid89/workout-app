@@ -109,19 +109,40 @@ Each signed-in user gets a **private, read-only JSON feed** of their workout log
   workout, the feed updates.
 
 Fetching it returns a Firestore document whose **`json` field is a stringified
-array** of your sessions, e.g.:
+object**. Parsed, it looks like:
 
-```json
-{ "fields": {
-    "count":     { "integerValue": "3" },
-    "updatedAt": { "timestampValue": "2026-06-12T21:40:00Z" },
-    "json":      { "stringValue": "[{\"date\":\"2026-06-12\",\"workout\":\"Lower Power\",\"key\":\"1\",\"type\":\"Strength\"}]" }
-} }
+```jsonc
+{
+  "athlete": "Santi",
+  "generatedAt": "2026-06-12T21:40:00.000Z",
+  "count": 3,
+  "sessions": [
+    {
+      "date": "2026-06-12",
+      "day": "1",
+      "weekday": "Mon",
+      "workout": "Lower Power",
+      "type": "Strength",
+      "focus": "Strength · Lower",
+      "summary": "Heavy compound legs…",
+      "tags": ["~45–50 min", "Optional Z2 spin · 20–30 min"],
+      "exercises": [
+        { "name": "Squat (rotation)", "sets": "5 × 5", "note": "Heavy…",
+          "rotation": [{ "week": "A", "variation": "Back Squat — bar on traps…" }],
+          "howTo": "https://www.youtube.com/results?search_query=back+squat…" }
+      ]
+    }
+  ],
+  "program": { "1": { /* full 7-day plan, every exercise, for reference */ } }
+}
 ```
 
 So to consume it, fetch the URL and `JSON.parse` the `fields.json.stringValue`.
-You can paste the copied link into a Claude chat and ask things like *"here's my
-workout log API — how many sessions did I do this month?"*
+Each session carries its full exercise detail inline (ride days use
+`rideOptions`, the recovery day uses `recovery`), and the whole `program` is
+included once for context. You can paste the copied link into a Claude chat and
+ask things like *"here's my workout log API — how many sessions did I do this
+month, and am I keeping up with the program?"*
 
 **Rotating / revoking the link:** ask me to "rotate my API link" (I'll
 regenerate the token), or in the Firebase console delete your `shares/<token>`

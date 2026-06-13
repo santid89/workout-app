@@ -24,8 +24,9 @@ export function ApiAccess() {
     <div className="api-card">
       <div className="api-card-head">🔗 API access</div>
       <p>
-        A private, read-only JSON feed of your log. Hand this URL to Claude (or
-        any tool) to have it read your training history.
+        A private, read-only JSON feed of your log — every session with its full
+        exercise list, sets, cues, and the whole program for context. Hand this
+        URL to Claude (or any tool) to have it read your training in detail.
       </p>
       {shareToken ? (
         <>

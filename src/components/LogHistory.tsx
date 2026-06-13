@@ -1,13 +1,82 @@
+import { useState } from 'react';
 import { useAppStore } from '@/store/useAppStore';
 import { CONFIGURED } from '@/firebase/config';
 import { COLORS, todayDayKey } from '@/data/theme';
+import { PROGRAM_DETAIL } from '@/data/programDetail';
 import { removeLog } from '@/firebase/logs';
 import { doSignIn } from '@/lib/actions';
 import { toast } from '@/store/toastStore';
 import { todayStr, prettyDate } from '@/lib/date';
-import { PlusIcon, GoogleIcon } from '@/lib/icons';
+import { PlusIcon, GoogleIcon, ChevronIcon } from '@/lib/icons';
 import { ApiAccess } from './ApiAccess';
 import type { LogEntry } from '@/types';
+
+/** The exercise rows shown when a history entry is expanded. */
+function detailRows(workoutKey: string): { name: string; sets?: string }[] {
+  const d = PROGRAM_DETAIL[workoutKey];
+  if (!d) return [];
+  if (d.exercises) return d.exercises.map((e) => ({ name: e.name, sets: e.sets }));
+  if (d.rideOptions)
+    return d.rideOptions.map((o) => ({ name: o.title, sets: o.option }));
+  if (d.recovery) return [{ name: d.recovery.title }];
+  return [];
+}
+
+function LogEntryItem({
+  log,
+  onRemove,
+}: {
+  log: LogEntry;
+  onRemove: (id: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const color = COLORS[log.color] || COLORS.dim;
+  const rows = detailRows(log.workoutKey);
+  const expandable = rows.length > 0;
+
+  return (
+    <div
+      className={
+        'log-entry' +
+        (expandable ? ' expandable' : '') +
+        (open ? ' open' : '')
+      }
+    >
+      <div
+        className="log-entry-row"
+        onClick={expandable ? () => setOpen((o) => !o) : undefined}
+      >
+        <span
+          className="log-entry-dot"
+          style={{ background: color, color }}
+        />
+        <span className="log-entry-name">{log.workoutName}</span>
+        <span className="log-entry-type">{log.type || ''}</span>
+        {expandable && <ChevronIcon className="log-entry-chev" />}
+        <button
+          className="log-entry-del"
+          aria-label="Remove"
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove(log.id);
+          }}
+        >
+          ×
+        </button>
+      </div>
+      {expandable && (
+        <div className="log-entry-detail">
+          {rows.map((r, i) => (
+            <div className="ex-row" key={i}>
+              <span className="ex-name">{r.name}</span>
+              {r.sets && <span className="ex-sets">{r.sets}</span>}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function LogHistory({ active }: { active: boolean }) {
   return (
@@ -147,26 +216,9 @@ function LogBody() {
               {prettyDate(date)}
               {date === todayS && <span className="today-tag">Today</span>}
             </div>
-            {byDate.get(date)!.map((l) => {
-              const color = COLORS[l.color] || COLORS.dim;
-              return (
-                <div className="log-entry" key={l.id}>
-                  <span
-                    className="log-entry-dot"
-                    style={{ background: color, color }}
-                  />
-                  <span className="log-entry-name">{l.workoutName}</span>
-                  <span className="log-entry-type">{l.type || ''}</span>
-                  <button
-                    className="log-entry-del"
-                    aria-label="Remove"
-                    onClick={() => onRemove(l.id)}
-                  >
-                    ×
-                  </button>
-                </div>
-              );
-            })}
+            {byDate.get(date)!.map((l) => (
+              <LogEntryItem key={l.id} log={l} onRemove={onRemove} />
+            ))}
           </div>
         ))
       )}
