@@ -3,6 +3,7 @@ import { useAppStore } from '@/store/useAppStore';
 import { CONFIGURED } from '@/firebase/config';
 import { COLORS, todayDayKey } from '@/data/theme';
 import { PROGRAM_DETAIL } from '@/data/programDetail';
+import { resolveVariation } from '@/data/rotation';
 import { removeLog } from '@/firebase/logs';
 import { doSignIn } from '@/lib/actions';
 import { toast } from '@/store/toastStore';
@@ -12,10 +13,17 @@ import { ApiAccess } from './ApiAccess';
 import type { LogEntry } from '@/types';
 
 /** The exercise rows shown when a history entry is expanded. */
-function detailRows(workoutKey: string): { name: string; sets?: string }[] {
-  const d = PROGRAM_DETAIL[workoutKey];
+function detailRows(log: LogEntry): { name: string; sets?: string }[] {
+  const d = PROGRAM_DETAIL[log.workoutKey];
   if (!d) return [];
-  if (d.exercises) return d.exercises.map((e) => ({ name: e.name, sets: e.sets }));
+  if (d.exercises) {
+    // Resolve the umbrella "(rotation)" lift to the variation actually done.
+    const v = resolveVariation(log.workoutKey, log.date, log.variationTag);
+    return d.exercises.map((e) => ({
+      name: e.rotation && v ? v.name : e.name,
+      sets: e.sets,
+    }));
+  }
   if (d.rideOptions)
     return d.rideOptions.map((o) => ({ name: o.title, sets: o.option }));
   if (d.recovery) return [{ name: d.recovery.title }];
@@ -31,7 +39,7 @@ function LogEntryItem({
 }) {
   const [open, setOpen] = useState(false);
   const color = COLORS[log.color] || COLORS.dim;
-  const rows = detailRows(log.workoutKey);
+  const rows = detailRows(log);
   const expandable = rows.length > 0;
 
   return (

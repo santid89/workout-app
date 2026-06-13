@@ -127,8 +127,8 @@ object**. Parsed, it looks like:
       "summary": "Heavy compound legs…",
       "tags": ["~45–50 min", "Optional Z2 spin · 20–30 min"],
       "exercises": [
-        { "name": "Squat (rotation)", "sets": "5 × 5", "note": "Heavy…",
-          "rotation": [{ "week": "A", "variation": "Back Squat — bar on traps…" }] }
+        // rotation lifts resolve to the single variation done that session
+        { "name": "Back Squat", "sets": "5 × 5", "note": "Heavy…", "week": "A" }
       ]
     }
   ],
@@ -139,7 +139,10 @@ object**. Parsed, it looks like:
 So to consume it, fetch the URL and `JSON.parse` the `fields.json.stringValue`.
 Each session carries its full exercise detail inline (ride days use
 `rideOptions`, the recovery day uses `recovery`), and the whole `program` is
-included once for context. You can paste the copied link into a Claude chat and
+included once for context. Rotation main lifts (squat / bench / deadlift)
+resolve to the single variation done that session (`name` + `week`), while the
+top-level `program` map keeps all three variations for reference. The variation
+is picked when logging (defaulting to the current 3-week-cycle week). You can paste the copied link into a Claude chat and
 ask things like *"here's my workout log API — how many sessions did I do this
 month, and am I keeping up with the program?"*
 
