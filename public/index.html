@@ -977,21 +977,31 @@
     background: var(--rose); color: #fff;
   }
   .log-entry {
-    display: flex;
-    align-items: center;
-    gap: 12px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 14px 14px 14px 16px;
     margin-top: 8px;
+    overflow: hidden;
   }
+  .log-entry-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 14px 14px 16px;
+  }
+  .log-entry.expandable .log-entry-row { cursor: pointer; }
   .log-entry-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 10px currentColor; }
   .log-entry-name { flex: 1; font-size: 15px; font-weight: 600; color: var(--text); }
   .log-entry-type {
     font-size: 10px; font-weight: 700; letter-spacing: 0.6px;
     text-transform: uppercase; color: var(--text-dim);
   }
+  .log-entry-chev {
+    width: 16px; height: 16px; flex-shrink: 0;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+  }
+  .log-entry.open .log-entry-chev { transform: rotate(180deg); }
   .log-entry-del {
     flex-shrink: 0;
     width: 32px; height: 32px;
@@ -1003,6 +1013,21 @@
     cursor: pointer;
   }
   .log-entry-del:active { background: var(--surface-3); color: var(--rose); }
+  .log-entry-detail { display: none; padding: 4px 16px 14px; }
+  .log-entry.open .log-entry-detail { display: block; }
+  .ex-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+  }
+  .ex-name { font-size: 14px; color: var(--text); }
+  .ex-sets {
+    font-size: 13px; font-weight: 700; color: var(--text-muted);
+    white-space: nowrap; font-variant-numeric: tabular-nums;
+  }
   .empty-state {
     text-align: center;
     padding: 40px 20px;
@@ -1751,6 +1776,7 @@ let auth = null, db = null, currentUser = null;
 let unsubLogs = null;
 let logs = []; // [{ id, date, workoutKey, workoutName, type, color }]
 let shareToken = null; // capability token for the read-only JSON export
+let program = {}; // key '1'..'7' → parsed workout detail (exercises, ride options, etc.)
 const PROJECT_ID = firebaseConfig.projectId;
 const shareUrl = (token) =>
   `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/shares/${token}`;
@@ -1760,6 +1786,63 @@ const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => (
   { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
 ));
+const txt = (el, sel) => {
+  const n = el.querySelector(sel);
+  return n ? n.textContent.replace(/\s+/g, " ").trim() : "";
+};
+
+/* ─────────────── Program parser ───────────────
+   The workout cards in the DOM are the single source of truth. We read the
+   exercises (and ride/recovery blocks) straight out of each day's panel so the
+   log detail and API export never drift from what's shown on screen. */
+function parseDay(key) {
+  const panel = $("day-" + key);
+  if (!panel) return null;
+  const c = panel.querySelector(".container");
+  const meta = WORKOUTS.find((w) => w.key === key) || {};
+  const detail = {
+    day: meta.short,
+    name: txt(c, ".day-title"),
+    focus: txt(c, ".day-eyebrow"),
+    type: meta.type,
+    summary: txt(c, ".day-sub"),
+    tags: [...c.querySelectorAll(".day-tag")].map((t) => t.textContent.replace(/\s+/g, " ").trim()).filter(Boolean),
+  };
+
+  // Strength / power days: exercise cards
+  const exercises = [...c.querySelectorAll(".card")].map((card) => {
+    const ex = { name: txt(card, ".card-name") };
+    const sets = txt(card, ".card-sets"); if (sets) ex.sets = sets;
+    const note = txt(card, ".card-note"); if (note) ex.note = note;
+    const rotation = [...card.querySelectorAll(".rotation-row")].map((r) => ({
+      week: txt(r, ".rotation-tag"),
+      variation: txt(r, ".rotation-text"),
+    }));
+    if (rotation.length) ex.rotation = rotation;
+    const vid = card.querySelector(".card-video");
+    if (vid && vid.href) ex.howTo = vid.href;
+    return ex;
+  }).filter((e) => e.name);
+  if (exercises.length) detail.exercises = exercises;
+
+  // Ride days: outdoor / indoor / fallback option cards
+  const options = [...c.querySelectorAll(".big-card")].map((b) => ({
+    option: txt(b, ".big-card-pill"),
+    title: txt(b, "h3"),
+    detail: txt(b, "p"),
+  })).filter((o) => o.title);
+  if (options.length) detail.rideOptions = options;
+
+  // Recovery day: single centered block
+  const center = c.querySelector(".center-card");
+  if (center) detail.recovery = { title: txt(center, "h3"), detail: txt(center, "p") };
+
+  return detail;
+}
+function buildProgram() {
+  program = {};
+  WORKOUTS.forEach((w) => { const d = parseDay(w.key); if (d) program[w.key] = d; });
+}
 
 /* ─────────────── Date helpers (local time) ─────────────── */
 function ymd(d) {
@@ -1953,6 +2036,30 @@ async function removeLog(id) {
 }
 window.__removeLog = removeLog; // referenced by inline handlers in the history list
 
+/* Expandable per-entry exercise detail in the history list. */
+function entryDetailHtml(key) {
+  const d = program[key];
+  if (!d) return "";
+  let rows = "";
+  if (d.exercises) {
+    rows = d.exercises.map((e) => `
+      <div class="ex-row">
+        <span class="ex-name">${esc(e.name)}</span>
+        ${e.sets ? `<span class="ex-sets">${esc(e.sets)}</span>` : ""}
+      </div>`).join("");
+  } else if (d.rideOptions) {
+    rows = d.rideOptions.map((o) => `
+      <div class="ex-row">
+        <span class="ex-name">${esc(o.title)}</span>
+        <span class="ex-sets">${esc(o.option)}</span>
+      </div>`).join("");
+  } else if (d.recovery) {
+    rows = `<div class="ex-row"><span class="ex-name">${esc(d.recovery.title)}</span></div>`;
+  }
+  return rows ? `<div class="log-entry-detail">${rows}</div>` : "";
+}
+window.__toggleEntry = (rowEl) => rowEl.parentElement.classList.toggle("open");
+
 /* ═══════════════ HISTORY PANEL ═══════════════ */
 function renderHistory() {
   const body = $("logBody");
@@ -2022,12 +2129,17 @@ function renderHistory() {
         <div class="log-date-head">${esc(prettyDate(date))}${date === todayS ? '<span class="today-tag">Today</span>' : ""}</div>`;
       for (const l of byDate.get(date)) {
         const color = WA.COLORS[l.color] || WA.COLORS.dim;
+        const detail = entryDetailHtml(l.workoutKey);
         html += `
-          <div class="log-entry">
-            <span class="log-entry-dot" style="background:${color};color:${color}"></span>
-            <span class="log-entry-name">${esc(l.workoutName)}</span>
-            <span class="log-entry-type">${esc(l.type || "")}</span>
-            <button class="log-entry-del" aria-label="Remove" onclick="__removeLog('${esc(l.id)}')">&times;</button>
+          <div class="log-entry${detail ? " expandable" : ""}">
+            <div class="log-entry-row" ${detail ? `onclick="__toggleEntry(this)"` : ""}>
+              <span class="log-entry-dot" style="background:${color};color:${color}"></span>
+              <span class="log-entry-name">${esc(l.workoutName)}</span>
+              <span class="log-entry-type">${esc(l.type || "")}</span>
+              ${detail ? `<svg class="log-entry-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>` : ""}
+              <button class="log-entry-del" aria-label="Remove" onclick="event.stopPropagation();__removeLog('${esc(l.id)}')">&times;</button>
+            </div>
+            ${detail}
           </div>`;
       }
       html += `</div>`;
@@ -2039,7 +2151,7 @@ function renderHistory() {
   html += `
     <div class="api-card">
       <div class="api-card-head">🔗 API access</div>
-      <p>A private, read-only JSON feed of your log. Hand this URL to Claude (or any tool) to have it read your training history.</p>
+      <p>A private, read-only JSON feed of your log — every session with its full exercise list, sets, cues, and the whole program for context. Hand this URL to Claude (or any tool) to have it read your training in detail.</p>
       ${shareToken ? `
       <div class="api-url-row">
         <div class="api-url" id="apiUrl">${esc(url)}</div>
@@ -2115,13 +2227,36 @@ async function ensureShareToken(uid) {
 
 async function syncShareExport() {
   if (!shareToken || !currentUser) return;
-  const payload = logs.map((l) => ({
-    date: l.date, workout: l.workoutName, key: l.workoutKey, type: l.type,
-  }));
+  // Each session carries its full exercise detail inline (self-contained for
+  // any consumer), and we include the whole program once for overall context.
+  const sessions = logs.map((l) => {
+    const d = program[l.workoutKey] || {};
+    const s = {
+      date: l.date,
+      day: l.workoutKey,
+      weekday: d.day || null,
+      workout: l.workoutName,
+      type: l.type,
+      focus: d.focus || null,
+      summary: d.summary || null,
+    };
+    if (d.tags && d.tags.length) s.tags = d.tags;
+    if (d.exercises) s.exercises = d.exercises;
+    if (d.rideOptions) s.rideOptions = d.rideOptions;
+    if (d.recovery) s.recovery = d.recovery;
+    return s;
+  });
+  const payload = {
+    athlete: currentUser.displayName || currentUser.email || null,
+    generatedAt: new Date().toISOString(),
+    count: sessions.length,
+    sessions,
+    program, // the full 7-day plan with every exercise, for reference
+  };
   try {
     await setDoc(doc(db, "shares", shareToken), {
       ownerUid: currentUser.uid,
-      count: payload.length,
+      count: sessions.length,
       updatedAt: serverTimestamp(),
       json: JSON.stringify(payload),
     });
@@ -2153,6 +2288,7 @@ $("gateSignIn").addEventListener("click", signIn);
 
 buildWorkoutOptions();
 injectLogButtons();
+buildProgram(); // parse exercise detail from the rendered workout cards
 
 if (CONFIGURED) {
   const app = initializeApp(firebaseConfig);
