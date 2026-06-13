@@ -1,6 +1,7 @@
 name: Deploy to Firebase Hosting
 
-# Deploys the static site whenever the tracked branches are updated.
+# Builds the Vite app and deploys the static output whenever the tracked
+# branches are updated.
 on:
   push:
     branches:
@@ -15,6 +16,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        # The public Firebase web config lives in the committed .env, so no
+        # build secrets are required. To target a different project, set
+        # VITE_FIREBASE_* repo secrets and reference them here.
+        run: npm run build
 
       - name: Deploy to Firebase Hosting (live channel)
         uses: FirebaseExtended/action-hosting-deploy@v0
