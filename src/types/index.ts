@@ -73,5 +73,9 @@ export interface LogEntry {
   workoutName: string;
   type: string;
   color: DayColor;
+  /** For rotation days: the specific variation done, e.g. "Back Squat". */
+  variation?: string;
+  /** The rotation tag (A/B/C) for the variation above. */
+  variationTag?: string;
   createdAt?: unknown;
 }

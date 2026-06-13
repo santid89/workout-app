@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAppStore } from '@/store/useAppStore';
 import { DAYS } from '@/data/theme';
+import { rotationRows, defaultVariationTag } from '@/data/rotation';
 import { addLog } from '@/firebase/logs';
 import { doSignIn } from '@/lib/actions';
 import { toast } from '@/store/toastStore';
@@ -13,6 +14,8 @@ export function LogModal() {
 
   const [selected, setSelected] = useState(workoutKey);
   const [day, setDay] = useState(date);
+  const [variationTag, setVariationTag] = useState('');
+  const [variationTouched, setVariationTouched] = useState(false);
   const [saving, setSaving] = useState(false);
 
   // Sync local form state each time the modal is (re)opened.
@@ -20,8 +23,26 @@ export function LogModal() {
     if (open) {
       setSelected(workoutKey);
       setDay(date);
+      setVariationTag(defaultVariationTag(workoutKey, date) ?? '');
+      setVariationTouched(false);
     }
   }, [open, workoutKey, date]);
+
+  const rows = rotationRows(selected);
+
+  const onWorkoutChange = (key: string) => {
+    setSelected(key);
+    setVariationTag(defaultVariationTag(key, day) ?? '');
+    setVariationTouched(false);
+  };
+
+  const onDateChange = (newDate: string) => {
+    setDay(newDate);
+    // Follow the cycle's default until the user picks a variation themselves.
+    if (!variationTouched) {
+      setVariationTag(defaultVariationTag(selected, newDate) ?? '');
+    }
+  };
 
   const onSave = async () => {
     if (!user) {
@@ -35,6 +56,8 @@ export function LogModal() {
     }
     const w = DAYS.find((x) => x.key === selected);
     if (!w) return;
+    const variationRow =
+      rows && variationTag ? rows.find((r) => r.tag === variationTag) : null;
     setSaving(true);
     try {
       await addLog(user.uid, {
@@ -43,9 +66,12 @@ export function LogModal() {
         workoutName: w.name,
         type: w.type,
         color: w.color,
+        variation: variationRow?.name,
+        variationTag: variationRow?.tag,
       });
       closeLogModal();
-      toast(`Logged ${w.name} · ${prettyDate(day)}`, 'success');
+      const label = variationRow ? `${w.name} (${variationRow.name})` : w.name;
+      toast(`Logged ${label} · ${prettyDate(day)}`, 'success');
     } catch (e) {
       const err = e as { code?: string; message?: string };
       toast("Couldn't save: " + (err.code || err.message), 'error');
@@ -80,7 +106,7 @@ export function LogModal() {
           <select
             id="logWorkout"
             value={selected}
-            onChange={(e) => setSelected(e.target.value)}
+            onChange={(e) => onWorkoutChange(e.target.value)}
           >
             {DAYS.map((w) => (
               <option value={w.key} key={w.key}>
@@ -89,6 +115,27 @@ export function LogModal() {
             ))}
           </select>
         </div>
+        {rows && (
+          <div className="field">
+            <label className="field-label" htmlFor="logVariation">
+              Variation
+            </label>
+            <select
+              id="logVariation"
+              value={variationTag}
+              onChange={(e) => {
+                setVariationTag(e.target.value);
+                setVariationTouched(true);
+              }}
+            >
+              {rows.map((r) => (
+                <option value={r.tag} key={r.tag}>
+                  {r.tag} · {r.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
         <div className="field">
           <label className="field-label" htmlFor="logDate">
             Date completed
@@ -98,7 +145,7 @@ export function LogModal() {
             id="logDate"
             max={todayStr()}
             value={day}
-            onChange={(e) => setDay(e.target.value)}
+            onChange={(e) => onDateChange(e.target.value)}
           />
         </div>
         <div className="modal-actions">

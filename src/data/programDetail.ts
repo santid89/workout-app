@@ -13,6 +13,8 @@ export interface DetailExercise {
   sets?: string;
   note?: string;
   rotation?: { week: string; variation: string }[];
+  /** Set when a rotation exercise has been resolved to the variation done. */
+  week?: string;
 }
 
 export interface DetailRideOption {

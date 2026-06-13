@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import { getDbOrNull } from './app';
 import { PROGRAM_DETAIL } from '@/data/programDetail';
+import { resolveVariation } from '@/data/rotation';
 import type { LogEntry } from '@/types';
 
 export interface NewLog {
@@ -20,6 +21,8 @@ export interface NewLog {
   workoutName: string;
   type: string;
   color: string;
+  variation?: string;
+  variationTag?: string;
 }
 
 /**
@@ -46,10 +49,18 @@ export function subscribeLogs(
 export async function addLog(uid: string, log: NewLog): Promise<void> {
   const db = getDbOrNull();
   if (!db) throw new Error('Firebase not configured');
-  await addDoc(collection(db, 'users', uid, 'logs'), {
-    ...log,
+  // Firestore rejects undefined fields, so only include variation when set.
+  const doc: Record<string, unknown> = {
+    date: log.date,
+    workoutKey: log.workoutKey,
+    workoutName: log.workoutName,
+    type: log.type,
+    color: log.color,
     createdAt: serverTimestamp(),
-  });
+  };
+  if (log.variation) doc.variation = log.variation;
+  if (log.variationTag) doc.variationTag = log.variationTag;
+  await addDoc(collection(db, 'users', uid, 'logs'), doc);
 }
 
 export async function removeLog(uid: string, id: string): Promise<void> {
@@ -115,7 +126,15 @@ export async function syncShareExport(
       summary: d?.summary ?? null,
     };
     if (d?.tags && d.tags.length) s.tags = d.tags;
-    if (d?.exercises) s.exercises = d.exercises;
+    if (d?.exercises) {
+      // Resolve the umbrella "(rotation)" lift to the single variation done.
+      const v = resolveVariation(l.workoutKey, l.date, l.variationTag);
+      s.exercises = d.exercises.map((ex) =>
+        ex.rotation && v
+          ? { name: v.name, sets: ex.sets, note: ex.note, week: v.tag }
+          : ex
+      );
+    }
     if (d?.rideOptions) s.rideOptions = d.rideOptions;
     if (d?.recovery) s.recovery = d.recovery;
     return s;
