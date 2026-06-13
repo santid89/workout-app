@@ -1,5 +1,4 @@
 import { PROGRAM } from './program';
-import { youtubeSearch } from '@/lib/date';
 
 /**
  * A flattened, self-contained detail view of each workout day, keyed '1'..'7'.
@@ -14,7 +13,6 @@ export interface DetailExercise {
   sets?: string;
   note?: string;
   rotation?: { week: string; variation: string }[];
-  howTo?: string;
 }
 
 export interface DetailRideOption {
@@ -63,7 +61,6 @@ function buildDetail(): Record<string, DayDetail> {
             variation: `${r.name} ${r.desc}`,
           }));
         }
-        if (ex.videoQuery) e.howTo = youtubeSearch(ex.videoQuery);
         return e;
       });
     }
