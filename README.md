@@ -128,8 +128,7 @@ object**. Parsed, it looks like:
       "tags": ["~45–50 min", "Optional Z2 spin · 20–30 min"],
       "exercises": [
         { "name": "Squat (rotation)", "sets": "5 × 5", "note": "Heavy…",
-          "rotation": [{ "week": "A", "variation": "Back Squat — bar on traps…" }],
-          "howTo": "https://www.youtube.com/results?search_query=back+squat…" }
+          "rotation": [{ "week": "A", "variation": "Back Squat — bar on traps…" }] }
       ]
     }
   ],
