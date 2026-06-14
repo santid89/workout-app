@@ -1,38 +1,26 @@
 import { useAppStore } from '@/store/useAppStore';
-import { DAYS, REF, COLORS, todayDayKey } from '@/data/theme';
-import { ChevronIcon, GoogleIcon } from '@/lib/icons';
+import { GoogleIcon } from '@/lib/icons';
 import { doSignIn } from '@/lib/actions';
 
-const ALL = [...DAYS, ...REF];
-
+/**
+ * Mobile top bar: brand on the left, account on the right. Day navigation now
+ * lives in the always-visible week strip + bottom nav, so the old dropdown
+ * picker is gone. On desktop this bar is hidden — the sidebar carries brand
+ * and account instead.
+ */
 export function Header() {
-  const selectedDay = useAppStore((s) => s.selectedDay);
-  const toggleSheet = useAppStore((s) => s.toggleSheet);
-  const sheetOpen = useAppStore((s) => s.sheetOpen);
-
-  const d = ALL.find((x) => x.key === selectedDay) ?? ALL[0];
-  const isToday = d.key === todayDayKey();
-  const label = isToday ? 'Today · ' + d.short : d.short;
-  const dotColor = COLORS[d.color];
+  const selectDay = useAppStore((s) => s.selectDay);
 
   return (
     <header className="header">
       <div className="header-inner">
         <button
-          className={'picker' + (sheetOpen ? ' open' : '')}
-          aria-haspopup="listbox"
-          aria-expanded={sheetOpen}
-          onClick={toggleSheet}
+          className="brand"
+          onClick={() => selectDay('today')}
+          aria-label="Home"
         >
-          <span
-            className="picker-dot"
-            style={{ background: dotColor, color: dotColor }}
-          />
-          <div className="picker-text">
-            <span className="picker-label">{label}</span>
-            <span className="picker-title">{d.name}</span>
-          </div>
-          <ChevronIcon className="picker-chev" />
+          <span className="brand-dot" />
+          <span className="brand-word">Training</span>
         </button>
         <AuthArea />
       </div>
@@ -49,8 +37,7 @@ function AuthArea() {
     return (
       <div className="auth-area">
         <button
-          className="avatar-btn"
-          id="avatarBtn"
+          className="avatar-btn js-avatar"
           aria-label="Account"
           onClick={toggleAccountMenu}
         >

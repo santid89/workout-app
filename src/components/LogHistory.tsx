@@ -8,8 +8,9 @@ import { removeLog } from '@/firebase/logs';
 import { doSignIn } from '@/lib/actions';
 import { toast } from '@/store/toastStore';
 import { todayStr, prettyDate } from '@/lib/date';
-import { PlusIcon, GoogleIcon, ChevronIcon } from '@/lib/icons';
+import { PlusIcon, GoogleIcon, ChevronIcon, NotebookIcon } from '@/lib/icons';
 import { ApiAccess } from './ApiAccess';
+import { ProgressCharts } from './ProgressCharts';
 import type { LogEntry } from '@/types';
 
 /** The exercise rows shown when a history entry is expanded. */
@@ -30,6 +31,62 @@ function detailRows(log: LogEntry): { name: string; sets?: string }[] {
   return [];
 }
 
+/** The logged-metric chips (top set, RPE, ride duration/distance) for an entry. */
+function metricChips(log: LogEntry): { key: string; label: JSX.Element }[] {
+  const chips: { key: string; label: JSX.Element }[] = [];
+  if (log.weight && log.reps) {
+    chips.push({
+      key: 'set',
+      label: (
+        <>
+          Top set:&nbsp;
+          <b>
+            {log.weight} × {log.reps}
+          </b>
+          &nbsp;{log.unit ?? ''}
+        </>
+      ),
+    });
+  } else if (log.weight) {
+    chips.push({
+      key: 'load',
+      label: (
+        <>
+          <b>{log.weight}</b>&nbsp;{log.unit ?? ''}
+        </>
+      ),
+    });
+  }
+  if (log.rpe)
+    chips.push({
+      key: 'rpe',
+      label: (
+        <>
+          RPE&nbsp;<b>{log.rpe}</b>
+        </>
+      ),
+    });
+  if (log.durationMin)
+    chips.push({
+      key: 'dur',
+      label: (
+        <>
+          <b>{log.durationMin}</b>&nbsp;min
+        </>
+      ),
+    });
+  if (log.distanceKm)
+    chips.push({
+      key: 'dist',
+      label: (
+        <>
+          <b>{log.distanceKm}</b>&nbsp;km
+        </>
+      ),
+    });
+  return chips;
+}
+
 function LogEntryItem({
   log,
   onRemove,
@@ -40,24 +97,20 @@ function LogEntryItem({
   const [open, setOpen] = useState(false);
   const color = COLORS[log.color] || COLORS.dim;
   const rows = detailRows(log);
-  const expandable = rows.length > 0;
+  const chips = metricChips(log);
+  const expandable = rows.length > 0 || chips.length > 0 || !!log.note;
 
   return (
     <div
       className={
-        'log-entry' +
-        (expandable ? ' expandable' : '') +
-        (open ? ' open' : '')
+        'log-entry' + (expandable ? ' expandable' : '') + (open ? ' open' : '')
       }
     >
       <div
         className="log-entry-row"
         onClick={expandable ? () => setOpen((o) => !o) : undefined}
       >
-        <span
-          className="log-entry-dot"
-          style={{ background: color, color }}
-        />
+        <span className="log-entry-dot" style={{ background: color, color }} />
         <span className="log-entry-name">{log.workoutName}</span>
         <span className="log-entry-type">{log.type || ''}</span>
         {expandable && <ChevronIcon className="log-entry-chev" />}
@@ -74,12 +127,22 @@ function LogEntryItem({
       </div>
       {expandable && (
         <div className="log-entry-detail">
+          {chips.length > 0 && (
+            <div className="log-metrics">
+              {chips.map((c) => (
+                <span className="metric-chip" key={c.key}>
+                  {c.label}
+                </span>
+              ))}
+            </div>
+          )}
           {rows.map((r, i) => (
             <div className="ex-row" key={i}>
               <span className="ex-name">{r.name}</span>
               {r.sets && <span className="ex-sets">{r.sets}</span>}
             </div>
           ))}
+          {log.note && <div className="log-note">“{log.note}”</div>}
         </div>
       )}
     </div>
@@ -209,7 +272,9 @@ function LogBody() {
 
       {logs.length === 0 ? (
         <div className="empty-state">
-          <span className="icon">📓</span>
+          <span className="icon" aria-hidden="true">
+            <NotebookIcon />
+          </span>
           <p>
             No workouts logged yet.
             <br />
@@ -218,6 +283,11 @@ function LogBody() {
           </p>
         </div>
       ) : (
+        <ProgressCharts logs={logs} />
+      )}
+
+      {logs.length > 0 && <div className="today-section-label">History</div>}
+      {logs.length > 0 &&
         groups.map((date) => (
           <div className="log-date-group" key={date}>
             <div className="log-date-head">
@@ -228,8 +298,7 @@ function LogBody() {
               <LogEntryItem key={l.id} log={l} onRemove={onRemove} />
             ))}
           </div>
-        ))
-      )}
+        ))}
 
       <ApiAccess />
     </>

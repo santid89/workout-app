@@ -23,15 +23,12 @@ interface AppState {
   setLogs: (logs: LogEntry[]) => void;
   setShareToken: (token: string | null) => void;
 
-  // Navigation
+  // Navigation. selectedDay is the visible view: 'today' (home), '1'..'7'
+  // (a workout day), or 'log' | 'fuel' | 'about'. lastWorkoutDay remembers
+  // which of the 7 days the Train tab returns to.
   selectedDay: string;
+  lastWorkoutDay: string;
   selectDay: (key: string) => void;
-
-  // Day-picker sheet
-  sheetOpen: boolean;
-  openSheet: () => void;
-  closeSheet: () => void;
-  toggleSheet: () => void;
 
   // Account menu
   accountMenuOpen: boolean;
@@ -55,19 +52,19 @@ export const useAppStore = create<AppState>((set) => ({
   setLogs: (logs) => set({ logs }),
   setShareToken: (shareToken) => set({ shareToken }),
 
-  selectedDay: todayDayKey(),
+  selectedDay: 'today',
+  lastWorkoutDay: todayDayKey(),
   selectDay: (key) => {
-    set({ selectedDay: key });
+    set((s) => ({
+      selectedDay: key,
+      lastWorkoutDay: /^[1-7]$/.test(key) ? key : s.lastWorkoutDay,
+    }));
     window.scrollTo({ top: 0, behavior: 'instant' });
   },
 
-  sheetOpen: false,
-  openSheet: () => set({ sheetOpen: true }),
-  closeSheet: () => set({ sheetOpen: false }),
-  toggleSheet: () => set((s) => ({ sheetOpen: !s.sheetOpen })),
-
   accountMenuOpen: false,
-  toggleAccountMenu: () => set((s) => ({ accountMenuOpen: !s.accountMenuOpen })),
+  toggleAccountMenu: () =>
+    set((s) => ({ accountMenuOpen: !s.accountMenuOpen })),
   closeAccountMenu: () => set({ accountMenuOpen: false }),
 
   logModal: { open: false, workoutKey: '1', date: todayStr() },

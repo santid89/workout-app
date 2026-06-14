@@ -1,12 +1,6 @@
 export type WorkoutType = 'Strength' | 'Ride' | 'Power' | 'Rest';
 export type RefType = 'Log' | 'Reference';
-export type DayColor =
-  | 'blue'
-  | 'cyan'
-  | 'amber'
-  | 'violet'
-  | 'green'
-  | 'dim';
+export type DayColor = 'blue' | 'cyan' | 'amber' | 'violet' | 'green' | 'dim';
 
 /** A row in a main-lift's 3-week rotation box. */
 export interface RotationRow {
@@ -77,5 +71,21 @@ export interface LogEntry {
   variation?: string;
   /** The rotation tag (A/B/C) for the variation above. */
   variationTag?: string;
+  /* Optional session metrics (Phase 3). All backward-compatible — older logs
+     simply omit them. Strength/Power use the top-set fields; rides use
+     duration/distance; note applies to any session. */
+  weight?: number; // top-set load, in the unit below
+  reps?: number; // top-set reps
+  rpe?: number; // rate of perceived exertion, 1–10
+  unit?: 'kg' | 'lb';
+  durationMin?: number;
+  distanceKm?: number;
+  note?: string;
   createdAt?: unknown;
 }
+
+/** The optional metric fields a session can carry, keyed for reuse. */
+export type LogMetrics = Pick<
+  LogEntry,
+  'weight' | 'reps' | 'rpe' | 'unit' | 'durationMin' | 'distanceKm' | 'note'
+>;

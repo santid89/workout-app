@@ -1,4 +1,5 @@
 /** Shared inline SVG icons, ported from the original markup. */
+import type { ReactNode } from 'react';
 
 export function GoogleIcon() {
   return (
@@ -75,5 +76,95 @@ export function YouTubeIcon() {
     <svg viewBox="0 0 24 24">
       <path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z" />
     </svg>
+  );
+}
+
+export function MoonIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z" />
+    </svg>
+  );
+}
+
+/** Shared 24×24 stroke-icon wrapper so the nav set stays visually consistent. */
+function Stroke({
+  className,
+  children,
+}: {
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {children}
+    </svg>
+  );
+}
+
+export function NotebookIcon({ className }: { className?: string }) {
+  return (
+    <Stroke className={className}>
+      <path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2z" />
+      <line x1="9" y1="3" x2="9" y2="21" />
+      <line x1="13" y1="8" x2="16" y2="8" />
+      <line x1="13" y1="12" x2="16" y2="12" />
+    </Stroke>
+  );
+}
+
+export function HomeIcon({ className }: { className?: string }) {
+  return (
+    <Stroke className={className}>
+      <path d="M3 10.5L12 3l9 7.5" />
+      <path d="M5 9.5V20a1 1 0 001 1h12a1 1 0 001-1V9.5" />
+    </Stroke>
+  );
+}
+
+export function DumbbellIcon({ className }: { className?: string }) {
+  return (
+    <Stroke className={className}>
+      <path d="M6.5 6.5l11 11" />
+      <path d="M21 21l-1.5-1.5" />
+      <path d="M3 3l1.5 1.5" />
+      <path d="M18 12l3-3-3-3-3 3" />
+      <path d="M6 12l-3 3 3 3 3-3" />
+    </Stroke>
+  );
+}
+
+export function FlameIcon({ className }: { className?: string }) {
+  return (
+    <Stroke className={className}>
+      <path d="M12 3c1 3-1.5 4-1.5 6.5A2.5 2.5 0 0012 12a2 2 0 002-2c1.5 1 2.5 2.8 2.5 4.5a4.5 4.5 0 11-9 0C7.5 11 10.5 9 12 3z" />
+    </Stroke>
+  );
+}
+
+export function ArrowRightIcon({ className }: { className?: string }) {
+  return (
+    <Stroke className={className}>
+      <line x1="4" y1="12" x2="19" y2="12" />
+      <polyline points="13 6 19 12 13 18" />
+    </Stroke>
   );
 }
