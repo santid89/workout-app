@@ -26,7 +26,7 @@ const EMPTY = {
   reps: '',
   rpe: '',
   durationMin: '',
-  distanceKm: '',
+  distanceMiles: '',
 };
 
 export function LogModal() {
@@ -105,7 +105,7 @@ export function LogModal() {
         // Rides are pure user input — duration/distance/note, no prescription.
         const detail: LogMetrics = {
           durationMin: pos(metrics.durationMin),
-          distanceKm: pos(metrics.distanceKm),
+          distanceMiles: pos(metrics.distanceMiles),
         };
         if (trimmedNote) detail.note = trimmedNote;
         // Keep the signature name when the day itself is a ride day.
@@ -283,7 +283,7 @@ export function LogModal() {
               </div>
               <div className="field">
                 <label className="field-label" htmlFor="logDistance">
-                  Distance <span className="field-hint">km</span>
+                  Distance <span className="field-hint">mi</span>
                 </label>
                 <input
                   id="logDistance"
@@ -291,8 +291,8 @@ export function LogModal() {
                   inputMode="decimal"
                   min="0"
                   placeholder="—"
-                  value={metrics.distanceKm}
-                  onChange={(e) => setMetric('distanceKm', e.target.value)}
+                  value={metrics.distanceMiles}
+                  onChange={(e) => setMetric('distanceMiles', e.target.value)}
                 />
               </div>
             </div>

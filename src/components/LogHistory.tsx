@@ -78,12 +78,18 @@ function metricChips(log: LogEntry): { key: string; label: JSX.Element }[] {
         </>
       ),
     });
-  if (log.distanceKm)
+  // Prefer miles; convert any legacy km value so it always reads in miles.
+  const miles =
+    log.distanceMiles ??
+    (log.distanceKm
+      ? Math.round(log.distanceKm * 0.621371 * 10) / 10
+      : undefined);
+  if (miles)
     chips.push({
       key: 'dist',
       label: (
         <>
-          <b>{log.distanceKm}</b>&nbsp;km
+          <b>{miles}</b>&nbsp;mi
         </>
       ),
     });
