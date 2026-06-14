@@ -2092,6 +2092,48 @@ body {
   color: var(--on-primary);
 }
 
+/* Activity segmented control (Workout / Ride) */
+.activity-seg {
+  display: flex;
+  gap: 8px;
+}
+.activity-seg button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+.activity-seg button svg {
+  width: 17px;
+  height: 17px;
+}
+.activity-seg button:hover {
+  border-color: var(--text-dim);
+  color: var(--text);
+}
+.activity-seg button.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--on-primary);
+}
+.activity-seg button.active:hover {
+  color: var(--on-primary);
+}
+
 /* ───────────── PROGRESS SECTION ───────────── */
 .progress {
   margin-top: 26px;

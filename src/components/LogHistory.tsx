@@ -15,6 +15,9 @@ import type { LogEntry } from '@/types';
 
 /** The exercise rows shown when a history entry is expanded. */
 function detailRows(log: LogEntry): { name: string; sets?: string }[] {
+  // Rides are captured by their logged duration/distance/note, not a fixed
+  // prescription — don't surface the program's suggested ride options.
+  if (log.type === 'Ride') return [];
   const d = PROGRAM_DETAIL[log.workoutKey];
   if (!d) return [];
   if (d.exercises) {
