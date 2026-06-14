@@ -5,6 +5,8 @@ import {
   doc,
   getDoc,
   setDoc,
+  updateDoc,
+  deleteField,
   onSnapshot,
   query,
   orderBy,
@@ -32,9 +34,35 @@ const METRIC_KEYS: (keyof LogMetrics)[] = [
   'rpe',
   'unit',
   'durationMin',
-  'distanceKm',
+  'distanceMiles',
   'note',
 ];
+
+const KM_TO_MI = 0.621371;
+
+/**
+ * One-time migration: rides used to store distance in km (distanceKm). Convert
+ * any such logs to miles (distanceMiles) and drop the old field. Idempotent —
+ * once a doc has no distanceKm it's skipped, so it converges after one pass.
+ */
+export async function migrateDistanceToMiles(
+  uid: string,
+  logs: LogEntry[]
+): Promise<void> {
+  const db = getDbOrNull();
+  if (!db) return;
+  const stale = logs.filter((l) => typeof l.distanceKm === 'number');
+  await Promise.all(
+    stale.map((l) =>
+      updateDoc(doc(db, 'users', uid, 'logs', l.id), {
+        distanceMiles: Math.round(l.distanceKm! * KM_TO_MI * 10) / 10,
+        distanceKm: deleteField(),
+      }).catch((e) =>
+        console.warn('[Workout app] distance migration:', errCode(e))
+      )
+    )
+  );
+}
 
 /**
  * Subscribes to the user's logs (ordered date desc). Calls onData on every

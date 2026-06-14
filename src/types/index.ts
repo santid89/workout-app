@@ -79,6 +79,8 @@ export interface LogEntry {
   rpe?: number; // rate of perceived exertion, 1–10
   unit?: 'kg' | 'lb';
   durationMin?: number;
+  distanceMiles?: number;
+  /** @deprecated Legacy field — migrated to distanceMiles on load. */
   distanceKm?: number;
   note?: string;
   createdAt?: unknown;
@@ -87,5 +89,5 @@ export interface LogEntry {
 /** The optional metric fields a session can carry, keyed for reuse. */
 export type LogMetrics = Pick<
   LogEntry,
-  'weight' | 'reps' | 'rpe' | 'unit' | 'durationMin' | 'distanceKm' | 'note'
+  'weight' | 'reps' | 'rpe' | 'unit' | 'durationMin' | 'distanceMiles' | 'note'
 >;

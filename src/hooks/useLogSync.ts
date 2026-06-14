@@ -5,6 +5,7 @@ import {
   subscribeLogs,
   ensureShareToken,
   syncShareExport,
+  migrateDistanceToMiles,
 } from '@/firebase/logs';
 
 /**
@@ -39,6 +40,8 @@ export function useLogSync() {
         user.uid,
         (logs) => {
           setLogs(logs);
+          // One-time: convert any legacy km distances to miles.
+          migrateDistanceToMiles(user.uid, logs);
           // Keep the read-only JSON export current.
           if (token) syncShareExport(token, user.uid, athlete, logs);
         },
