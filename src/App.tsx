@@ -5,7 +5,9 @@ import { PROGRAM } from '@/data/program';
 import { AuthGate } from '@/components/AuthGate';
 import { Header } from '@/components/Header';
 import { AccountMenu } from '@/components/AccountMenu';
-import { DayPicker } from '@/components/DayPicker';
+import { BottomNav, SideNav } from '@/components/Nav';
+import { WeekStrip } from '@/components/WeekStrip';
+import { Today } from '@/components/Today';
 import { WorkoutDay } from '@/components/WorkoutDay';
 import { FuelPanel } from '@/components/panels/FuelPanel';
 import { AboutPanel } from '@/components/panels/AboutPanel';
@@ -17,15 +19,25 @@ export default function App() {
   useAuth();
   useLogSync();
   const selectedDay = useAppStore((s) => s.selectedDay);
+  const onWorkoutDay = /^[1-7]$/.test(selectedDay);
 
   return (
     <>
       <AuthGate />
+      <SideNav />
       <Header />
       <AccountMenu />
-      <DayPicker />
+
+      {onWorkoutDay && (
+        <div className="train-bar">
+          <div className="train-bar-inner">
+            <WeekStrip />
+          </div>
+        </div>
+      )}
 
       <main>
+        <Today active={selectedDay === 'today'} />
         {PROGRAM.map((day) => (
           <WorkoutDay
             key={day.key}
@@ -38,6 +50,7 @@ export default function App() {
         <AboutPanel active={selectedDay === 'about'} />
       </main>
 
+      <BottomNav />
       <LogModal />
       <ToastContainer />
     </>

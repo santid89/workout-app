@@ -13,9 +13,9 @@ import {
 import { getDbOrNull } from './app';
 import { PROGRAM_DETAIL } from '@/data/programDetail';
 import { resolveVariation } from '@/data/rotation';
-import type { LogEntry } from '@/types';
+import type { LogEntry, LogMetrics } from '@/types';
 
-export interface NewLog {
+export interface NewLog extends LogMetrics {
   date: string;
   workoutKey: string;
   workoutName: string;
@@ -24,6 +24,17 @@ export interface NewLog {
   variation?: string;
   variationTag?: string;
 }
+
+/** The optional metric fields, in the order they're written to Firestore. */
+const METRIC_KEYS: (keyof LogMetrics)[] = [
+  'weight',
+  'reps',
+  'rpe',
+  'unit',
+  'durationMin',
+  'distanceKm',
+  'note',
+];
 
 /**
  * Subscribes to the user's logs (ordered date desc). Calls onData on every
@@ -36,7 +47,10 @@ export function subscribeLogs(
 ): () => void {
   const db = getDbOrNull();
   if (!db) return () => {};
-  const q = query(collection(db, 'users', uid, 'logs'), orderBy('date', 'desc'));
+  const q = query(
+    collection(db, 'users', uid, 'logs'),
+    orderBy('date', 'desc')
+  );
   return onSnapshot(
     q,
     (snap) => {
@@ -60,6 +74,11 @@ export async function addLog(uid: string, log: NewLog): Promise<void> {
   };
   if (log.variation) doc.variation = log.variation;
   if (log.variationTag) doc.variationTag = log.variationTag;
+  // Include any optional metrics the user filled in (skip empty/undefined).
+  for (const k of METRIC_KEYS) {
+    const v = log[k];
+    if (v !== undefined && v !== '') doc[k] = v;
+  }
   await addDoc(collection(db, 'users', uid, 'logs'), doc);
 }
 
@@ -137,6 +156,13 @@ export async function syncShareExport(
     }
     if (d?.rideOptions) s.rideOptions = d.rideOptions;
     if (d?.recovery) s.recovery = d.recovery;
+    // Carry any logged metrics through to the export (e.g. for Claude).
+    const logged: Record<string, unknown> = {};
+    for (const k of METRIC_KEYS) {
+      const v = l[k];
+      if (v !== undefined && v !== '') logged[k] = v;
+    }
+    if (Object.keys(logged).length) s.logged = logged;
     return s;
   });
 

@@ -17,7 +17,7 @@ export function AccountMenu() {
       if (
         menuRef.current &&
         !menuRef.current.contains(target) &&
-        !target.closest('#avatarBtn')
+        !target.closest('.js-avatar')
       ) {
         closeAccountMenu();
       }
@@ -33,10 +33,7 @@ export function AccountMenu() {
   };
 
   return (
-    <div
-      className={'account-menu' + (open ? ' open' : '')}
-      ref={menuRef}
-    >
+    <div className={'account-menu' + (open ? ' open' : '')} ref={menuRef}>
       <div className="account-name">{user?.displayName || 'Signed in'}</div>
       <div className="account-email">{user?.email || ''}</div>
       <button className="account-signout" onClick={onSignOut}>

@@ -2,6 +2,7 @@ import type { WorkoutDay as WorkoutDayType } from '@/types';
 import { ExerciseCard } from './ExerciseCard';
 import { RideCard } from './RideCard';
 import { LogCta } from './LogCta';
+import { MoonIcon } from '@/lib/icons';
 
 export function WorkoutDay({
   day,
@@ -47,7 +48,9 @@ export function WorkoutDay({
 
         {day.recovery && (
           <div className="center-card">
-            <span className="icon">{day.recovery.icon}</span>
+            <span className="icon" aria-hidden="true">
+              <MoonIcon />
+            </span>
             <h3>{day.recovery.title}</h3>
             <p>{day.recovery.body}</p>
           </div>

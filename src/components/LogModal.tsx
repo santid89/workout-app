@@ -6,6 +6,22 @@ import { addLog } from '@/firebase/logs';
 import { doSignIn } from '@/lib/actions';
 import { toast } from '@/store/toastStore';
 import { todayStr, prettyDate } from '@/lib/date';
+import { ChevronIcon } from '@/lib/icons';
+import type { LogMetrics } from '@/types';
+
+/** Parses a positive number from an input string, else undefined. */
+function pos(s: string): number | undefined {
+  const n = parseFloat(s);
+  return Number.isFinite(n) && n > 0 ? n : undefined;
+}
+
+const EMPTY = {
+  weight: '',
+  reps: '',
+  rpe: '',
+  durationMin: '',
+  distanceKm: '',
+};
 
 export function LogModal() {
   const { open, workoutKey, date } = useAppStore((s) => s.logModal);
@@ -18,6 +34,12 @@ export function LogModal() {
   const [variationTouched, setVariationTouched] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  // Optional detail (Phase 3).
+  const [showDetail, setShowDetail] = useState(false);
+  const [unit, setUnit] = useState<'kg' | 'lb'>('lb');
+  const [metrics, setMetrics] = useState(EMPTY);
+  const [note, setNote] = useState('');
+
   // Sync local form state each time the modal is (re)opened.
   useEffect(() => {
     if (open) {
@@ -25,10 +47,18 @@ export function LogModal() {
       setDay(date);
       setVariationTag(defaultVariationTag(workoutKey, date) ?? '');
       setVariationTouched(false);
+      setShowDetail(false);
+      setMetrics(EMPTY);
+      setNote('');
     }
   }, [open, workoutKey, date]);
 
   const rows = rotationRows(selected);
+  const selDay = DAYS.find((x) => x.key === selected);
+  const isStrength = selDay?.type === 'Strength' || selDay?.type === 'Power';
+  const isRide = selDay?.type === 'Ride';
+  const setMetric = (k: keyof typeof EMPTY, v: string) =>
+    setMetrics((m) => ({ ...m, [k]: v }));
 
   const onWorkoutChange = (key: string) => {
     setSelected(key);
@@ -58,6 +88,22 @@ export function LogModal() {
     if (!w) return;
     const variationRow =
       rows && variationTag ? rows.find((r) => r.tag === variationTag) : null;
+
+    // Collect only the metrics relevant to this day type, when filled.
+    const detail: LogMetrics = {};
+    if (isStrength) {
+      detail.weight = pos(metrics.weight);
+      detail.reps = pos(metrics.reps);
+      detail.rpe = pos(metrics.rpe);
+      if (detail.weight) detail.unit = unit;
+    }
+    if (isRide) {
+      detail.durationMin = pos(metrics.durationMin);
+      detail.distanceKm = pos(metrics.distanceKm);
+    }
+    const trimmed = note.trim();
+    if (trimmed) detail.note = trimmed;
+
     setSaving(true);
     try {
       await addLog(user.uid, {
@@ -68,6 +114,7 @@ export function LogModal() {
         color: w.color,
         variation: variationRow?.name,
         variationTag: variationRow?.tag,
+        ...detail,
       });
       closeLogModal();
       const label = variationRow ? `${w.name} (${variationRow.name})` : w.name;
@@ -148,6 +195,139 @@ export function LogModal() {
             onChange={(e) => onDateChange(e.target.value)}
           />
         </div>
+
+        <button
+          type="button"
+          className={'detail-toggle' + (showDetail ? ' open' : '')}
+          onClick={() => setShowDetail((v) => !v)}
+          aria-expanded={showDetail}
+        >
+          <span>Add detail (optional)</span>
+          <ChevronIcon className="detail-chev" />
+        </button>
+
+        {showDetail && (
+          <div className="detail-fields">
+            {isStrength && (
+              <>
+                <div className="field-row">
+                  <div className="field">
+                    <label className="field-label" htmlFor="logWeight">
+                      Top set load
+                    </label>
+                    <div className="input-unit">
+                      <input
+                        id="logWeight"
+                        type="number"
+                        inputMode="decimal"
+                        min="0"
+                        placeholder="—"
+                        value={metrics.weight}
+                        onChange={(e) => setMetric('weight', e.target.value)}
+                      />
+                      <div
+                        className="unit-toggle"
+                        role="group"
+                        aria-label="Unit"
+                      >
+                        <button
+                          type="button"
+                          className={unit === 'lb' ? 'active' : ''}
+                          onClick={() => setUnit('lb')}
+                        >
+                          lb
+                        </button>
+                        <button
+                          type="button"
+                          className={unit === 'kg' ? 'active' : ''}
+                          onClick={() => setUnit('kg')}
+                        >
+                          kg
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="field">
+                    <label className="field-label" htmlFor="logReps">
+                      Reps
+                    </label>
+                    <input
+                      id="logReps"
+                      type="number"
+                      inputMode="numeric"
+                      min="0"
+                      placeholder="—"
+                      value={metrics.reps}
+                      onChange={(e) => setMetric('reps', e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="field">
+                  <label className="field-label" htmlFor="logRpe">
+                    RPE <span className="field-hint">— effort, 1–10</span>
+                  </label>
+                  <input
+                    id="logRpe"
+                    type="number"
+                    inputMode="decimal"
+                    min="1"
+                    max="10"
+                    step="0.5"
+                    placeholder="—"
+                    value={metrics.rpe}
+                    onChange={(e) => setMetric('rpe', e.target.value)}
+                  />
+                </div>
+              </>
+            )}
+            {isRide && (
+              <div className="field-row">
+                <div className="field">
+                  <label className="field-label" htmlFor="logDuration">
+                    Duration <span className="field-hint">min</span>
+                  </label>
+                  <input
+                    id="logDuration"
+                    type="number"
+                    inputMode="numeric"
+                    min="0"
+                    placeholder="—"
+                    value={metrics.durationMin}
+                    onChange={(e) => setMetric('durationMin', e.target.value)}
+                  />
+                </div>
+                <div className="field">
+                  <label className="field-label" htmlFor="logDistance">
+                    Distance <span className="field-hint">km</span>
+                  </label>
+                  <input
+                    id="logDistance"
+                    type="number"
+                    inputMode="decimal"
+                    min="0"
+                    placeholder="—"
+                    value={metrics.distanceKm}
+                    onChange={(e) => setMetric('distanceKm', e.target.value)}
+                  />
+                </div>
+              </div>
+            )}
+            <div className="field">
+              <label className="field-label" htmlFor="logNote">
+                Note
+              </label>
+              <textarea
+                id="logNote"
+                className="field-textarea"
+                rows={2}
+                placeholder="How it felt, what you changed…"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+              />
+            </div>
+          </div>
+        )}
+
         <div className="modal-actions">
           <button className="modal-btn secondary" onClick={closeLogModal}>
             Cancel
