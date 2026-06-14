@@ -135,17 +135,20 @@ export async function syncShareExport(
 
   const sessions = logs.map((l) => {
     const d = PROGRAM_DETAIL[l.workoutKey];
+    // A ride can be logged on any day; don't attach the day's strength
+    // prescription to it — rides carry only their logged metrics + note.
+    const isRide = l.type === 'Ride';
     const s: Record<string, unknown> = {
       date: l.date,
       day: l.workoutKey,
       weekday: d?.day ?? null,
       workout: l.workoutName,
       type: l.type,
-      focus: d?.focus ?? null,
-      summary: d?.summary ?? null,
+      focus: isRide ? null : (d?.focus ?? null),
+      summary: isRide ? null : (d?.summary ?? null),
     };
-    if (d?.tags && d.tags.length) s.tags = d.tags;
-    if (d?.exercises) {
+    if (!isRide && d?.tags && d.tags.length) s.tags = d.tags;
+    if (!isRide && d?.exercises) {
       // Resolve the umbrella "(rotation)" lift to the single variation done.
       const v = resolveVariation(l.workoutKey, l.date, l.variationTag);
       s.exercises = d.exercises.map((ex) =>
@@ -154,8 +157,8 @@ export async function syncShareExport(
           : ex
       );
     }
-    if (d?.rideOptions) s.rideOptions = d.rideOptions;
-    if (d?.recovery) s.recovery = d.recovery;
+    if (isRide && d?.rideOptions) s.rideOptions = d.rideOptions;
+    if (!isRide && d?.recovery) s.recovery = d.recovery;
     // Carry any logged metrics through to the export (e.g. for Claude).
     const logged: Record<string, unknown> = {};
     for (const k of METRIC_KEYS) {
