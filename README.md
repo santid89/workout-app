@@ -16,14 +16,16 @@ while keeping the same look, the same Firebase backend, and push-to-deploy.
 │   ├── main.tsx · App.tsx       # entry + app shell
 │   ├── components/              # Header, DayPicker, WorkoutDay, LogModal, …
 │   ├── data/                    # program.ts (the workouts), reference.tsx, theme.ts
-│   ├── firebase/                # config, app init, auth, logs
-│   ├── hooks/                   # useAuth, useLogSync
+│   ├── firebase/                # config, app init, auth, logs, food
+│   ├── hooks/                   # useAuth, useLogSync, useFoodLogSync
 │   ├── store/                   # Zustand stores (app + toasts)
-│   ├── lib/                     # date helpers, icons, actions
+│   ├── lib/                     # date helpers, icons, actions, image
 │   └── styles/                  # tokens.css + global.css (the design system)
+├── functions/                  # Cloud Functions — food-log Gemini processing
 ├── .env                        # public Firebase web config (safe to commit)
-├── firebase.json               # Hosting config (serves dist/)
-├── firestore.rules             # Security rules
+├── firebase.json               # Hosting + Functions + Storage + emulators config
+├── firestore.rules             # Firestore security rules
+├── storage.rules               # Cloud Storage security rules (food photos)
 └── .github/workflows/
     └── firebase-hosting.yml     # Build + auto-deploy on push
 ```
@@ -67,6 +69,13 @@ npm run build
 firebase deploy --only hosting
 ```
 
+The food-logging backend (Cloud Functions + Storage/Firestore rules) is **not**
+covered by the Hosting workflow — deploy it by hand when it changes:
+
+```bash
+firebase deploy --only functions,firestore:rules,storage
+```
+
 ### One-time Firebase setup
 
 Creating the project, registering the web app, enabling Google sign-in, and
@@ -85,6 +94,17 @@ Google account. The summary:
    service-account JSON). The easiest setup is `firebase init hosting:github`
    once, then point the workflow at the secret it creates (or rename it to
    `FIREBASE_SERVICE_ACCOUNT`).
+4. **Storage (for food photos):** Build → Storage → Get started. Publish the
+   rules in [`storage.rules`](storage.rules) (or
+   `firebase deploy --only storage`). Requires the **Blaze** plan.
+5. **Cloud Functions + Gemini key:** the project must be on the **Blaze** plan.
+   Store your [Google AI Studio](https://aistudio.google.com/apikey) key as a
+   Functions secret, then deploy:
+
+   ```bash
+   firebase functions:secrets:set GEMINI_API_KEY   # paste the key when prompted
+   firebase deploy --only functions
+   ```
 
 ## Google login + workout logging
 
@@ -93,6 +113,35 @@ can record which session you actually did each day — the Monday workout doesn'
 have to be logged on a Monday. Logs are stored per-user in **Cloud Firestore**,
 so your history syncs across every device you sign in on. The app is gated: the
 program and log only appear once you're signed in.
+
+## Food logging (with automatic Gemini analysis)
+
+The home page has a **Log food** button: jot a quick description (e.g. "chicken
+burrito bowl with guac"), snap/upload a photo, or both. Each entry is saved to
+Firestore as `users/{uid}/foodLogs/{id}` with `status: "pending"` (photos go to
+Cloud Storage at `users/{uid}/food/…`, downscaled client-side first).
+
+A Cloud Function (`functions/src/index.ts`) fires on each new entry, sends the
+description and/or photo to **Gemini** (`gemini-2.5-flash`) asking for a
+structured nutrition estimate, and writes the result back onto the document
+(`status: "processed"`, `nutrition: { summary, items[], calories, protein_g,
+carbs_g, fat_g, confidence }`). The home page lists recent entries and updates
+live as the estimate lands — no manual pickup needed. Failures resolve to
+`status: "error"` with the message shown in the UI.
+
+### Working on the functions
+
+```bash
+cd functions
+npm install
+npm run build                 # tsc → lib/
+
+# Full local end-to-end (from the repo root, in another terminal run `npm run dev`):
+firebase emulators:start --only functions,firestore,storage,auth,hosting
+```
+
+Provide the Gemini key to the emulator via a `functions/.secret.local` file
+containing `GEMINI_API_KEY=<your AI Studio key>`.
 
 ## Reading your data via API (for Claude, scripts, etc.)
 

@@ -6,11 +6,13 @@ import {
   type Auth,
 } from 'firebase/auth';
 import { getFirestore, type Firestore } from 'firebase/firestore';
+import { getStorage, type FirebaseStorage } from 'firebase/storage';
 import { CONFIGURED, firebaseConfig } from './config';
 
 let app: FirebaseApp | null = null;
 let authInstance: Auth | null = null;
 let dbInstance: Firestore | null = null;
+let storageInstance: FirebaseStorage | null = null;
 
 /**
  * Lazily initializes Firebase the first time it's needed. Returns null when the
@@ -23,6 +25,7 @@ function ensureApp(): FirebaseApp | null {
     app = initializeApp(firebaseConfig);
     authInstance = getAuth(app);
     dbInstance = getFirestore(app);
+    storageInstance = getStorage(app);
     setPersistence(authInstance, browserLocalPersistence).catch(() => {});
   }
   return app;
@@ -36,4 +39,9 @@ export function getAuthOrNull(): Auth | null {
 export function getDbOrNull(): Firestore | null {
   ensureApp();
   return dbInstance;
+}
+
+export function getStorageOrNull(): FirebaseStorage | null {
+  ensureApp();
+  return storageInstance;
 }

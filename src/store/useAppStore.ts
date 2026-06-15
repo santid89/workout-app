@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { LogEntry } from '@/types';
+import type { LogEntry, FoodLog } from '@/types';
 import type { User } from '@/firebase/auth';
 import { todayDayKey } from '@/data/theme';
 import { todayStr } from '@/lib/date';
@@ -23,6 +23,10 @@ interface AppState {
   setLogs: (logs: LogEntry[]) => void;
   setShareToken: (token: string | null) => void;
 
+  // Food logs
+  foodLogs: FoodLog[];
+  setFoodLogs: (logs: FoodLog[]) => void;
+
   // Navigation. selectedDay is the visible view: 'today' (home), '1'..'7'
   // (a workout day), or 'log' | 'fuel' | 'about'. lastWorkoutDay remembers
   // which of the 7 days the Train tab returns to.
@@ -39,6 +43,11 @@ interface AppState {
   logModal: LogModalState;
   openLogModal: (workoutKey: string, date?: string) => void;
   closeLogModal: () => void;
+
+  // Food-log modal
+  foodLogModal: { open: boolean };
+  openFoodLogModal: () => void;
+  closeFoodLogModal: () => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -51,6 +60,9 @@ export const useAppStore = create<AppState>((set) => ({
   shareToken: null,
   setLogs: (logs) => set({ logs }),
   setShareToken: (shareToken) => set({ shareToken }),
+
+  foodLogs: [],
+  setFoodLogs: (foodLogs) => set({ foodLogs }),
 
   selectedDay: 'today',
   lastWorkoutDay: todayDayKey(),
@@ -72,4 +84,8 @@ export const useAppStore = create<AppState>((set) => ({
     set({ logModal: { open: true, workoutKey, date: date || todayStr() } }),
   closeLogModal: () =>
     set((s) => ({ logModal: { ...s.logModal, open: false } })),
+
+  foodLogModal: { open: false },
+  openFoodLogModal: () => set({ foodLogModal: { open: true } }),
+  closeFoodLogModal: () => set({ foodLogModal: { open: false } }),
 }));

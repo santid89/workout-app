@@ -91,3 +91,48 @@ export type LogMetrics = Pick<
   LogEntry,
   'weight' | 'reps' | 'rpe' | 'unit' | 'durationMin' | 'distanceMiles' | 'note'
 >;
+
+/* ───────────── Food logging ─────────────
+   A quick text and/or photo capture of something eaten. The client writes it
+   with status 'pending'; a Cloud Function calls Gemini and fills in `nutrition`,
+   flipping status to 'processed' (or 'error'). */
+
+export type FoodLogStatus = 'pending' | 'processed' | 'error';
+
+/** One identified item within a meal, with Gemini's macro estimate. */
+export interface FoodNutritionItem {
+  name: string;
+  calories?: number;
+  protein_g?: number;
+  carbs_g?: number;
+  fat_g?: number;
+}
+
+/** Gemini's structured estimate for a whole food-log entry. */
+export interface FoodNutrition {
+  summary?: string;
+  items?: FoodNutritionItem[];
+  calories?: number;
+  protein_g?: number;
+  carbs_g?: number;
+  fat_g?: number;
+  confidence?: 'low' | 'medium' | 'high';
+}
+
+/** A logged meal — shape matches the Firestore document. */
+export interface FoodLog {
+  id: string;
+  /** Free-text description the user typed, if any. */
+  description?: string;
+  /** Storage path of the uploaded photo, if any (e.g. users/{uid}/food/abc). */
+  photoPath?: string;
+  /** Download URL for the photo, for rendering a thumbnail. */
+  photoUrl?: string;
+  status: FoodLogStatus;
+  /** Populated by the server once Gemini has analysed the entry. */
+  nutrition?: FoodNutrition;
+  /** Error message when status is 'error'. */
+  error?: string;
+  loggedAt?: unknown;
+  processedAt?: unknown;
+}

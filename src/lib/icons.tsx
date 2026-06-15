@@ -178,3 +178,33 @@ export function ArrowRightIcon({ className }: { className?: string }) {
     </Stroke>
   );
 }
+
+export function UtensilsIcon({ className }: { className?: string }) {
+  return (
+    <Stroke className={className}>
+      <path d="M4 3v6a2 2 0 002 2h0a2 2 0 002-2V3" />
+      <line x1="6" y1="11" x2="6" y2="21" />
+      <path d="M17 3c-1.5 0-3 1.8-3 5 0 2.5 1 3.5 2 3.7V21" />
+    </Stroke>
+  );
+}
+
+export function CameraIcon({ className }: { className?: string }) {
+  return (
+    <Stroke className={className}>
+      <path d="M3 8a2 2 0 012-2h2l1.5-2h7L18 6h1a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+      <circle cx="12" cy="12.5" r="3.5" />
+    </Stroke>
+  );
+}
+
+export function TrashIcon({ className }: { className?: string }) {
+  return (
+    <Stroke className={className}>
+      <polyline points="3 6 5 6 21 6" />
+      <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+      <path d="M10 11v6M14 11v6" />
+      <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+    </Stroke>
+  );
+}

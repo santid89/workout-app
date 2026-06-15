@@ -1,6 +1,7 @@
 import { useAppStore } from '@/store/useAppStore';
 import { useAuth } from '@/hooks/useAuth';
 import { useLogSync } from '@/hooks/useLogSync';
+import { useFoodLogSync } from '@/hooks/useFoodLogSync';
 import { PROGRAM } from '@/data/program';
 import { AuthGate } from '@/components/AuthGate';
 import { Header } from '@/components/Header';
@@ -13,11 +14,13 @@ import { FuelPanel } from '@/components/panels/FuelPanel';
 import { AboutPanel } from '@/components/panels/AboutPanel';
 import { LogHistory } from '@/components/LogHistory';
 import { LogModal } from '@/components/LogModal';
+import { FoodLogModal } from '@/components/FoodLogModal';
 import { ToastContainer } from '@/components/Toast';
 
 export default function App() {
   useAuth();
   useLogSync();
+  useFoodLogSync();
   const selectedDay = useAppStore((s) => s.selectedDay);
   const onWorkoutDay = /^[1-7]$/.test(selectedDay);
 
@@ -52,6 +55,7 @@ export default function App() {
 
       <BottomNav />
       <LogModal />
+      <FoodLogModal />
       <ToastContainer />
     </>
   );

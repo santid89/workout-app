@@ -3,6 +3,8 @@ import { PROGRAM } from '@/data/program';
 import { todayDayKey } from '@/data/theme';
 import { todayStr, currentStreak, weekDates } from '@/lib/date';
 import { LogCta } from './LogCta';
+import { FoodLogCta } from './FoodLogCta';
+import { FoodLogList } from './FoodLogList';
 import { WeekStrip } from './WeekStrip';
 import { ArrowRightIcon } from '@/lib/icons';
 
@@ -48,6 +50,7 @@ export function Today({ active }: { active: boolean }) {
           )}
 
           <LogCta workoutKey={todayKey} />
+          <FoodLogCta />
 
           <button className="today-open" onClick={() => selectDay(todayKey)}>
             <span>View full workout</span>
@@ -69,6 +72,8 @@ export function Today({ active }: { active: boolean }) {
             <div className="today-stat-label">All time</div>
           </div>
         </div>
+
+        <FoodLogList />
 
         <div className="today-section-label">Your week</div>
         <WeekStrip />
