@@ -19,6 +19,7 @@ const TYPE_COLOR: Record<string, string> = {
   Strength: COLORS.blue,
   Ride: COLORS.cyan,
   Power: COLORS.amber,
+  Golf: COLORS.green,
   Rest: COLORS.violet,
 };
 

@@ -5,20 +5,29 @@ import type { WorkoutDay } from '@/types';
  * index.html; modeling it as data is what makes new features (charts, editing,
  * alternate programs) tractable. HTML entities from the original are written
  * here as their literal Unicode characters.
+ *
+ * Design intent (2026 redesign): a deliberately balanced week across the three
+ * sports — weightlifting, cycling (indoor + outdoor) and golf — built around
+ * two hard rules from real life:
+ *   • Weekdays: out the door at dawn, home and showered by 7:30.
+ *   • Weekends: more room — just back by around 10.
+ * Most days deliberately *combine* two things (a lift + an easy spin, golf +
+ * mobility) so all three sports fit one week instead of fighting for it. The
+ * whole thing is pointed at staying lean at 185–190 lb while holding muscle.
  */
 export const PROGRAM: WorkoutDay[] = [
   // ════════════════ MONDAY ════════════════
   {
     key: '1',
     short: 'Mon',
-    name: 'Lower Power',
+    name: 'Lower Strength + Spin',
     type: 'Strength',
     chip: 'chip-blue',
     color: 'blue',
-    eyebrow: 'Strength · Lower',
-    title: 'Lower Power',
-    sub: 'Heavy compound legs. Rotate squat variation each cycle. Rest 2–3 min on main lift, 90 sec on accessories.',
-    tags: ['~45–50 min', 'Optional Z2 spin · 20–30 min'],
+    eyebrow: 'Strength · Lower + Spin',
+    title: 'Lower Strength + Spin',
+    sub: 'Heavy legs and posterior chain, then flush them with an easy Zone 2 spin. Squat variation rotates each cycle. Rest 2–3 min on the main lift, 90 sec on accessories. Start ~5:45, showered by 7:30.',
+    tags: ['~40 min lift + 20 min spin', 'Weekday · home by 7:30'],
     exercises: [
       {
         name: 'Squat (rotation)',
@@ -37,32 +46,40 @@ export const PROGRAM: WorkoutDay[] = [
       {
         name: 'Romanian Deadlift',
         sets: '4 × 6',
-        note: 'Push hips back, soft knee bend. Lower until you feel a deep hamstring stretch. Drive hips forward. Bar stays close to legs.',
+        note: 'Your heavy hinge — this carries the deadlift stimulus now that the week is two lift days. Push hips back, soft knee bend, lower until you feel a deep hamstring stretch, drive hips forward. Bar stays close to the legs.',
         videoQuery: 'romanian deadlift barbell form tutorial',
       },
       {
         name: 'Bulgarian Split Squat (DB)',
         sets: '3 × 8/leg',
-        note: 'Rear foot laces-down on bench. Drop back knee straight down, front shin vertical. 2-sec down, 1-sec up.',
+        note: 'Rear foot laces-down on bench. Drop back knee straight down, front shin vertical. 2-sec down, 1-sec up. Single-leg strength and balance for the bike and the golf swing.',
         videoQuery: 'bulgarian split squat dumbbell form',
       },
       {
-        name: 'Leg Extension',
+        name: 'Seated Leg Curl',
         sets: '3 × 12',
-        note: 'Quad isolation on the machine. Pause 1 sec at full lockout and squeeze, then a 3-sec negative. Back flat against the pad — no swinging the weight up with momentum.',
-        videoQuery: 'leg extension machine proper form',
+        note: 'Direct hamstring work to balance all the quad-dominant riding. Curl the pad down hard, 1-sec squeeze, slow 3-sec return. Keep hips pinned to the seat — no lifting to cheat the weight.',
+        videoQuery: 'seated leg curl machine proper form',
       },
       {
         name: 'Standing Calf Raise',
         sets: '3 × 12',
-        note: 'Full ROM. 1-sec pause at top, 1-sec pause at full stretch. No bouncing. Load it with dumbbells off a step, or push through the balls of your feet on the leg-press plate.',
+        note: 'Full ROM. 1-sec pause at top, 1-sec pause at full stretch. No bouncing. Load with dumbbells off a step, or push through the balls of your feet on the leg-press plate.',
         videoQuery: 'standing calf raise form tutorial',
       },
       {
-        name: 'Lying Leg Raise',
+        name: 'Hanging Leg Raise',
         sets: '3 × 12',
-        note: 'Lie flat, lower back pressed into the floor. Legs straight, raise to vertical, lower with control. Stop just before heels touch — keep tension. No momentum.',
-        videoQuery: 'lying leg raise form tutorial',
+        note: 'Hang from the bar, raise straight legs to horizontal (or knees to chest to scale), lower with control — no swinging. Anti-momentum core to finish.',
+        videoQuery: 'hanging leg raise form tutorial',
+      },
+    ],
+    rides: [
+      {
+        variant: 'indoor',
+        pill: 'Flush Spin · Indoor',
+        title: '20 min easy on the Zwift Ride',
+        body: 'Straight off the rack: Zone 2, ~120–145W (55–65% of your 222W FTP), fully conversational. Clears the legs, adds a little burn, no extra fatigue. The one thing to drop if the clock is against 7:30.',
       },
     ],
   },
@@ -71,19 +88,84 @@ export const PROGRAM: WorkoutDay[] = [
   {
     key: '2',
     short: 'Tue',
-    name: 'Upper Push & Press',
+    name: 'Indoor Intervals',
+    type: 'Ride',
+    chip: 'chip-cyan',
+    color: 'cyan',
+    eyebrow: 'Ride · Indoor Intervals',
+    title: 'Indoor Intervals',
+    sub: 'Your one hard, structured bike session — weather-proof and tightly time-boxed on the Zwift Ride. Alternate sweet-spot and VO₂ blocks by cycle week. FTP 222W. Cap it with an 8-minute core circuit.',
+    tags: ['45–55 min', 'Weekday · home by 7:30', 'Finish: 8-min core'],
+    rides: [
+      {
+        variant: 'indoor',
+        pill: 'Sweet Spot · Weeks A / C',
+        title: '3 × 12 min @ 195–205W (88–92% FTP)',
+        body: '5 min easy, 5 min build, then 3 × 12 min at sweet spot with 4 min easy between. Best bang-for-buck aerobic power — raises FTP without wrecking recovery. Cadence 85–95.',
+      },
+      {
+        variant: 'indoor',
+        pill: 'VO₂ · Week B',
+        title: '5 × 3 min @ 240–260W (108–117% FTP)',
+        body: 'After a 12-min build: 5 × 3 min hard, 3 min easy spin between. Top-end power and a big calorie hit in a short window. Short and brutal — perfect for the weekday slot.',
+      },
+      {
+        variant: 'fallback',
+        pill: 'Fallback',
+        title: '40 min Zone 2 + core',
+        body: 'Low recovery or short on time: steady ~140–160W and just bank the aerobic minutes. Either way finish with the core circuit — hollow holds, side planks, Pallof press.',
+      },
+    ],
+  },
+
+  // ════════════════ WEDNESDAY ════════════════
+  {
+    key: '3',
+    short: 'Wed',
+    name: 'Dawn Nine',
+    type: 'Golf',
+    chip: 'chip-green',
+    color: 'green',
+    eyebrow: 'Golf · Dawn Nine',
+    title: 'Dawn Nine',
+    sub: 'Tee off at first light and walk a fast nine — the walking is the training and the reps are the skill work. To be showered by 7:30 it has to be a moving round; if the tee sheet is slow, hit the range and short-game area instead.',
+    tags: ['~75–90 min walking', 'Weekday · home by 7:30'],
+    exercises: [
+      {
+        name: 'Walk & play — fast 9',
+        sets: '~75–90 min',
+        note: 'Tee off ~5:30. Carry or push — skip the cart; the walking is the point. Brisk pace between shots so it doubles as Zone 1–2 steps. Roughly 7–8k steps and 300–500 kcal before most people are up.',
+      },
+      {
+        name: 'Range + short game (backup)',
+        sets: '~45 min',
+        note: 'Course backed up or weather turning? A bucket working through the bag, then chipping and putting. All the skill, none of the time risk — call it at 7:00 and still make 7:30.',
+      },
+      {
+        name: 'Later / PM — 10-min mobility',
+        sets: 'optional',
+        note: 'Golf is rotational and one-sided. Thoracic rotations, open-books, hip-flexor and hamstring stretch, a few band pull-aparts. Do it at the desk or before bed.',
+      },
+    ],
+  },
+
+  // ════════════════ THURSDAY ════════════════
+  {
+    key: '4',
+    short: 'Thu',
+    name: 'Upper Strength + Power',
     type: 'Strength',
     chip: 'chip-blue',
     color: 'blue',
-    eyebrow: 'Strength · Push',
-    title: 'Upper Push & Press',
-    sub: 'Heavy upper body. Press variation rotates. Rest 2 min on main lifts, 90 sec on accessories.',
-    tags: ['~40–45 min', 'Optional Z2 spin · 20–30 min'],
+    eyebrow: 'Strength · Upper + Power',
+    title: 'Upper Strength + Power',
+    sub: 'Push, pull, and one explosive move to keep you athletic. Bench variation rotates each cycle. Heavy but fast — 2 min on the main lifts, 90 sec on accessories. Optional easy spin after if the clock allows.',
+    tags: ['~40 min lift + optional spin', 'Weekday · home by 7:30'],
     exercises: [
       {
         name: 'Bench Press (rotation)',
         sets: '5 × 5',
-        note: 'Heavy. Scapulae retracted, slight arch, feet planted. 2-sec descent, brief pause on chest, drive up fast.',
+        note: 'Heavy. Scapulae retracted, slight arch, feet planted. 2-sec descent, brief pause on the chest, drive up fast.',
         rotation: {
           title: '3-week cycle',
           rows: [
@@ -95,119 +177,42 @@ export const PROGRAM: WorkoutDay[] = [
         videoQuery: 'barbell bench press proper form',
       },
       {
-        name: 'Standing Overhead Press',
-        sets: '4 × 6',
-        note: 'Strict press, no leg drive. Brace core, tuck chin to let bar pass, press straight up. Full lockout overhead.',
-        videoQuery: 'standing overhead press barbell form',
-      },
-      {
-        name: 'Incline DB Press',
-        sets: '3 × 8',
-        note: 'Bench at 30–45°. Press straight up from upper chest. Elbows at ~45°, not flared.',
-        videoQuery: 'incline dumbbell press form tutorial',
-      },
-      {
-        name: 'Lateral Raise (DB)',
-        sets: '3 × 12–15',
-        note: 'Slight bend in elbows. Raise to shoulder height max. 3-sec negative on every rep.',
-        videoQuery: 'dumbbell lateral raise proper form',
-      },
-      {
-        name: 'Cable Reverse Fly',
-        sets: '3 × 12–15',
-        note: 'Dual pulley set to shoulder height, cables crossed. Slight elbow bend, arms sweep out and back to parallel leading with the elbows. Constant tension beats dumbbells here — squeeze the rear delts hard, 1-sec hold.',
-        videoQuery: 'cable reverse fly rear delt form',
-      },
-      {
-        name: 'Hollow Body Hold',
-        sets: '3 × 30–45 sec',
-        note: 'Lie flat, lower back pressed into the floor. Lift shoulders and legs slightly off the ground, arms extended overhead. Tight, cohesive shape. Scale by bending knees or shortening arm reach.',
-        videoQuery: 'hollow body hold tutorial form',
-      },
-    ],
-  },
-
-  // ════════════════ WEDNESDAY ════════════════
-  {
-    key: '3',
-    short: 'Wed',
-    name: 'Mid-Week Ride',
-    type: 'Ride',
-    chip: 'chip-cyan',
-    color: 'cyan',
-    eyebrow: 'Ride Day',
-    title: 'Mid-Week Ride',
-    sub: 'Outdoor preferred — get fresh air. No lifting. Engine work for the legs while everything else recovers.',
-    rides: [
-      {
-        variant: 'outdoor',
-        pill: 'Outdoor · Default',
-        title: '60–90 min on the Tarmac SL8 or Marlin',
-        body: 'Mostly Zone 2 with natural terrain variation. Build the aerobic base. If you feel good, throw in a few harder efforts up climbs — but the point is volume, not punishment.',
-      },
-      {
-        variant: 'indoor',
-        pill: 'Indoor · Backup',
-        title: '45–60 min Zwift structured',
-        body: 'Sweet spot intervals (4 × 8 min @ 88–94% FTP) or tempo (3 × 12 min @ 76–87% FTP). FTP: 180W. Quality over duration when indoors.',
-      },
-      {
-        variant: 'fallback',
-        pill: 'Fallback',
-        title: '30 min recovery spin',
-        body: "If you're toast from Mon/Tue or short on time: easy spin, ~60–65% FTP, conversational. Still better than skipping.",
-      },
-    ],
-  },
-
-  // ════════════════ THURSDAY ════════════════
-  {
-    key: '4',
-    short: 'Thu',
-    name: 'Power & Athletic',
-    type: 'Power',
-    chip: 'chip-amber',
-    color: 'amber',
-    eyebrow: 'Power · Athletic',
-    title: 'Power & Athletic',
-    sub: 'Fast, explosive, intentful. Light loads, max speed. Full recovery between sets. Quality over quantity.',
-    tags: ['~35–40 min', 'Optional Z2 spin · 20–30 min'],
-    exercises: [
-      {
-        name: 'Hang Cleans',
-        sets: '5 × 3',
-        note: 'Start at mid-thigh. Snap hips forward, shrug, catch in front rack. Reset fully between reps. ~60–70% of your clean max — speed is the goal.',
-        videoQuery: 'barbell hang clean form tutorial',
-      },
-      {
         name: 'Barbell Push Press',
         sets: '4 × 3',
-        note: 'Dip knees slightly, drive through heels, punch the bar overhead. Lock out with ears in front of arms. Aggressive intent.',
+        note: 'The athletic/power move now that there is no separate power day. Dip the knees slightly, drive through the heels, punch the bar overhead. Lock out with ears in front of the arms. Aggressive intent, full recovery between sets.',
         videoQuery: 'push press barbell form tutorial',
       },
       {
-        name: 'Barbell Jump Squat',
-        sets: '4 × 5',
-        note: 'Light bar (30–40% of squat max). Quarter squat, jump as high as you can. Land soft with bent knees, reset, go again.',
-        videoQuery: 'barbell jump squat form tutorial',
+        name: 'Bent-Over Barbell Row',
+        sets: '4 × 6',
+        note: 'Torso at ~45°. Pull the bar to the lower chest, squeeze at the top for 1 sec. No momentum, no hitching. Horizontal pull to balance all the pressing.',
+        videoQuery: 'barbell bent over row proper form',
       },
       {
-        name: 'Heavy DB Swing',
+        name: 'Lat Pulldown',
+        sets: '3 × 10',
+        note: 'Vertical pull for back width. Wide-ish grip, drive the elbows down and back, bar to the upper chest. Lead with the elbows. 1-sec squeeze at the bottom, controlled 3-sec stretch up — no heaving.',
+        videoQuery: 'lat pulldown machine proper form',
+      },
+      {
+        name: 'Cable Face Pull',
         sets: '3 × 15',
-        note: 'Hold one heavy DB with both hands. Hike between legs, snap hips forward, let it float to chest height. Arms are passive — hips do the work.',
-        videoQuery: 'dumbbell swing form tutorial hip hinge',
+        note: 'Dual pulley at forehead height with a rope. Pull to the face, rotate the hands out so thumbs point behind you, squeeze 1 sec. Shoulder health for all the pressing and all the hunched-over riding.',
+        videoQuery: 'cable face pull rope form rear delt',
       },
       {
         name: 'Farmer Carry',
         sets: '2 × 50 yd',
-        note: "Heaviest DBs you can grip for the distance. Brisk pace, tall posture, don't grind. Grip + structural carryover.",
+        note: 'Heaviest DBs you can grip for the distance. Brisk pace, tall posture, don’t grind. Grip and full-body structural work to finish.',
         videoQuery: 'farmer carry dumbbell form tutorial',
       },
+    ],
+    rides: [
       {
-        name: 'Cable Pallof Press',
-        sets: '3 × 10/side',
-        note: 'Anti-rotation core off the dual pulley at chest height. Slow press out, hold 2 sec, return. Resist the cable trying to twist you. Brace hard — the stack lets you load it heavier and progress cleanly.',
-        videoQuery: 'cable pallof press form tutorial',
+        variant: 'indoor',
+        pill: 'Optional Spin · Indoor',
+        title: '15–20 min easy if time allows',
+        body: 'Same easy Zone 2 flush as Monday, ~120–145W. Optional — the lift is the priority. Skip it without guilt to make 7:30.',
       },
     ],
   },
@@ -216,64 +221,32 @@ export const PROGRAM: WorkoutDay[] = [
   {
     key: '5',
     short: 'Fri',
-    name: 'Posterior & Pull',
-    type: 'Strength',
-    chip: 'chip-blue',
-    color: 'blue',
-    eyebrow: 'Strength · Pull',
-    title: 'Posterior & Pull',
-    sub: 'Heavy posterior chain + back width. Deadlift variation rotates. Rest 2–3 min on main, 90 sec on accessories.',
-    tags: ['~45–50 min', 'Optional Z2 spin · 20–30 min'],
-    exercises: [
+    name: 'Outdoor Endurance',
+    type: 'Ride',
+    chip: 'chip-cyan',
+    color: 'cyan',
+    eyebrow: 'Ride · Outdoor Endurance',
+    title: 'Outdoor Endurance',
+    sub: 'Get outside on the Tarmac before work — 60–75 minutes of mostly Zone 2 with whatever terrain the route gives you. This is where the aerobic base and the calorie burn live. Dawn start, home to shower by 7:30.',
+    tags: ['60–75 min', 'Weekday · home by 7:30', 'Outdoor'],
+    rides: [
       {
-        name: 'Deadlift (rotation)',
-        sets: '5 × 3',
-        note: 'Push the floor away. Bar against shins. Full reset on the floor between reps — no touch-and-go.',
-        rotation: {
-          title: '3-week cycle',
-          rows: [
-            { tag: 'A', name: 'Conventional Deadlift', desc: '— feet hip-width, grip outside knees.' },
-            { tag: 'B', name: 'Deficit Deadlift', desc: '— stand on a 1–1.5" plate. -10% load.' },
-            { tag: 'C', name: 'Snatch-Grip Deadlift', desc: '— wide grip, trap stimulus. -15% load.' },
-          ],
-        },
-        videoQuery: 'barbell deadlift form tutorial conventional',
+        variant: 'outdoor',
+        pill: 'Outdoor · Default',
+        title: '60–75 min Zone 2 on the Tarmac SL8',
+        body: 'Roll out ~5:40. Mostly Zone 2 — HR 120–148, ~123–167W — with natural surges over bridges and rollers. Steady, could-hold-a-conversation breathing. Loop close to home so you’re back to shower by ~7:15.',
       },
       {
-        name: 'Bent Over Barbell Row',
-        sets: '4 × 6',
-        note: 'Torso at ~45°. Pull bar to lower chest, squeeze at the top for 1 sec. No momentum, no hitching.',
-        videoQuery: 'barbell bent over row proper form',
+        variant: 'indoor',
+        pill: 'Indoor · Backup',
+        title: '50 min Zwift Zone 2 / tempo',
+        body: 'Rain or too dark: steady Zone 2 with a few 3–5 min tempo lifts (170–190W). Not as fun as outside, but the minutes still count.',
       },
       {
-        name: 'Single-Leg RDL (DB)',
-        sets: '3 × 8/leg',
-        note: 'Hinge forward on one leg, free leg extends behind you. Keep hips square. Touch a wall for balance if needed.',
-        videoQuery: 'single leg rdl dumbbell form tutorial',
-      },
-      {
-        name: 'Lat Pulldown',
-        sets: '3 × 10',
-        note: 'Real vertical pull at last. Wide-ish grip, drive elbows down and back, pull the bar to your upper chest. Lead with the elbows, not the hands. 1-sec squeeze at the bottom, controlled 3-sec stretch up — no leaning way back to heave it.',
-        videoQuery: 'lat pulldown machine proper form',
-      },
-      {
-        name: 'Cable Face Pull',
-        sets: '3 × 15',
-        note: 'Dual pulley at forehead height with a rope. Pull to your face, and at the end rotate your hands outward so thumbs point behind you. Squeeze for 1 sec. Shoulder health and rear-delt work in one.',
-        videoQuery: 'cable face pull rope form rear delt',
-      },
-      {
-        name: 'Seated Leg Curl',
-        sets: '3 × 12',
-        note: "Direct hamstring work to round out the posterior-chain day. Curl the pad down hard, 1-sec squeeze at the bottom, slow 3-sec return. Keep your hips pinned to the seat — don't let them lift to cheat the weight.",
-        videoQuery: 'seated leg curl machine proper form',
-      },
-      {
-        name: 'Side Plank',
-        sets: '3 × 30–40 sec/side',
-        note: "Forearm down, body in a straight line from head to heels. Hips up — don't let them sag. Anti-lateral flexion finisher. Stack feet, or stagger for stability.",
-        videoQuery: 'side plank form tutorial',
+        variant: 'fallback',
+        pill: 'Fallback',
+        title: '30 min recovery spin',
+        body: 'Legs cooked from Tuesday’s intervals? Easy 30 min at ~60% FTP, conversational. Still beats skipping.',
       },
     ],
   },
@@ -286,21 +259,22 @@ export const PROGRAM: WorkoutDay[] = [
     type: 'Ride',
     chip: 'chip-cyan',
     color: 'cyan',
-    eyebrow: 'Long Ride',
+    eyebrow: 'Ride · Long',
     title: 'Long Ride',
-    sub: "Signature ride of the week. Outdoor by default — this is what summer's for.",
+    sub: 'The signature ride of the week and your single biggest calorie burn. It’s the weekend, so the 7:30 rule is off — just be back by around 10. Outdoor by default; build the duration slowly and keep it fun.',
+    tags: ['1.5–2.5 hr', 'Weekend · back by ~10', 'Outdoor'],
     rides: [
       {
         variant: 'outdoor',
         pill: 'Outdoor · Default',
-        title: '1.5–3 hours on the Tarmac SL8 or Marlin',
-        body: 'Primarily Zone 2 with natural terrain variation. Build slowly — if last week was 90 min, this week aim for 100. Keep it fun. Stop for coffee. This is where the bulk of aerobic adaptation and calorie burn happens.',
+        title: '1.5–2.5 hr on the Tarmac SL8',
+        body: 'Primarily Zone 2 with terrain — HR 120–148, ~123–167W. Build gradually: if last week was 90 min, make this 100. Stop for coffee. Over 90 min, take 50–80 g carbs/hr so you don’t bonk and cost yourself the rest of the day.',
       },
       {
         variant: 'indoor',
         pill: 'Indoor · Backup',
-        title: '90–120 min Zwift event or structured ride',
-        body: 'Group ride or long sweet-spot session if weather forces you inside. Duration matters more than intensity on this day.',
+        title: '75–90 min Zwift group ride or long sweet-spot',
+        body: 'If the weather is genuinely out: a Zwift group ride or a long steady effort. Duration matters more than intensity on this day.',
       },
     ],
   },
@@ -309,17 +283,30 @@ export const PROGRAM: WorkoutDay[] = [
   {
     key: '7',
     short: 'Sun',
-    name: 'Recovery',
-    type: 'Rest',
-    chip: 'chip-violet',
-    color: 'violet',
-    eyebrow: 'Recovery',
-    title: 'Recovery',
-    sub: 'Active rest — not a skip day. This protects everything else in the program.',
-    recovery: {
-      icon: '🧘',
-      title: 'Yoga, Mobility, Stretching',
-      body: '20–30 minutes. Focus on hip flexors, hamstrings, thoracic spine, shoulders, and neck. Optional easy 20–30 min spin if you want movement, recovery pace only. Sleep matters more than any extra session.',
-    },
+    name: 'Golf + Recovery',
+    type: 'Golf',
+    chip: 'chip-green',
+    color: 'green',
+    eyebrow: 'Golf · Recovery Round',
+    title: 'Golf + Recovery',
+    sub: 'Your second golf slot and your active-recovery day in one: a relaxed round — nine, or a full eighteen if the morning is open — then a proper mobility session. Weekend pace, back by around 10 (later if you play 18). This is what protects everything else in the week.',
+    tags: ['Relaxed round + mobility', 'Weekend · flexible'],
+    exercises: [
+      {
+        name: 'Play — relaxed 9 or 18',
+        sets: 'walk it',
+        note: 'No clock pressure today. Walk the round for the steps and the head-space — low intensity is exactly what the day after a long ride wants. If your Whoop recovery is red, keep it to nine or take a true rest day. Sleep beats any extra session.',
+      },
+      {
+        name: 'Mobility & stretch',
+        sets: '20–30 min',
+        note: 'The real recovery work: hips, hamstrings, thoracic spine, shoulders, neck, plus golf-specific t-spine rotations and open-books. Foam-roll quads and glutes after the week’s riding.',
+      },
+      {
+        name: 'Optional easy spin',
+        sets: '20–30 min',
+        note: 'Want a touch more movement? A very easy Zone 1 spin (~60% FTP) helps the legs shed Saturday’s ride. Totally optional — recovery pace only.',
+      },
+    ],
   },
 ];
