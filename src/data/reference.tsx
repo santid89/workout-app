@@ -81,10 +81,10 @@ export interface WeekRow {
 }
 
 export const WEEK_AT_GLANCE: WeekRow[] = [
-  { day: 'Mon', desc: 'Lower strength (squat) + 20-min Z2 flush spin' },
+  { day: 'Mon', desc: 'Lower strength (shoulder-safe squat) + 20-min Z2 flush spin' },
   { day: 'Tue', desc: 'Indoor intervals (Zwift, FTP 222) + core' },
   { day: 'Wed', desc: 'Golf — dawn speed-9 (+ PM mobility)' },
-  { day: 'Thu', desc: 'Upper strength + power (bench) + optional spin' },
+  { day: 'Thu', desc: 'Upper rebuild — cuff/scap rehab + staged pressing return' },
   { day: 'Fri', desc: 'Outdoor endurance ride (Z2, 60–75 min)' },
   { day: 'Sat', desc: 'Long outdoor ride (1.5–2.5 hr, back by ~10)' },
   { day: 'Sun', desc: 'Golf — relaxed round + mobility (active recovery)' },
@@ -102,15 +102,54 @@ export interface AccordionData {
 
 export const ABOUT_ACCORDIONS: AccordionData[] = [
   {
+    title: 'Shoulder — Return to Load',
+    items: [
+      {
+        h4: 'Where this sits',
+        body: (
+          <>
+            Shoulder dislocation on <b>2026-06-16</b>, ~6-week rehab → cleared to
+            load around <b>2026-07-28</b>. Cycling and golf continued throughout;
+            only loaded lifting paused. The plan brings lifting back in stages
+            rather than cold. This isn’t medical advice — let your PT gate it.
+          </>
+        ),
+      },
+      {
+        h4: 'Phase A — now to clearance',
+        body: 'Thursday is rotator-cuff + scapular work only — external rotations, band pull-aparts, Y-T-W raises, chest-supported rows. No pressing, nothing overhead. Legs (shoulder-safe squats), core, cycling and golf carry the week.',
+      },
+      {
+        h4: 'Phase B — reintroduce (wks 6–9)',
+        body: 'Once cleared and pain-free, add the neutral-grip DB floor press, then the landmine press — light, higher reps, slow progression. Bring the back squat back if the bar-on-back hold is comfortable.',
+      },
+      {
+        h4: 'Phase C — rebuild (wks 9–12)',
+        body: 'Controlled-ROM barbell bench and incline pressing return; then the strict overhead press; the push press is last, and only once the shoulder is fully stable. Work back toward normal strength targets.',
+      },
+      {
+        h4: 'Non-negotiables',
+        body: (
+          <>
+            Pain-free range, always. Re-dislocation risk is highest with the arm{' '}
+            <b>abducted and externally rotated</b> (the throwing / “cocked”
+            position) — respect it. Sharp pain or a feeling of instability means
+            stop and regress. Get a PT’s sign-off before anything overhead.
+          </>
+        ),
+      },
+    ],
+  },
+  {
     title: '3-Week Rotation Schedule',
     items: [
       {
-        h4: 'Mon — Squat',
-        body: 'Week A: Back Squat · Week B: Front Squat · Week C: Tempo Back Squat (3-sec descent + pause).',
+        h4: 'Mon — Squat (shoulder-safe for now)',
+        body: 'Week A: Safety-Bar Squat · Week B: Leg Press · Week C: Goblet Squat — holds that spare the shoulder. The original Back / Front / Tempo back-squat rotation returns once you’re cleared to load the bar on your back (Phase B).',
       },
       {
-        h4: 'Thu — Bench Press',
-        body: 'Week A: Standard Barbell Bench · Week B: Close-Grip Bench · Week C: Floor Press.',
+        h4: 'Thu — Bench Press (on hold)',
+        body: 'Paused while the shoulder rebuilds. Pressing comes back through rehab — floor press → landmine → barbell bench. The Barbell / Close-Grip / Floor bench rotation resumes in Phase C.',
       },
       {
         h4: 'The Hinge',

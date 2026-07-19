@@ -38,10 +38,12 @@ export function AboutPanel({ active }: { active: boolean }) {
           the weekend, where you just need to be back by around <b>10</b>.
         </p>
         <p className="prose">
-          <b>Two lifts that actually happen.</b> The old four-day strength block
-          quietly fell to zero once summer hit. Two full, hard sessions — lower +
-          posterior on Monday, upper + power on Thursday — hold muscle far better
-          than four days you skip.
+          <b>Lifting is rebuilding, not restarting cold.</b> The strength work
+          stopped after a <b>shoulder dislocation on 2026-06-16</b> — not from
+          drift. So the two lift days are shoulder-first: legs and posterior
+          chain unaffected on Monday, and Thursday is a staged upper-body return
+          — rotator-cuff and scapular work now, pressing reintroduced as you’re
+          cleared. See <b>Shoulder — Return to Load</b> below.
         </p>
         <p className="prose">
           <b>Cycling, indoor and outdoor.</b> One hard indoor interval day
