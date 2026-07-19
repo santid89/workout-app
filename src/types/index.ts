@@ -1,4 +1,4 @@
-export type WorkoutType = 'Strength' | 'Ride' | 'Power' | 'Rest';
+export type WorkoutType = 'Strength' | 'Ride' | 'Power' | 'Golf' | 'Rest';
 export type RefType = 'Log' | 'Reference';
 export type DayColor = 'blue' | 'cyan' | 'amber' | 'violet' | 'green' | 'dim';
 

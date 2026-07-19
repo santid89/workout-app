@@ -18,73 +18,42 @@ export function AboutPanel({ active }: { active: boolean }) {
 
         <div className="section-title">Goal</div>
         <p className="prose">
-          Build an elite-rugby-player body:{' '}
-          <b>strong, powerful, athletic, durable</b>. Heavy compound lifts,
-          Olympic lift derivatives, posterior chain bias, grip work, loaded
-          carries, jumps. Not bodybuilding-isolation, not pure powerlifting.
-          Athletic strength.
-        </p>
-        <p className="prose">
-          Cycling provides the aerobic engine and burns the calories —
-          weather-driven now that summer's here, with 4+ outdoor rides as the
-          weekly target.
+          Stay lean and athletic at <b>185–190 lb</b> — as low a body fat as you
+          can hold your ~138 lb of lean mass at. Three sports, deliberately
+          balanced: <b>weightlifting</b> to keep the muscle, <b>cycling</b>{' '}
+          (indoor and outdoor) as the aerobic engine and biggest calorie burn,
+          and <b>golf</b> for the skill, the steps, and the head-space. You’re
+          ~199 lb today, so the near-term job is a slow, muscle-sparing cut.
         </p>
 
-        <div className="section-title">How This Differs from the Old Program</div>
+        <div className="section-title">How This Is Built</div>
         <p className="prose">
-          <b>4 strength days, not 5.</b> Frees up Wednesday for a dedicated ride
-          and gives the body real recovery slack.
+          <b>Combined mornings.</b> Most days stack two things — a lift plus an
+          easy spin, golf plus mobility — so all three sports fit one week
+          instead of fighting over it. It’s also how you already train.
         </p>
         <p className="prose">
-          <b>Lower reps, heavier loads.</b> Main lifts run 3–6 reps (was 6–12).
-          Strength bias for the rugby physique.
+          <b>Built around your clock.</b> Weekday sessions are sized to finish
+          and shower by <b>7:30</b>; the long ride and the relaxed round live on
+          the weekend, where you just need to be back by around <b>10</b>.
         </p>
         <p className="prose">
-          <b>3-week movement rotation.</b> Each main lift cycles through three
-          variations — same structure, different stimulus.
+          <b>Lifting is rebuilding, not restarting cold.</b> The strength work
+          stopped after a <b>shoulder dislocation on 2026-06-16</b> — not from
+          drift. So the two lift days are shoulder-first: legs and posterior
+          chain unaffected on Monday, and Thursday is a staged upper-body return
+          — rotator-cuff and scapular work now, pressing reintroduced as you’re
+          cleared. See <b>Shoulder — Return to Load</b> below.
         </p>
         <p className="prose">
-          <b>Olympic lift derivatives in, isolation out.</b> Hang cleans + push
-          press anchor Thursday. No standalone skull crushers or curls — arms
-          get hit through compounds.
+          <b>Cycling, indoor and outdoor.</b> One hard indoor interval day
+          (weather-proof, time-boxed), one outdoor endurance ride, one long
+          weekend ride, plus easy flush spins after lifting. FTP is 222W.
         </p>
         <p className="prose">
-          <b>Cycling weather-driven.</b> Wed and Sat are dedicated rides.
-          Lift-day spins are optional.
-        </p>
-
-        <div className="section-title">Building Gym — Equipment Update</div>
-        <p className="prose">
-          Moved from the home gym to the building's gym. It has a{' '}
-          <b>full rack and benches</b>, so every barbell main lift — squat,
-          bench, overhead press, deadlift — and the Thursday Olympic work stay
-          exactly as they were. What changed is the accessories, now that a
-          machine circuit and a cable station are on hand.
-        </p>
-        <p className="prose">
-          <b>Lat pulldown in.</b> Friday's DB pullover → lat pulldown. Finally a
-          true vertical pull instead of an improvised lat stretch.
-        </p>
-        <p className="prose">
-          <b>Cable station replaces bands.</b> Pallof press (Thu) and face pull
-          (Fri) move to the dual adjustable pulley, and the reverse fly (Tue)
-          goes cable too — constant tension and a real stack to progress on.
-        </p>
-        <p className="prose">
-          <b>Direct leg machines added.</b> Leg extension caps Monday; seated
-          leg curl adds hamstring volume to Friday's posterior-chain work.
-        </p>
-        <p className="prose">
-          <b>Neck harness retired</b> with the home gym. No harness in the
-          building gym — revisit if cervical work becomes a priority again.
-        </p>
-        <p className="prose">
-          <b>Machine backups on tap.</b> Leg press (squat-day volume or a
-          busy-rack fallback), chest press &amp; shoulder press (pressing when
-          the bench/rack is taken), row machine (swap for barbell rows), and the
-          dip machine all map cleanly onto the program. The biceps curl machine
-          is there if you want it, but the plan still earns arms through
-          compounds.
+          <b>Golf counts.</b> Two slots — a fast dawn nine mid-week and a relaxed
+          recovery round on the weekend. Walked, it’s real Zone 1–2 volume, not a
+          day off.
         </p>
 
         <div className="section-title">Week at a Glance</div>
