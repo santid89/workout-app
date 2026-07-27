@@ -12,7 +12,7 @@ import {
   orderBy,
   serverTimestamp,
 } from 'firebase/firestore';
-import { getDbOrNull } from './app';
+import { getDbOrNull, errCode } from './app';
 import { PROGRAM_DETAIL } from '@/data/programDetail';
 import { resolveVariation } from '@/data/rotation';
 import type { LogEntry, LogMetrics } from '@/types';
@@ -215,9 +215,4 @@ export async function syncShareExport(
   } catch (e) {
     console.warn('[Workout app] Could not update API export:', errCode(e));
   }
-}
-
-function errCode(e: unknown): string {
-  const err = e as { code?: string; message?: string };
-  return err.code || err.message || 'unknown error';
 }

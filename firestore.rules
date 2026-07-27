@@ -2,22 +2,76 @@ rules_version = '2';
 
 // Workout-app data model
 // ----------------------
-//  users/{uid}                 — private profile (holds the share token)
-//  users/{uid}/logs/{logId}    — private workout history
-//  shares/{token}              — read-only JSON export, reachable only by
-//                                someone holding the unguessable token
-//                                (a "capability URL"); writable solely by the
-//                                owner whose uid is stamped on the doc.
+//  users/{uid}                      — private profile (share token, injection cadence)
+//  users/{uid}/logs/{logId}         — private workout history
+//  users/{uid}/placements/{id}      — private injection-site rotation
+//  users/{uid}/injections/{id}      — private injection history (health data)
+//  shares/{token}                   — read-only JSON export of TRAINING data only,
+//                                     reachable by anyone holding the unguessable
+//                                     token (a "capability URL"); writable solely
+//                                     by the owner whose uid is stamped on the doc.
+//
+// The user tree is deny-by-default: each collection is matched explicitly rather
+// than through a recursive wildcard. Rules are OR'd, so a blanket
+// `users/{uid}/{document=**}` allow would defeat any validation added beneath
+// it. The trade-off is that a new subcollection needs a rule block here before
+// it can be written — which is the point.
+//
+// Health data never appears under /shares. There is no rule that would let it.
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Everything under a user's own tree: owner-only.
-    match /users/{userId}/{document=**} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
     }
 
-    // Public read of the export is intentional — the token is the secret.
-    // Creates/updates must be performed by the owner and must stamp their uid.
+    // A YYYY-MM-DD calendar date, the format every client writes.
+    function isDateString(v) {
+      return v is string && v.matches('^\\d{4}-\\d{2}-\\d{2}$');
+    }
+
+    function validPlacement() {
+      let d = request.resource.data;
+      return d.label is string && d.label.size() > 0 && d.label.size() <= 80
+             && d.order is int && d.order >= 0 && d.order < 200
+             && d.active is bool;
+    }
+
+    function validInjection() {
+      let d = request.resource.data;
+      return isDateString(d.date)
+             && d.placementId is string && d.placementId.size() > 0
+             && d.placementLabel is string
+                && d.placementLabel.size() > 0 && d.placementLabel.size() <= 80
+             && (!('doseMg' in d) || (d.doseMg is number && d.doseMg > 0 && d.doseMg <= 100))
+             && (!('note' in d) || (d.note is string && d.note.size() <= 500));
+    }
+
+    // The profile doc itself: share token, injection cadence.
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+
+      // Workout history. Left unvalidated so existing clients can't break; the
+      // shape is enforced by the typed write layer in src/firebase/logs.ts.
+      match /logs/{logId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Health. Validated on write — bad dates, negative doses and oversized
+      // notes are rejected at the database, not just in the UI.
+      match /placements/{placementId} {
+        allow read, delete: if isOwner(userId);
+        allow create, update: if isOwner(userId) && validPlacement();
+      }
+
+      match /injections/{injectionId} {
+        allow read, delete: if isOwner(userId);
+        allow create, update: if isOwner(userId) && validInjection();
+      }
+    }
+
+    // Public read of the training export is intentional — the token is the
+    // secret. Creates/updates must be performed by the owner and stamp their uid.
     match /shares/{token} {
       allow read: if true;
       allow create: if request.auth != null

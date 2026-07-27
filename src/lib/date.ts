@@ -7,10 +7,29 @@ export function ymd(d: Date): string {
 
 export const todayStr = (): string => ymd(new Date());
 
+/** Parses a "YYYY-MM-DD" string into a local-midnight Date. */
+export function parseYmd(s: string): Date {
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+/** Shifts a "YYYY-MM-DD" string by n days (negative to go back). */
+export function addDays(s: string, n: number): string {
+  const d = parseYmd(s);
+  d.setDate(d.getDate() + n);
+  return ymd(d);
+}
+
+/** Whole days from `from` to `to`, both "YYYY-MM-DD". Negative when `to` is earlier. */
+export function daysBetween(from: string, to: string): number {
+  return Math.round(
+    (parseYmd(to).getTime() - parseYmd(from).getTime()) / 86400000
+  );
+}
+
 /** Humanizes a YYYY-MM-DD string: "Today", "Yesterday", or "Mon, Jan 15". */
 export function prettyDate(s: string): string {
-  const [y, m, d] = s.split('-').map(Number);
-  const date = new Date(y, m - 1, d);
+  const date = parseYmd(s);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const diff = Math.round((date.getTime() - today.getTime()) / 86400000);
