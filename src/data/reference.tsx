@@ -25,11 +25,11 @@ export interface CarbRow {
 export const CARBS_BY_DAY: CarbRow[] = [
   { day: 'Mon', amount: '~300 g', rest: '— lower strength + spin' },
   { day: 'Tue', amount: '~320 g', rest: '— hard indoor intervals' },
-  { day: 'Wed', amount: '~250 g', rest: '— golf, easy walking day' },
-  { day: 'Thu', amount: '~300 g', rest: '— upper strength + power' },
+  { day: 'Wed', amount: '~285 g', rest: '— golf AM + push session PM' },
+  { day: 'Thu', amount: '~300 g', rest: '— lower unilateral + power' },
   { day: 'Fri', amount: '~300–340 g', rest: '— outdoor ride, scale with length' },
   { day: 'Sat', amount: '~340–420 g', rest: '— long ride, scale with duration' },
-  { day: 'Sun', amount: '~230 g', rest: '— golf + recovery' },
+  { day: 'Sun', amount: '~250 g', rest: '— golf + light pull + recovery' },
 ];
 
 export interface InfoCard {
@@ -81,13 +81,13 @@ export interface WeekRow {
 }
 
 export const WEEK_AT_GLANCE: WeekRow[] = [
-  { day: 'Mon', desc: 'Lower strength (shoulder-safe squat) + 20-min Z2 flush spin' },
-  { day: 'Tue', desc: 'Indoor intervals (Zwift, FTP 222) + core' },
-  { day: 'Wed', desc: 'Golf — dawn speed-9 (+ PM mobility)' },
-  { day: 'Thu', desc: 'Upper rebuild — cuff/scap rehab + staged pressing return' },
+  { day: 'Mon', desc: 'Lower strength (DB squat rotation) + 20-min Z2 flush spin' },
+  { day: 'Tue', desc: 'Indoor intervals (Zwift, FTP 222) + mat core' },
+  { day: 'Wed', desc: 'Golf dawn speed-9 AM · upper push (floor press) PM' },
+  { day: 'Thu', desc: 'Lower unilateral + DB swing power (+ optional spin)' },
   { day: 'Fri', desc: 'Outdoor endurance ride (Z2, 60–75 min)' },
   { day: 'Sat', desc: 'Long outdoor ride (1.5–2.5 hr, back by ~10)' },
-  { day: 'Sun', desc: 'Golf — relaxed round + mobility (active recovery)' },
+  { day: 'Sun', desc: 'Golf relaxed round + light pull session + mobility' },
 ];
 
 export interface AccordionItemData {
@@ -108,24 +108,25 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
         h4: 'Where this sits',
         body: (
           <>
-            Shoulder dislocation on <b>2026-06-16</b>, ~6-week rehab → cleared to
-            load around <b>2026-07-28</b>. Cycling and golf continued throughout;
-            only loaded lifting paused. The plan brings lifting back in stages
-            rather than cold. This isn’t medical advice — let your PT gate it.
+            Shoulder dislocation on <b>2026-06-16</b>, ~6-week rehab. As of early
+            August it’s <b>pain-free and past the 6-week mark → Phase B is
+            active</b>. Cycling and golf continued throughout; only loaded
+            lifting paused. This isn’t medical advice — let your PT gate each
+            step up.
           </>
         ),
       },
       {
-        h4: 'Phase A — now to clearance',
-        body: 'Thursday is rotator-cuff + scapular work only — external rotations, band pull-aparts, Y-T-W raises, chest-supported rows. No pressing, nothing overhead. Legs (shoulder-safe squats), core, cycling and golf carry the week.',
+        h4: 'Phase A — done',
+        body: 'Weeks 0–6: rotator-cuff + scapular work only, no pressing, nothing overhead, while legs, core, cycling and golf carried the week. Its habits stay: every press session still opens with the cuff warm-up (side-lying external rotations + prone Y-T-W), and Sunday keeps a maintenance dose.',
       },
       {
-        h4: 'Phase B — reintroduce (wks 6–9)',
-        body: 'Once cleared and pain-free, add the neutral-grip DB floor press, then the landmine press — light, higher reps, slow progression. Bring the back squat back if the bar-on-back hold is comfortable.',
+        h4: 'Phase B — now (wks 6–9)',
+        body: 'The floor press rotation on Wednesday PM is the comeback lift: light (~20–25 lb/hand), higher reps, slow progression, floor-protected range. Rows are unrestricted. Nothing overhead yet. Any sharp pain or instability → back to Phase A for a week.',
       },
       {
-        h4: 'Phase C — rebuild (wks 9–12)',
-        body: 'Controlled-ROM barbell bench and incline pressing return; then the strict overhead press; the push press is last, and only once the shoulder is fully stable. Work back toward normal strength targets.',
+        h4: 'Phase C — next (wks 9–12)',
+        body: 'Once the floor press is solid and pain-free for a few weeks, add the half-kneeling single-arm press (the gated card on Wednesday) — the overhead comeback step now that the landmine went with the gym. Strict two-arm overhead pressing comes after that, and only once fully stable.',
       },
       {
         h4: 'Non-negotiables',
@@ -144,21 +145,21 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
     title: '3-Week Rotation Schedule',
     items: [
       {
-        h4: 'Mon — Squat (shoulder-safe for now)',
-        body: 'Week A: Safety-Bar Squat · Week B: Leg Press · Week C: Goblet Squat — holds that spare the shoulder. The original Back / Front / Tempo back-squat rotation returns once you’re cleared to load the bar on your back (Phase B).',
+        h4: 'Mon — Squat pattern',
+        body: 'Week A: DB Front-Rack Squat · Week B: Goblet Squat · Week C: Tempo Front-Rack (3-sec descent + pause, lighter). Same structure, three different stimuli — all within the dumbbell ceiling.',
       },
       {
-        h4: 'Thu — Bench Press (on hold)',
-        body: 'Paused while the shoulder rebuilds. Pressing comes back through rehab — floor press → landmine → barbell bench. The Barbell / Close-Grip / Floor bench rotation resumes in Phase C.',
+        h4: 'Wed PM — Floor Press',
+        body: 'Week A: Neutral-Grip DB Floor Press · Week B: Standard-Grip DB Floor Press · Week C: Single-Arm Floor Press. The pressing rotation lives here now — floor-protected range while the shoulder finishes rebuilding.',
       },
       {
         h4: 'The Hinge',
         body: (
           <>
-            The heavy deadlift pattern lives inside Monday now as the{' '}
-            <b>Romanian deadlift</b>, rather than on its own day. Two lift days
-            can’t each carry a full main lift — squat and bench rotate, the
-            hinge rides along on leg day.
+            The heavy deadlift pattern lives inside Monday as the{' '}
+            <b>DB Romanian deadlift</b> (tempo negatives make 2×50 honest), with
+            Thursday’s <b>heavy DB swing</b> covering hip speed. No barbell
+            needed for either.
           </>
         ),
       },
@@ -208,7 +209,7 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
       },
       {
         h4: 'Weekend window — back by ~10',
-        body: 'Sunday is the relaxed slot: nine or a full eighteen, no clock pressure. Low intensity the day after the long ride makes it double as active recovery, paired with a real mobility session.',
+        body: 'Sunday is the relaxed slot: nine or a full eighteen, no clock pressure. Low intensity the day after the long ride makes it double as active recovery, paired with the light pull session and a real mobility block once you’re home.',
       },
       {
         h4: 'Why it’s in the plan',
@@ -220,16 +221,24 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
     title: 'Progression & Recovery',
     items: [
       {
-        h4: 'Main Lifts',
-        body: 'Add 5 lbs to a main lift once you’ve completed its sets/reps cleanly on two consecutive A-rotations of that movement (two full 3-week cycles for the same variation). Don’t chase weight inside a cycle.',
+        h4: 'Double Progression (the DB rule)',
+        body: (
+          <>
+            Every lift has a rep range. Start at the bottom, add reps session to
+            session; when <b>all sets</b> hit the top of the range cleanly, add
+            weight and reset to the bottom. Plate steps per hand: 10 (empty) →
+            20 → 30 → 40 → 50 lb; a single pair of 5s buys the half-step when a
+            full jump is too big.
+          </>
+        ),
       },
       {
-        h4: 'Accessories & Machines',
-        body: 'When the top set hits the upper end of its rep range cleanly across all sets, move up — barbell +5 lbs, dumbbell +2.5/hand, machine one pin. On cables (face pull, Pallof) prioritize control over load.',
+        h4: 'At the 50 lb Ceiling',
+        body: 'Both handles max at ~50 lb (that combination uses every plate). When a lift owns 50s at the top of its range, the load lever is gone — so pull the other ones: 3-sec negatives, pause reps, 1½ reps, single-limb versions, shorter rest. Rep quality is the progression, not the number on the handle.',
       },
       {
         h4: 'Combining on Low-Time Days',
-        body: 'The stacked days flex. Tight on time before 7:30? Lift only and drop the spin; ride the intervals and skip the core; hit the range instead of playing nine. Do the primary, shed the add-on — never skip the whole day.',
+        body: 'The stacked days flex. Tight on time before 7:30? Lift only and drop the spin; ride the intervals and skip the core; hit the range instead of playing nine. The Wednesday push session floats — bump it to Thursday PM if the evening dies. Do the primary, shed the add-on — never skip the whole day.',
       },
       {
         h4: 'Recovery Management',

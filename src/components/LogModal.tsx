@@ -69,7 +69,12 @@ export function LogModal() {
 
   const rows = rotationRows(selected);
   const selDay = DAYS.find((x) => x.key === selected);
-  const isStrength = selDay?.type === 'Strength' || selDay?.type === 'Power';
+  // Golf days carry prescribed lifts too (Wed PM push, Sun pull), so they get
+  // the top-set metric fields as well.
+  const isStrength =
+    selDay?.type === 'Strength' ||
+    selDay?.type === 'Power' ||
+    selDay?.type === 'Golf';
   const setMetric = (k: keyof typeof EMPTY, v: string) =>
     setMetrics((m) => ({ ...m, [k]: v }));
 
