@@ -6,71 +6,68 @@ import type { WorkoutDay } from '@/types';
  * alternate programs) tractable. HTML entities from the original are written
  * here as their literal Unicode characters.
  *
- * Design intent (2026 redesign): a deliberately balanced week across the three
- * sports — weightlifting, cycling (indoor + outdoor) and golf — built around
- * two hard rules from real life:
+ * Design intent (2026 redesign, apartment edition): a deliberately balanced
+ * week across the three sports — weightlifting, cycling (indoor + outdoor) and
+ * golf — built around two hard rules from real life:
  *   • Weekdays: out the door at dawn, home and showered by 7:30.
  *   • Weekends: more room — just back by around 10.
- * Most days deliberately *combine* two things (a lift + an easy spin, golf +
- * mobility) so all three sports fit one week instead of fighting for it. The
- * whole thing is pointed at staying lean at 185–190 lb while holding muscle.
+ * Strength now runs on a home dumbbell setup: two loadable handles (~10 lb
+ * each) with 6×10 lb + 4×5 lb plates — a hard ceiling of ~50 lb per hand, no
+ * bench, no bands, a mat, and a small floor space. Four short lift days replace
+ * the old two gym days; golf + mobility and lift + spin still stack so all
+ * three sports fit one week. The whole thing is pointed at staying lean at
+ * 185–190 lb while holding muscle.
  */
 export const PROGRAM: WorkoutDay[] = [
   // ════════════════ MONDAY ════════════════
   {
     key: '1',
     short: 'Mon',
-    name: 'Lower Strength + Spin',
+    name: 'Lower Strength',
     type: 'Strength',
     chip: 'chip-blue',
     color: 'blue',
     eyebrow: 'Strength · Lower + Spin',
-    title: 'Lower Strength + Spin',
-    sub: 'Heavy legs and posterior chain, then flush them with an easy Zone 2 spin. Squat variation rotates each cycle. Rest 2–3 min on the main lift, 90 sec on accessories. Start ~5:45, showered by 7:30.',
-    tags: ['~40 min lift + 20 min spin', 'Weekday · home by 7:30'],
+    title: 'Lower Strength',
+    sub: 'Heavy-for-dumbbells legs and posterior chain in the living room, then flush with an easy Zone 2 spin. Squat pattern rotates each cycle. With a 50 lb/hand ceiling, tempo and control ARE the load — earn every rep. Start ~5:50, showered by 7:30.',
+    tags: ['~35 min lift + 20 min spin', 'Weekday · home by 7:30', 'DBs + mat'],
     exercises: [
       {
-        name: 'Squat (shoulder-safe rotation)',
-        sets: '5 × 5',
-        note: 'Heavy legs without loading the healing shoulder. Warm up thoroughly, brace hard, full depth, controlled descent, drive up with intent. The back-squat Back / Front / Tempo rotation returns once the bar-on-back hold is comfortable and pain-free — see Shoulder · Return to Load in About.',
+        name: 'Squat (rotation)',
+        sets: '4 × 8–10',
+        note: 'The main lower move. Brace hard, full depth, control the descent, drive up with intent. When 4×10 at the top loading feels owned, slow the tempo — the plates cap out, your control doesn’t.',
         rotation: {
-          title: '3-week cycle · shoulder-safe',
+          title: '3-week cycle · dumbbell',
           rows: [
-            { tag: 'A', name: 'Safety-Bar Squat', desc: '— the SSB handles keep the shoulders neutral; no external rotation to hold the bar.' },
-            { tag: 'B', name: 'Leg Press', desc: '— zero load through the shoulders. Go heavy safely.' },
-            { tag: 'C', name: 'Goblet Squat', desc: '— one DB/KB at the chest, hands neutral. Lighter, so reps can climb to 8–10.' },
+            { tag: 'A', name: 'DB Front-Rack Squat', desc: '— both DBs racked at the shoulders, elbows up. Up to 100 lb total.' },
+            { tag: 'B', name: 'Goblet Squat', desc: '— one heavy DB held at the chest. Deep, upright, big brace.' },
+            { tag: 'C', name: 'Tempo Front-Rack Squat', desc: '— 3-sec descent + 1-sec pause in the hole. Drop a plate pair.' },
           ],
         },
-        videoQuery: 'safety bar squat form tutorial',
+        videoQuery: 'dumbbell front rack squat form tutorial',
       },
       {
-        name: 'Romanian Deadlift',
-        sets: '4 × 6',
-        note: 'Your heavy hinge — carries the deadlift stimulus now that the week is two lift days. Push hips back, soft knee bend, lower to a deep hamstring stretch, drive hips forward, bar close to the legs. The shoulders just hang here, but if a loaded barbell tugs the healing side, use a trap-bar or dumbbells and/or lighten.',
-        videoQuery: 'romanian deadlift barbell form tutorial',
+        name: 'DB Romanian Deadlift',
+        sets: '4 × 8–12',
+        note: 'The heavy hinge. Push hips back, soft knees, DBs sliding down the thighs to a deep hamstring stretch, drive hips forward. At 2×50 the weight is modest for a hinge — 3-sec negatives and a 1-sec stretch pause make it honest.',
+        videoQuery: 'dumbbell romanian deadlift form tutorial',
       },
       {
-        name: 'Bulgarian Split Squat (DB)',
-        sets: '3 × 8/leg',
-        note: 'Rear foot laces-down on bench. Drop back knee straight down, front shin vertical. 2-sec down, 1-sec up. Single-leg strength and balance for the bike and the golf swing.',
-        videoQuery: 'bulgarian split squat dumbbell form',
+        name: 'Split Squat (DB pair)',
+        sets: '3 × 8–10/leg',
+        note: 'Front shin vertical, back knee straight down, 2-sec down 1-sec up. Progress by elevating the rear foot on a sturdy chair or the couch (Bulgarian-style) once flat-foot versions are owned — single-leg work is how legs stay heavy on limited plates.',
+        videoQuery: 'dumbbell split squat form tutorial',
       },
       {
-        name: 'Seated Leg Curl',
-        sets: '3 × 12',
-        note: 'Direct hamstring work to balance all the quad-dominant riding. Curl the pad down hard, 1-sec squeeze, slow 3-sec return. Keep hips pinned to the seat — no lifting to cheat the weight.',
-        videoQuery: 'seated leg curl machine proper form',
-      },
-      {
-        name: 'Standing Calf Raise',
-        sets: '3 × 12',
-        note: 'Full ROM. 1-sec pause at top, 1-sec pause at full stretch. No bouncing. Load with dumbbells off a step, or push through the balls of your feet on the leg-press plate.',
-        videoQuery: 'standing calf raise form tutorial',
+        name: 'Single-Leg Calf Raise',
+        sets: '3 × 12–15/leg',
+        note: 'DB in one hand, other hand on the wall for balance. Full ROM — 1-sec pause at the top, 1-sec at the stretch, no bouncing. One leg at a time doubles the effective load.',
+        videoQuery: 'single leg dumbbell calf raise form',
       },
       {
         name: 'Lying Leg Raise',
         sets: '3 × 12',
-        note: 'On the floor, not hanging from a bar — no overhead dead-hang to strain the shoulder while it heals. Lower back pressed down, straight legs up to vertical, lower with control, stop before the heels touch. No momentum.',
+        note: 'On the mat. Lower back pressed down, straight legs up to vertical, lower with control, stop before the heels touch. No momentum.',
         videoQuery: 'lying leg raise form tutorial',
       },
     ],
@@ -79,7 +76,7 @@ export const PROGRAM: WorkoutDay[] = [
         variant: 'indoor',
         pill: 'Flush Spin · Indoor',
         title: '20 min easy on the Zwift Ride',
-        body: 'Straight off the rack: Zone 2, ~120–145W (55–65% of your 222W FTP), fully conversational. Clears the legs, adds a little burn, no extra fatigue. The one thing to drop if the clock is against 7:30.',
+        body: 'Straight after the lift: Zone 2, ~120–145W (55–65% of your 222W FTP), fully conversational. Clears the legs, adds a little burn, no extra fatigue. The one thing to drop if the clock is against 7:30.',
       },
     ],
   },
@@ -94,7 +91,7 @@ export const PROGRAM: WorkoutDay[] = [
     color: 'cyan',
     eyebrow: 'Ride · Indoor Intervals',
     title: 'Indoor Intervals',
-    sub: 'Your one hard, structured bike session — weather-proof and tightly time-boxed on the Zwift Ride. Alternate sweet-spot and VO₂ blocks by cycle week. FTP 222W. Cap it with an 8-minute core circuit.',
+    sub: 'Your one hard, structured bike session — weather-proof and tightly time-boxed on the Zwift Ride. Alternate sweet-spot and VO₂ blocks by cycle week. FTP 222W. Cap it with an 8-minute core circuit on the mat.',
     tags: ['45–55 min', 'Weekday · home by 7:30', 'Finish: 8-min core'],
     rides: [
       {
@@ -113,7 +110,7 @@ export const PROGRAM: WorkoutDay[] = [
         variant: 'fallback',
         pill: 'Fallback',
         title: '40 min Zone 2 + core',
-        body: 'Low recovery or short on time: steady ~140–160W and just bank the aerobic minutes. Either way finish with the core circuit — hollow holds, side planks, Pallof press.',
+        body: 'Low recovery or short on time: steady ~140–160W and just bank the aerobic minutes. Either way finish with the mat core circuit — hollow holds, side planks, dead bugs.',
       },
     ],
   },
@@ -122,29 +119,62 @@ export const PROGRAM: WorkoutDay[] = [
   {
     key: '3',
     short: 'Wed',
-    name: 'Dawn Nine',
+    name: 'Dawn Nine + Push',
     type: 'Golf',
     chip: 'chip-green',
     color: 'green',
-    eyebrow: 'Golf · Dawn Nine',
-    title: 'Dawn Nine',
-    sub: 'Tee off at first light and walk a fast nine — the walking is the training and the reps are the skill work. To be showered by 7:30 it has to be a moving round; if the tee sheet is slow, hit the range and short-game area instead.',
-    tags: ['~75–90 min walking', 'Weekday · home by 7:30'],
+    eyebrow: 'Golf AM · Push PM',
+    title: 'Dawn Nine + Push',
+    sub: 'Two-part day. Dawn: tee off at first light and walk a fast nine — showered by 7:30, range as the backup. Evening: a ~30-min dumbbell push session at home — the shoulder’s pressing comeback, floor press first, cuff work always.',
+    tags: ['~75–90 min walking AM', '~30 min lift PM', 'Weekday · home by 7:30'],
     exercises: [
       {
-        name: 'Walk & play — fast 9',
+        name: 'AM · Walk & play — fast 9',
         sets: '~75–90 min',
-        note: 'Tee off ~5:30. Carry or push — skip the cart; the walking is the point. Brisk pace between shots so it doubles as Zone 1–2 steps. Roughly 7–8k steps and 300–500 kcal before most people are up. Shoulder: you’ve been playing through this fine — if a full swing ever tugs the healing side, bias the range and short game until it settles.',
+        note: 'Tee off ~5:30. Carry or push — skip the cart; the walking is the point. Brisk pace between shots so it doubles as Zone 1–2 steps. Roughly 7–8k steps and 300–500 kcal before most people are up. If a full swing ever tugs the healing side, bias the range and short game until it settles.',
       },
       {
-        name: 'Range + short game (backup)',
+        name: 'AM · Range + short game (backup)',
         sets: '~45 min',
         note: 'Course backed up or weather turning? A bucket working through the bag, then chipping and putting. All the skill, none of the time risk — call it at 7:00 and still make 7:30.',
       },
       {
-        name: 'Later / PM — 10-min mobility',
-        sets: 'optional',
-        note: 'Golf is rotational and one-sided. Thoracic rotations, open-books, hip-flexor and hamstring stretch, a few band pull-aparts. Do it at the desk or before bed.',
+        name: 'PM · Cuff warm-up',
+        sets: '2 rounds',
+        note: 'Every press session starts here, no exceptions: side-lying external rotations with a 5-lb plate × 12/side, then prone Y-T-W on the mat × 8 each. Replaces the old band work now that the bands are gone — same job, keeps the joint centered before loading.',
+        videoQuery: 'side lying dumbbell external rotation shoulder',
+      },
+      {
+        name: 'PM · Floor Press (rotation)',
+        sets: '4 × 8–12',
+        note: 'The pressing comeback, Phase B. No bench needed — the floor stops the elbows before the shoulder over-extends, protecting the front of the joint. Start light (~20–25 lb/hand), add slowly, and stop the set the moment anything feels off.',
+        rotation: {
+          title: '3-week cycle · floor press',
+          rows: [
+            { tag: 'A', name: 'Neutral-Grip DB Floor Press', desc: '— palms facing each other. The friendliest pressing angle; the default.' },
+            { tag: 'B', name: 'DB Floor Press', desc: '— standard grip, elbows ~45°. Slightly more chest, still floor-protected.' },
+            { tag: 'C', name: 'Single-Arm Floor Press', desc: '— one DB at a time; the free hand feels the ribs stay down. Anti-rotation bonus.' },
+          ],
+        },
+        videoQuery: 'neutral grip dumbbell floor press form',
+      },
+      {
+        name: 'PM · Push-Up',
+        sets: '3 × AMRAP−2',
+        note: 'Grip the DB handles as push-up bars — neutral wrists, a touch more depth. Stop two reps shy of failure. Progress by slowing the negative, then elevating the feet. Bodyweight pressing volume that travels with any setup.',
+        videoQuery: 'push up on dumbbells form tutorial',
+      },
+      {
+        name: 'PM · Bent-Over Rear-Delt Fly',
+        sets: '3 × 15',
+        note: 'Hinged over, light — a 5-lb plate or empty feel per hand at first. Slight elbow bend, sweep out and back leading with the elbows, 1-sec squeeze. Balances the pressing and feeds the back of the shoulder.',
+        videoQuery: 'bent over rear delt fly dumbbell form',
+      },
+      {
+        name: 'PM · Half-Kneeling 1-Arm Press (gated)',
+        sets: '3 × 8/side',
+        note: 'PHASE C — add only once the floor press is solid and pain-free for a few weeks. Half-kneeling, one DB, press up and slightly forward; the kneeling position keeps the ribs honest. This is the overhead comeback step (the landmine went with the gym) — strict overhead work returns after this feels strong.',
+        videoQuery: 'half kneeling single arm dumbbell press',
       },
     ],
   },
@@ -153,50 +183,44 @@ export const PROGRAM: WorkoutDay[] = [
   {
     key: '4',
     short: 'Thu',
-    name: 'Upper Rebuild',
+    name: 'Lower Unilateral',
     type: 'Strength',
     chip: 'chip-blue',
     color: 'blue',
-    eyebrow: 'Rebuild · Upper (shoulder-safe)',
-    title: 'Upper Rebuild',
-    sub: 'A staged return for the shoulder, not the old heavy pressing day (dislocation 2026-06-16). Do the rotator-cuff + scapular block every week; add the pressing block only once you’re at/past your ~6-week mark (≈2026-07-28) and pain-free. Move up slowly — sharp pain or any instability means stop, and get a PT’s sign-off before anything overhead.',
-    tags: ['~35–40 min', 'Weekday · home by 7:30', 'Pain-free range only'],
+    eyebrow: 'Strength · Unilateral + Power',
+    title: 'Lower Unilateral',
+    sub: 'Second leg day: single-leg strength and hip power. One leg at a time makes 50 lb per hand plenty heavy, and the DB swing keeps you explosive without a barbell. Optional easy spin after if the clock allows.',
+    tags: ['~35 min lift + optional spin', 'Weekday · home by 7:30', 'DBs + mat'],
     exercises: [
       {
-        name: 'Band External Rotation',
-        sets: '3 × 15/side',
-        note: 'Elbow pinned to your side at 90°, rotate the forearm outward against a light band, slow and controlled. The single most important rotator-cuff move for anterior stability — do it every session, including as a warm-up.',
-        videoQuery: 'banded external rotation shoulder rehab',
+        name: 'DB Reverse Lunge',
+        sets: '3 × 10/leg',
+        note: 'DB in each hand, step back, back knee kisses the floor, drive up through the front heel. Reverse beats forward lunges in a small space — no travel, easier on the knees. Torso tall.',
+        videoQuery: 'dumbbell reverse lunge form tutorial',
       },
       {
-        name: 'Band Pull-Apart',
-        sets: '3 × 15',
-        note: 'Arms straight out front, pull the band apart to your chest, squeeze the shoulder blades together, slow return. Scapular retraction and rear delts — reinforces the back of the shoulder.',
-        videoQuery: 'band pull apart form tutorial',
+        name: 'Single-Leg RDL (DB)',
+        sets: '3 × 8/leg',
+        note: 'Hinge forward on one leg, free leg extends behind, hips square. DB in the opposite hand to the working leg. Touch the wall for balance if needed. Hamstrings + balance + ankle stability for the bike and the swing.',
+        videoQuery: 'single leg rdl dumbbell form tutorial',
       },
       {
-        name: 'Prone Y-T-W Raises',
-        sets: '2 × 8 each',
-        note: 'Face-down on an incline bench, light or no weight. Raise the arms into a Y, then a T, then a W, squeezing the lower traps and scapulae. Slow. This is the scapular control that keeps the joint centered.',
-        videoQuery: 'prone ytw raise shoulder scapular exercise',
-      },
-      {
-        name: 'Chest-Supported DB Row',
-        sets: '3 × 10',
-        note: 'Chest on an incline bench so there’s no strain bracing a torso — just pull. Elbows to ~45°, squeeze, controlled. Safe horizontal pulling you can do the whole way through rehab.',
-        videoQuery: 'chest supported dumbbell row form',
-      },
-      {
-        name: 'Neutral-Grip DB Floor Press',
-        sets: '3 × 10',
-        note: 'REINTRODUCTION — start only when cleared / at 6+ weeks and pain-free. Palms facing each other, press from the floor. The floor stops your elbows before the shoulder over-extends, protecting the front of the joint; the neutral grip is the friendliest pressing angle. Start light, add slowly.',
-        videoQuery: 'neutral grip dumbbell floor press',
-      },
-      {
-        name: 'Landmine Press',
+        name: 'Cossack Squat (goblet)',
         sets: '3 × 8/side',
-        note: 'REINTRODUCTION — add once the floor press feels solid. Pressing on a diagonal (bar wedged in a corner) trains the overhead pattern without the risky straight-overhead, abducted-and-externally-rotated position. This is as “overhead” as you go until fully stable — barbell bench, then strict overhead press, then push press come back later (see Shoulder · Return to Load).',
-        videoQuery: 'landmine press form tutorial',
+        note: 'Wide stance, shift all the way over one leg, other leg straight, heel down. Goblet-hold one DB for counterbalance. Lateral strength and hip mobility the bike never trains — and the golf swing loves.',
+        videoQuery: 'cossack squat goblet form tutorial',
+      },
+      {
+        name: 'Heavy DB Swing',
+        sets: '3 × 15',
+        note: 'One DB loaded to ~40–50 lb, both hands on the handle. Hike it between the legs, snap the hips forward, let it float to chest height — arms passive, hips do everything. The power/explosive slot now that the barbell is gone. Mind the clearance in a small room.',
+        videoQuery: 'dumbbell swing form tutorial hip hinge',
+      },
+      {
+        name: 'Side Plank',
+        sets: '3 × 30–40 sec/side',
+        note: 'On the mat. Straight line head to heels, hips high. Anti-lateral-flexion core to finish — stack the feet, or stagger for stability.',
+        videoQuery: 'side plank form tutorial',
       },
     ],
     rides: [
@@ -204,7 +228,7 @@ export const PROGRAM: WorkoutDay[] = [
         variant: 'indoor',
         pill: 'Optional Spin · Indoor',
         title: '15–20 min easy if time allows',
-        body: 'Easy Zone 2 flush, ~120–145W, upright and relaxed on the Zwift Ride — no weight jammed through the healing shoulder. Optional; skip it to make 7:30.',
+        body: 'Same easy Zone 2 flush as Monday, ~120–145W, upright and relaxed on the Zwift Ride. Optional — the lift is the priority. Skip it without guilt to make 7:30.',
       },
     ],
   },
@@ -275,24 +299,48 @@ export const PROGRAM: WorkoutDay[] = [
   {
     key: '7',
     short: 'Sun',
-    name: 'Golf + Recovery',
+    name: 'Golf + Pull',
     type: 'Golf',
     chip: 'chip-green',
     color: 'green',
-    eyebrow: 'Golf · Recovery Round',
-    title: 'Golf + Recovery',
-    sub: 'Your second golf slot and your active-recovery day in one: a relaxed round — nine, or a full eighteen if the morning is open — then a proper mobility session. Weekend pace, back by around 10 (later if you play 18). This is what protects everything else in the week.',
-    tags: ['Relaxed round + mobility', 'Weekend · flexible'],
+    eyebrow: 'Golf · Pull · Recovery',
+    title: 'Golf + Pull',
+    sub: 'The easy day that still earns its keep: a relaxed round — nine, or a full eighteen if the morning is open — then a light dumbbell pull session and a proper mobility block at home. Weekend pace, back by around 10 (later if you play 18).',
+    tags: ['Relaxed round + ~25 min pull + mobility', 'Weekend · flexible'],
     exercises: [
       {
         name: 'Play — relaxed 9 or 18',
         sets: 'walk it',
-        note: 'No clock pressure today. Walk the round for the steps and the head-space — low intensity is exactly what the day after a long ride wants. If your Whoop recovery is red, keep it to nine or take a true rest day. Sleep beats any extra session. Same shoulder rule as Wednesday: full swings are fine while they’re pain-free — ease back to the short game if not.',
+        note: 'No clock pressure today. Walk the round for the steps and the head-space — low intensity is exactly what the day after a long ride wants. If your Whoop recovery is red, keep it to nine or take a true rest day — skip the pull session too. Sleep beats any extra session.',
+      },
+      {
+        name: 'Bent-Over DB Row',
+        sets: '4 × 10–12',
+        note: 'Both DBs, hinged to ~45°, pull to the lower ribs, 1-sec squeeze, no heaving. The main pull of the week — rows carry the whole back now that there’s no bar or pulldown. Work up to 2×50 and then slow the negatives.',
+        videoQuery: 'bent over dumbbell row form tutorial',
+      },
+      {
+        name: 'Single-Arm DB Row',
+        sets: '3 × 10/side',
+        note: 'Free hand braced on the knee (no bench needed), flat back, pull the DB to the hip. Load one DB heavier than the pair allows — this is where the back gets its heavy work.',
+        videoQuery: 'single arm dumbbell row knee braced form',
+      },
+      {
+        name: 'Cuff maintenance',
+        sets: '2 rounds',
+        note: 'Side-lying external rotations (5-lb plate) × 12/side + prone Y-T-W × 8 each. The weekly insurance dose for the shoulder, independent of Wednesday’s warm-up. Two minutes, do not skip.',
+        videoQuery: 'prone ytw raise shoulder scapular exercise',
+      },
+      {
+        name: 'Suitcase Carry (optional)',
+        sets: '3 × 30–45 sec/side',
+        note: 'One heavy DB, walk hallway laps or march in place, tall and level — don’t lean. Grip, obliques and posture work in a small footprint; the farmer-carry slot, apartment edition.',
+        videoQuery: 'suitcase carry dumbbell form',
       },
       {
         name: 'Mobility & stretch',
         sets: '20–30 min',
-        note: 'The real recovery work: hips, hamstrings, thoracic spine, shoulders, neck, plus golf-specific t-spine rotations and open-books. Foam-roll quads and glutes after the week’s riding.',
+        note: 'The real recovery work: hips, hamstrings, thoracic spine, shoulders, neck, plus golf-specific t-spine rotations and open-books on the mat. Foam-roll quads and glutes after the week’s riding.',
       },
       {
         name: 'Optional easy spin',

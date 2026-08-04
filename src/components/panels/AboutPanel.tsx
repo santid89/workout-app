@@ -38,12 +38,18 @@ export function AboutPanel({ active }: { active: boolean }) {
           the weekend, where you just need to be back by around <b>10</b>.
         </p>
         <p className="prose">
-          <b>Lifting is rebuilding, not restarting cold.</b> The strength work
-          stopped after a <b>shoulder dislocation on 2026-06-16</b> — not from
-          drift. So the two lift days are shoulder-first: legs and posterior
-          chain unaffected on Monday, and Thursday is a staged upper-body return
-          — rotator-cuff and scapular work now, pressing reintroduced as you’re
-          cleared. See <b>Shoulder — Return to Load</b> below.
+          <b>Four short lift days, at home.</b> With the dumbbells in the living
+          room there’s no travel tax, so lifting spreads into four ~25–35 min
+          sessions — two lower (Mon, Thu), two upper (Wed PM push, Sun pull) —
+          instead of two long gym days. Short enough that skipping never feels
+          justified.
+        </p>
+        <p className="prose">
+          <b>The shoulder is in Phase B.</b> The{' '}
+          <b>2026-06-16 dislocation</b> is past its 6-week mark and pain-free,
+          so pressing is back — via the floor press, light and slow, with cuff
+          work opening every session. Overhead comes last. See{' '}
+          <b>Shoulder — Return to Load</b> below.
         </p>
         <p className="prose">
           <b>Cycling, indoor and outdoor.</b> One hard indoor interval day
@@ -54,6 +60,18 @@ export function AboutPanel({ active }: { active: boolean }) {
           <b>Golf counts.</b> Two slots — a fast dawn nine mid-week and a relaxed
           recovery round on the weekend. Walked, it’s real Zone 1–2 volume, not a
           day off.
+        </p>
+
+        <div className="section-title">Apartment Dumbbell Setup</div>
+        <p className="prose">
+          The whole strength program runs on <b>two loadable dumbbell handles
+          (~10 lb each)</b> with <b>6×10 lb + 4×5 lb plates</b>, a mat, and a
+          small patch of floor. Practical ceiling: <b>~50 lb per hand</b> — and
+          both handles can sit at 50 at once (10+10 on each side of one, 10+5+5
+          on each side of the other uses every plate). No bench, so pressing
+          lives on the floor; no bands, so cuff work uses light plates; no bar
+          or pulldown, so rows carry the back. Single-leg and single-arm
+          variations, tempo, and pauses are what make 50 lb heavy.
         </p>
 
         <div className="section-title">Week at a Glance</div>
