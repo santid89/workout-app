@@ -178,3 +178,26 @@ export function ArrowRightIcon({ className }: { className?: string }) {
     </Stroke>
   );
 }
+
+export function SyringeIcon({ className }: { className?: string }) {
+  return (
+    <Stroke className={className}>
+      <path d="M18 2l4 4" />
+      <path d="M17 7l3-3" />
+      <path d="M19 9L8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5" />
+      <path d="M9 11l4 4" />
+      <path d="M5 19l-3 3" />
+      <path d="M14 4l6 6" />
+    </Stroke>
+  );
+}
+
+export function DownloadIcon({ className }: { className?: string }) {
+  return (
+    <Stroke className={className}>
+      <path d="M12 3v12" />
+      <polyline points="7 10 12 15 17 10" />
+      <path d="M5 20h14" />
+    </Stroke>
+  );
+}

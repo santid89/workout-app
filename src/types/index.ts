@@ -91,3 +91,46 @@ export type LogMetrics = Pick<
   LogEntry,
   'weight' | 'reps' | 'rpe' | 'unit' | 'durationMin' | 'distanceMiles' | 'note'
 >;
+
+/* ───────────────────────── Health: injection tracking ─────────────────────────
+   A rotating set of injection sites plus the log of shots taken at them. Both
+   live under the user's private Firestore tree — never in the share export. */
+
+/** An injection site in the rotation. Shape matches the Firestore document. */
+export interface Placement {
+  id: string;
+  /** What the user calls it, e.g. "Left thigh". */
+  label: string;
+  /** Position in the rotation cycle (0-based, ascending). */
+  order: number;
+  /** Retired sites stay for history but drop out of the rotation. */
+  active: boolean;
+  createdAt?: unknown;
+}
+
+/** A logged injection — shape matches the Firestore document. */
+export interface InjectionEntry {
+  id: string;
+  date: string; // YYYY-MM-DD
+  placementId: string;
+  /** Snapshot of the site's label at log time, so renames never rewrite history. */
+  placementLabel: string;
+  /** Dose in milligrams. Optional — older entries may predate the field. */
+  doseMg?: number;
+  note?: string;
+  createdAt?: unknown;
+}
+
+/** The optional detail fields an injection can carry, keyed for reuse. */
+export type InjectionDetail = Pick<InjectionEntry, 'doseMg' | 'note'>;
+
+/** How the next injection sits relative to the cadence. */
+export type DueState = 'none' | 'scheduled' | 'soon' | 'due' | 'overdue';
+
+export interface DueStatus {
+  state: DueState;
+  /** YYYY-MM-DD the next injection is due, or null when nothing is logged. */
+  nextDue: string | null;
+  /** Days until due — negative once overdue. 0 on the due date itself. */
+  days: number;
+}

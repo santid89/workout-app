@@ -5,11 +5,12 @@ import {
   HomeIcon,
   DumbbellIcon,
   NotebookIcon,
+  SyringeIcon,
   FlameIcon,
   GoogleIcon,
 } from '@/lib/icons';
 
-type Tab = 'today' | 'train' | 'log' | 'fuel';
+type Tab = 'today' | 'train' | 'log' | 'health' | 'fuel';
 
 interface NavItem {
   tab: Tab;
@@ -21,6 +22,7 @@ const ITEMS: NavItem[] = [
   { tab: 'today', label: 'Today', Icon: HomeIcon },
   { tab: 'train', label: 'Train', Icon: DumbbellIcon },
   { tab: 'log', label: 'Log', Icon: NotebookIcon },
+  { tab: 'health', label: 'Health', Icon: SyringeIcon },
   { tab: 'fuel', label: 'Fuel', Icon: FlameIcon },
 ];
 
@@ -29,6 +31,7 @@ function activeTab(selectedDay: string): Tab | null {
   if (selectedDay === 'today') return 'today';
   if (/^[1-7]$/.test(selectedDay)) return 'train';
   if (selectedDay === 'log') return 'log';
+  if (selectedDay === 'health') return 'health';
   if (selectedDay === 'fuel') return 'fuel';
   return null; // 'about' lives outside the primary tabs
 }

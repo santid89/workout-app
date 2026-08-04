@@ -1,12 +1,11 @@
 name: Deploy to Firebase Hosting
 
-# Builds the Vite app and deploys the static output whenever the tracked
-# branches are updated.
+# Builds the Vite app, deploys the static output, and publishes the Firestore
+# security rules whenever main is updated.
 on:
   push:
     branches:
       - main
-      - claude/loving-hypatia-yzfcee
   # Allow manual runs from the Actions tab.
   workflow_dispatch:
 
@@ -39,3 +38,22 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           channelId: live
           projectId: workouts-app-bd756
+
+      # firestore.rules is the only thing standing between your private data and
+      # the internet, so it ships from the repo rather than being pasted into the
+      # console — otherwise the file here silently drifts from what's enforced.
+      #
+      # Runs AFTER hosting so a missing IAM role can't block the site going live.
+      # The service account needs the "Firebase Rules Admin" role
+      # (roles/firebaserules.admin); see README → One-time Firebase setup.
+      - name: Deploy Firestore rules
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          printf '%s' "$SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/firebase-sa.json"
+          npx --yes firebase-tools@13 deploy \
+            --only firestore:rules \
+            --project workouts-app-bd756 \
+            --non-interactive
+          rm -f "$RUNNER_TEMP/firebase-sa.json"

@@ -1,8 +1,8 @@
 # Training Program — Vite + React + TypeScript
 
 A single-page weekly training routine (strength + cycling + nutrition) with
-Google sign-in and a per-user workout log, deployed as a static site on
-Firebase Hosting.
+Google sign-in, a per-user workout log and an injection tracker, deployed as a
+static site on Firebase Hosting.
 
 This app was originally a single self-contained `public/index.html`. It's now a
 modern Vite + React + TypeScript app: the workout program lives as typed data,
@@ -12,20 +12,21 @@ while keeping the same look, the same Firebase backend, and push-to-deploy.
 ```
 .
 ├── index.html                  # Vite entry
+├── public/                     # icons, PWA manifest, service worker
 ├── src/
 │   ├── main.tsx · App.tsx       # entry + app shell
-│   ├── components/              # Header, DayPicker, WorkoutDay, LogModal, …
-│   ├── data/                    # program.ts (the workouts), reference.tsx, theme.ts
-│   ├── firebase/                # config, app init, auth, logs
-│   ├── hooks/                   # useAuth, useLogSync
+│   ├── components/              # Header, WorkoutDay, LogModal, InjectionModal, …
+│   ├── data/                    # program.ts (the workouts), placements.ts, reference.tsx, theme.ts
+│   ├── firebase/                # config, app init, auth, logs, injections
+│   ├── hooks/                   # useAuth, useLogSync, useHealthSync
 │   ├── store/                   # Zustand stores (app + toasts)
-│   ├── lib/                     # date helpers, icons, actions
+│   ├── lib/                     # date helpers, icons, actions, pwa
 │   └── styles/                  # tokens.css + global.css (the design system)
 ├── .env                        # public Firebase web config (safe to commit)
-├── firebase.json               # Hosting config (serves dist/)
+├── firebase.json               # Hosting config (serves dist/) + rules target
 ├── firestore.rules             # Security rules
 └── .github/workflows/
-    └── firebase-hosting.yml     # Build + auto-deploy on push
+    └── firebase-hosting.yml     # Build + auto-deploy + publish rules on push
 ```
 
 ## Developing
@@ -44,6 +45,20 @@ npm run format   # prettier
 ride blocks). Nutrition and the About page live in
 [`src/data/reference.tsx`](src/data/reference.tsx). Edit the data, not markup.
 
+### Running against local emulators
+
+To exercise sign-in, logging and the security rules without touching real data:
+
+```bash
+firebase emulators:start --only auth,firestore   # ports 9099 / 8080
+VITE_USE_EMULATORS=1 npm run dev
+```
+
+The flag is honoured in dev builds only (see
+[`src/firebase/app.ts`](src/firebase/app.ts)); production always talks to the
+live project. The auth emulator's sign-in page lets you mint a throwaway Google
+account with one click.
+
 ### Firebase config
 
 The Firebase web config is read from `VITE_FIREBASE_*` env vars. The real values
@@ -59,13 +74,19 @@ instead of the login/log features.
 ## Deploying
 
 Push to `main` — the **Deploy to Firebase Hosting** workflow runs `npm ci &&
-npm run build` and publishes `dist/` to <https://workouts-app-bd756.web.app>.
-You can also trigger it manually from the **Actions** tab, or deploy by hand:
+npm run build`, publishes `dist/` to <https://workouts-app-bd756.web.app>, and
+then publishes [`firestore.rules`](firestore.rules). You can also trigger it
+manually from the **Actions** tab, or deploy by hand:
 
 ```bash
 npm run build
-firebase deploy --only hosting
+firebase deploy --only hosting,firestore:rules
 ```
+
+The rules ship from the repo on purpose: they're the only thing keeping your
+private data private, and a file that's only ever pasted into the console
+silently drifts from what's actually enforced. The rules step runs *after*
+hosting so a permissions gap can't block the site from going live.
 
 ### One-time Firebase setup
 
@@ -85,6 +106,19 @@ Google account. The summary:
    service-account JSON). The easiest setup is `firebase init hosting:github`
    once, then point the workflow at the secret it creates (or rename it to
    `FIREBASE_SERVICE_ACCOUNT`).
+4. **Rules-deploy permission:** that service account is created for Hosting, so
+   it can't publish security rules until you grant it **Firebase Rules Admin**
+   (`roles/firebaserules.admin`) — Google Cloud console → IAM & Admin → IAM →
+   find the `github-action-*@…iam.gserviceaccount.com` principal → Edit → Add
+   role. Without it the "Deploy Firestore rules" step fails (loudly, on purpose)
+   while the hosting deploy still succeeds.
+5. **Backups (recommended):** Firestore console → **Backups**. Turn on
+   **point-in-time recovery** and add a scheduled backup. Nothing in this repo
+   can do it for you — it's a project-level setting — and it's the difference
+   between "I deleted a year of health records" being an inconvenience and being
+   permanent. Check the console for what your billing plan allows. The in-app
+   **Download my data** button (Health tab) is the free, always-available
+   complement: a full JSON dump you keep yourself.
 
 ## Google login + workout logging
 
@@ -94,10 +128,73 @@ have to be logged on a Monday. Logs are stored per-user in **Cloud Firestore**,
 so your history syncs across every device you sign in on. The app is gated: the
 program and log only appear once you're signed in.
 
+## Injection tracker (the "Health" tab)
+
+Logs a rotating-site injection schedule — what went where, when, and at what
+dose. It replaces keeping the same list in a notes app, and adds the two things
+a flat list can't give you: which site is up next, and whether you're due.
+
+- **Rotation.** Sites cycle in order. "Next" is simply one past whatever you
+  logged last, so a skipped or out-of-order dose self-corrects instead of
+  throwing the cycle off. The logic lives in
+  [`src/data/placements.ts`](src/data/placements.ts) and mirrors the lift
+  rotation in [`src/data/rotation.ts`](src/data/rotation.ts).
+- **Managing sites.** Add, rename, and reorder from **Manage placements &
+  schedule**. Sites are **retired, never deleted** — a retired site drops out of
+  the rotation but every dose logged against it stays readable.
+- **History never rewrites itself.** Each injection stores the site's label *as
+  it was at the time* (`placementLabel`), so renaming "Left thigh" to "Left quad"
+  changes what's next, not what happened.
+- **Cadence.** Defaults to every 7 days; change it in the same sheet. The banner
+  reads "Due in N days" / "Due today" / "Overdue by N days".
+
+### Data model
+
+Everything is private to your account, under the same owner-only tree as your
+workouts:
+
+```
+users/{uid}                      cadenceDays, shareToken
+users/{uid}/logs/{id}            workout history
+users/{uid}/placements/{id}      label, order, active
+users/{uid}/injections/{id}      date, placementId, placementLabel, doseMg?, note?
+```
+
+Writes to `placements` and `injections` are **validated by security rule**, not
+just by the UI: malformed dates, non-positive or absurd doses, and oversized
+notes are rejected at the database. The user tree is deny-by-default — a new
+subcollection needs its own block in [`firestore.rules`](firestore.rules) before
+anything can be written to it.
+
+### Injection data is not in the API link
+
+The read-only JSON feed described below carries **training data only**. Health
+records are never written to `shares/{token}` and no rule would allow it — that
+document is readable by anyone who ever sees the link, and a leaked capability
+URL can't be un-published. To get injection data out of the app, use **Download
+my data** on the Health tab, which builds the file in your browser and uploads
+nothing.
+
+## Installing to your phone
+
+The app ships a web manifest and a service worker, so iOS Safari's **Share → Add
+to Home Screen** installs it as a standalone app (no browser chrome, own icon).
+The worker in [`public/sw.js`](public/sw.js) deliberately caches **nothing** —
+Hosting already serves `index.html` with `no-cache` and fingerprints assets, so a
+caching worker would only serve stale HTML after a deploy. It exists to make the
+app installable, and to give push notifications somewhere to land if they're
+added later (a `push` handler in that file plus a scheduled sender — no app
+restructuring).
+
+The `icon-192.png` / `icon-512.png` in `public/` are rasterized from
+`public/favicon.svg`; regenerate them with any SVG rasterizer if the mark
+changes.
+
 ## Reading your data via API (for Claude, scripts, etc.)
 
 Each signed-in user gets a **private, read-only JSON feed** of their workout log
-— shown in the **Log** tab under **API access**, with a Copy button.
+— shown in the **Log** tab under **API access**, with a Copy button. Training
+data only; injection records are excluded by design (see above).
 
 - The URL is a [Firestore REST](https://firebase.google.com/docs/firestore/use-rest-api)
   document link of the form
