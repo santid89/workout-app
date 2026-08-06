@@ -2,13 +2,13 @@ import type { DayColor, DayMeta } from '@/types';
 
 /** The 7 loggable workout days, keyed '1'..'7'. */
 export const DAYS: DayMeta[] = [
-  { key: '1', short: 'Mon', name: 'Lower Strength', type: 'Strength', chip: 'chip-blue', color: 'blue' },
+  { key: '1', short: 'Mon', name: 'Upper Push', type: 'Strength', chip: 'chip-blue', color: 'blue' },
   { key: '2', short: 'Tue', name: 'Indoor Intervals', type: 'Ride', chip: 'chip-cyan', color: 'cyan' },
-  { key: '3', short: 'Wed', name: 'Dawn Nine + Push', type: 'Golf', chip: 'chip-green', color: 'green' },
-  { key: '4', short: 'Thu', name: 'Lower Unilateral', type: 'Strength', chip: 'chip-blue', color: 'blue' },
+  { key: '3', short: 'Wed', name: 'Dawn Nine + Arms', type: 'Golf', chip: 'chip-green', color: 'green' },
+  { key: '4', short: 'Thu', name: 'Upper Pull + Legs', type: 'Strength', chip: 'chip-blue', color: 'blue' },
   { key: '5', short: 'Fri', name: 'Outdoor Endurance', type: 'Ride', chip: 'chip-cyan', color: 'cyan' },
   { key: '6', short: 'Sat', name: 'Long Ride', type: 'Ride', chip: 'chip-cyan', color: 'cyan' },
-  { key: '7', short: 'Sun', name: 'Golf + Pull', type: 'Golf', chip: 'chip-green', color: 'green' },
+  { key: '7', short: 'Sun', name: 'Golf + Recovery', type: 'Golf', chip: 'chip-green', color: 'green' },
 ];
 
 /** Reference panels — not loggable. */

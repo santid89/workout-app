@@ -23,13 +23,13 @@ export interface CarbRow {
 }
 
 export const CARBS_BY_DAY: CarbRow[] = [
-  { day: 'Mon', amount: '~300 g', rest: '— lower strength + spin' },
+  { day: 'Mon', amount: '~285 g', rest: '— upper push + spin' },
   { day: 'Tue', amount: '~320 g', rest: '— hard indoor intervals' },
-  { day: 'Wed', amount: '~285 g', rest: '— golf AM + push session PM' },
-  { day: 'Thu', amount: '~300 g', rest: '— lower unilateral + power' },
+  { day: 'Wed', amount: '~285 g', rest: '— golf AM + arms pump PM' },
+  { day: 'Thu', amount: '~300 g', rest: '— pull day + leg essentials' },
   { day: 'Fri', amount: '~300–340 g', rest: '— outdoor ride, scale with length' },
   { day: 'Sat', amount: '~340–420 g', rest: '— long ride, scale with duration' },
-  { day: 'Sun', amount: '~250 g', rest: '— golf + light pull + recovery' },
+  { day: 'Sun', amount: '~230 g', rest: '— golf + recovery' },
 ];
 
 export interface InfoCard {
@@ -81,13 +81,13 @@ export interface WeekRow {
 }
 
 export const WEEK_AT_GLANCE: WeekRow[] = [
-  { day: 'Mon', desc: 'Lower strength (DB squat rotation) + 20-min Z2 flush spin' },
+  { day: 'Mon', desc: 'Upper push — floor press rotation, delts, triceps (+ spin)' },
   { day: 'Tue', desc: 'Indoor intervals (Zwift, FTP 222) + mat core' },
-  { day: 'Wed', desc: 'Golf dawn speed-9 AM · upper push (floor press) PM' },
-  { day: 'Thu', desc: 'Lower unilateral + DB swing power (+ optional spin)' },
+  { day: 'Wed', desc: 'Golf dawn speed-9 AM · arms & delts pump PM' },
+  { day: 'Thu', desc: 'Upper pull — rows, rear delts, traps + 15-min leg essentials' },
   { day: 'Fri', desc: 'Outdoor endurance ride (Z2, 60–75 min)' },
   { day: 'Sat', desc: 'Long outdoor ride (1.5–2.5 hr, back by ~10)' },
-  { day: 'Sun', desc: 'Golf relaxed round + light pull session + mobility' },
+  { day: 'Sun', desc: 'Golf relaxed round + cuff maintenance + mobility' },
 ];
 
 export interface AccordionItemData {
@@ -122,11 +122,11 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
       },
       {
         h4: 'Phase B — now (wks 6–9)',
-        body: 'The floor press rotation on Wednesday PM is the comeback lift: light (~20–25 lb/hand), higher reps, slow progression, floor-protected range. Rows are unrestricted. Nothing overhead yet. Any sharp pain or instability → back to Phase A for a week.',
+        body: 'The floor press rotation on Monday is the comeback lift: light (~20–25 lb/hand), higher reps, slow progression, floor-protected range. Rows, curls and triceps work are unrestricted; lateral raises stay light, to shoulder height, pain-free range only. Nothing overhead yet. Any sharp pain or instability → back to Phase A for a week.',
       },
       {
         h4: 'Phase C — next (wks 9–12)',
-        body: 'Once the floor press is solid and pain-free for a few weeks, add the half-kneeling single-arm press (the gated card on Wednesday) — the overhead comeback step now that the landmine went with the gym. Strict two-arm overhead pressing comes after that, and only once fully stable.',
+        body: 'Once the floor press is solid and pain-free for a few weeks, add the half-kneeling single-arm press (the gated card on Monday) — the overhead comeback step now that the landmine went with the gym. Strict two-arm overhead pressing comes after that, and only once fully stable.',
       },
       {
         h4: 'Non-negotiables',
@@ -145,21 +145,17 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
     title: '3-Week Rotation Schedule',
     items: [
       {
-        h4: 'Mon — Squat pattern',
-        body: 'Week A: DB Front-Rack Squat · Week B: Goblet Squat · Week C: Tempo Front-Rack (3-sec descent + pause, lighter). Same structure, three different stimuli — all within the dumbbell ceiling.',
+        h4: 'Mon — Floor Press',
+        body: 'Week A: Neutral-Grip DB Floor Press · Week B: Standard-Grip DB Floor Press · Week C: Single-Arm Floor Press. The one rotating main lift — floor-protected range while the shoulder finishes rebuilding.',
       },
       {
-        h4: 'Wed PM — Floor Press',
-        body: 'Week A: Neutral-Grip DB Floor Press · Week B: Standard-Grip DB Floor Press · Week C: Single-Arm Floor Press. The pressing rotation lives here now — floor-protected range while the shoulder finishes rebuilding.',
-      },
-      {
-        h4: 'The Hinge',
+        h4: 'Where the legs went',
         body: (
           <>
-            The heavy deadlift pattern lives inside Monday as the{' '}
-            <b>DB Romanian deadlift</b> (tempo negatives make 2×50 honest), with
-            Thursday’s <b>heavy DB swing</b> covering hip speed. No barbell
-            needed for either.
+            No squat rotation anymore — legs are one condensed block inside
+            Thursday: <b>goblet squat, DB RDL, heavy DB swing</b>, ~15 minutes.
+            The bikes train the legs 3–4× a week; the dumbbells are for the
+            upper body, which the bikes can’t touch.
           </>
         ),
       },
@@ -209,7 +205,7 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
       },
       {
         h4: 'Weekend window — back by ~10',
-        body: 'Sunday is the relaxed slot: nine or a full eighteen, no clock pressure. Low intensity the day after the long ride makes it double as active recovery, paired with the light pull session and a real mobility block once you’re home.',
+        body: 'Sunday is the relaxed slot: nine or a full eighteen, no clock pressure. Low intensity the day after the long ride makes it double as active recovery, paired with cuff maintenance and a real mobility block once you’re home.',
       },
       {
         h4: 'Why it’s in the plan',
@@ -238,7 +234,7 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
       },
       {
         h4: 'Combining on Low-Time Days',
-        body: 'The stacked days flex. Tight on time before 7:30? Lift only and drop the spin; ride the intervals and skip the core; hit the range instead of playing nine. The Wednesday push session floats — bump it to Thursday PM if the evening dies. Do the primary, shed the add-on — never skip the whole day.',
+        body: 'The stacked days flex. Tight on time before 7:30? Lift only and drop the spin; ride the intervals and skip the core; hit the range instead of playing nine. The Wednesday arms pump floats — bump it to any free evening if that one dies. If Thursday runs long, the leg block is the part to trim. Do the primary, shed the add-on — never skip the whole day.',
       },
       {
         h4: 'Recovery Management',

@@ -19,11 +19,13 @@ export function AboutPanel({ active }: { active: boolean }) {
         <div className="section-title">Goal</div>
         <p className="prose">
           Stay lean and athletic at <b>185–190 lb</b> — as low a body fat as you
-          can hold your ~138 lb of lean mass at. Three sports, deliberately
-          balanced: <b>weightlifting</b> to keep the muscle, <b>cycling</b>{' '}
-          (indoor and outdoor) as the aerobic engine and biggest calorie burn,
-          and <b>golf</b> for the skill, the steps, and the head-space. You’re
-          ~199 lb today, so the near-term job is a slow, muscle-sparing cut.
+          can hold your ~138 lb of lean mass at. Three sports, each doing what
+          it’s best at: <b>weightlifting</b> aimed squarely at the upper body —
+          back, shoulders, chest, arms — because that’s what builds visible
+          shape; <b>cycling</b> (indoor and outdoor) as the aerobic engine, the
+          biggest calorie burn, and the de-facto leg training; and <b>golf</b>{' '}
+          for the skill, the steps, and the head-space. You’re ~199 lb today, so
+          the near-term job is a slow, muscle-sparing cut.
         </p>
 
         <div className="section-title">How This Is Built</div>
@@ -38,11 +40,13 @@ export function AboutPanel({ active }: { active: boolean }) {
           the weekend, where you just need to be back by around <b>10</b>.
         </p>
         <p className="prose">
-          <b>Four short lift days, at home.</b> With the dumbbells in the living
-          room there’s no travel tax, so lifting spreads into four ~25–35 min
-          sessions — two lower (Mon, Thu), two upper (Wed PM push, Sun pull) —
-          instead of two long gym days. Short enough that skipping never feels
-          justified.
+          <b>Upper body first.</b> Four short home sessions, three of them
+          upper: push (Mon), arms &amp; delts pump (Wed PM), pull (Thu) — chest
+          2×, back 2×, delts 3×, arms 3× a week, the frequency that builds
+          shape. Legs get one ~15-min essentials block inside Thursday, not a
+          day of their own — the bikes already train them 3–4× a week, and
+          honestly, leg day was the one you dreaded. Short enough that skipping
+          never feels justified.
         </p>
         <p className="prose">
           <b>The shoulder is in Phase B.</b> The{' '}
