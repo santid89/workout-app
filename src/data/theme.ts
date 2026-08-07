@@ -4,9 +4,9 @@ import type { DayColor, DayMeta } from '@/types';
 export const DAYS: DayMeta[] = [
   { key: '1', short: 'Mon', name: 'Upper Push', type: 'Strength', chip: 'chip-blue', color: 'blue' },
   { key: '2', short: 'Tue', name: 'Indoor Intervals', type: 'Ride', chip: 'chip-cyan', color: 'cyan' },
-  { key: '3', short: 'Wed', name: 'Dawn Nine + Arms', type: 'Golf', chip: 'chip-green', color: 'green' },
-  { key: '4', short: 'Thu', name: 'Upper Pull + Legs', type: 'Strength', chip: 'chip-blue', color: 'blue' },
-  { key: '5', short: 'Fri', name: 'Outdoor Endurance', type: 'Ride', chip: 'chip-cyan', color: 'cyan' },
+  { key: '3', short: 'Wed', name: 'Gym Lower', type: 'Power', chip: 'chip-amber', color: 'amber' },
+  { key: '4', short: 'Thu', name: 'Upper Pull', type: 'Strength', chip: 'chip-blue', color: 'blue' },
+  { key: '5', short: 'Fri', name: 'Ride or Nine', type: 'Ride', chip: 'chip-cyan', color: 'cyan' },
   { key: '6', short: 'Sat', name: 'Long Ride', type: 'Ride', chip: 'chip-cyan', color: 'cyan' },
   { key: '7', short: 'Sun', name: 'Golf + Recovery', type: 'Golf', chip: 'chip-green', color: 'green' },
 ];

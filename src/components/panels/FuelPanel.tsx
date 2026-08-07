@@ -18,7 +18,7 @@ export function FuelPanel({ active }: { active: boolean }) {
           <h1 className="day-title">Fuel &amp; Macros</h1>
           <p className="day-sub">
             Hold 185–190 lbs, as lean as possible — target ~188 by 2026-12-31.
-            Preserve lean mass. Pace ~0.35 lb/week. Updated 2026-07-19.
+            Preserve lean mass. Pace ~0.4 lb/week. Updated 2026-08-07.
           </p>
         </div>
 

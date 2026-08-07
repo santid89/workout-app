@@ -69,8 +69,8 @@ export function LogModal() {
 
   const rows = rotationRows(selected);
   const selDay = DAYS.find((x) => x.key === selected);
-  // Golf days carry prescribed lifts too (Wed PM push, Sun pull), so they get
-  // the top-set metric fields as well.
+  // Golf days carry prescribed lifts too (Sunday's cuff + carry work), so
+  // they get the top-set metric fields as well.
   const isStrength =
     selDay?.type === 'Strength' ||
     selDay?.type === 'Power' ||

@@ -6,21 +6,24 @@ import type { WorkoutDay } from '@/types';
  * alternate programs) tractable. HTML entities from the original are written
  * here as their literal Unicode characters.
  *
- * Design intent (2026 redesign, apartment edition): a deliberately balanced
- * week across the three sports — weightlifting, cycling (indoor + outdoor) and
- * golf — built around two hard rules from real life:
- *   • Weekdays: out the door at dawn, home and showered by 7:30.
- *   • Weekends: more room — just back by around 10.
- * Strength runs on a home dumbbell setup: two loadable handles (~10 lb each)
- * with 6×10 lb + 4×5 lb plates — a hard ceiling of ~50 lb per hand, no bench,
- * no bands, a mat, and a small floor space.
- *
- * The lifting is aimed squarely at the UPPER BODY — back, shoulders, chest,
- * arms — because that's what builds visible shape and it's the one thing the
- * bikes can't train. Legs get one short essentials block plus 3–4 rides a
- * week, which is plenty. Four short lift days: push (Mon), arms pump (Wed PM),
- * pull + leg essentials (Thu), with Sunday kept for golf and recovery. The
- * whole thing is pointed at staying lean at 185–190 lb while holding muscle.
+ * Design intent (2026 redesign, away-day edition): the week is shaped by one
+ * new fact of life — three weekday dawns are spent inside the apartment (she's
+ * at the 6 a.m. class, you're on kid duty), and only two weekday mornings plus
+ * the weekend allow leaving (building gym, road, or tee). So the week splits
+ * into HOME mornings (dumbbells + mat + Zwift Ride) and AWAY mornings, and
+ * each away morning is spent where the apartment genuinely can't follow:
+ *   • One on the building's full gym — a heavy lower-body + trunk day, because
+ *     the May DEXA showed legs (−2.0 lb) and trunk (−3.7 lb) losing the most
+ *     lean despite riding 3–4× a week. Load holds muscle in a deficit; Z2
+ *     volume doesn't, and 50-lb dumbbells can't load legs meaningfully.
+ *   • One on the road or the tee — outdoor Z2 by default while the century
+ *     build is on, the dawn nine when golf wins the argument.
+ * Wed/Fri are placeholders for the away days — slide them to whichever
+ * mornings she's home and keep the pattern (gym mid-week, ride-or-golf near
+ * the weekend). Upper body still runs at home on the dumbbells: two handles,
+ * ~50 lb per hand ceiling, no bench, floor pressing. All watt targets are
+ * built off FTP 254W (Garmin retest 2026-08-02). The whole thing is pointed
+ * at 188 lb by year-end with lean mass held, and a comfortable century.
  */
 export const PROGRAM: WorkoutDay[] = [
   // ════════════════ MONDAY ════════════════
@@ -31,10 +34,10 @@ export const PROGRAM: WorkoutDay[] = [
     type: 'Strength',
     chip: 'chip-blue',
     color: 'blue',
-    eyebrow: 'Strength · Push',
+    eyebrow: 'Home · Strength · Push',
     title: 'Upper Push',
-    sub: 'Chest, shoulders and triceps to open the week — the floor press rotation is the anchor lift. Shoulder is in Phase B: cuff warm-up first, floor-protected pressing, nothing overhead yet. Optional easy spin after. Start ~5:50, showered by 7:30.',
-    tags: ['~35 min lift + optional spin', 'Weekday · home by 7:30', 'DBs + mat'],
+    sub: 'Chest, shoulders and triceps to open the week — the floor press rotation is the anchor lift. Home morning: dumbbells and the mat while the apartment sleeps. Shoulder is in Phase B: cuff warm-up first, floor-protected pressing, nothing overhead yet. Optional easy spin after. Start ~5:50, showered by 7:30.',
+    tags: ['~35 min lift + optional spin', 'Home day · DBs + mat', 'Showered by 7:30'],
     exercises: [
       {
         name: 'Cuff warm-up',
@@ -86,7 +89,7 @@ export const PROGRAM: WorkoutDay[] = [
         variant: 'indoor',
         pill: 'Optional Spin · Indoor',
         title: '15–20 min easy if time allows',
-        body: 'Easy Zone 2 flush, ~120–145W (55–65% of your 222W FTP), upright and relaxed on the Zwift Ride. Optional — the lift is the priority. Skip it without guilt to make 7:30.',
+        body: 'Easy Zone 2 flush, ~140–165W (55–65% of your 254W FTP), upright and relaxed on the Zwift Ride. Optional — the lift is the priority. Skip it without guilt to make 7:30.',
       },
     ],
   },
@@ -99,28 +102,28 @@ export const PROGRAM: WorkoutDay[] = [
     type: 'Ride',
     chip: 'chip-cyan',
     color: 'cyan',
-    eyebrow: 'Ride · Indoor Intervals',
+    eyebrow: 'Home · Ride · Indoor Intervals',
     title: 'Indoor Intervals',
-    sub: 'Your one hard, structured bike session — weather-proof and tightly time-boxed on the Zwift Ride. Alternate sweet-spot and VO₂ blocks by cycle week. FTP 222W. Cap it with an 8-minute core circuit on the mat.',
-    tags: ['45–55 min', 'Weekday · home by 7:30', 'Finish: 8-min core'],
+    sub: 'Your one hard, structured bike session — weather-proof, apartment-proof, and tightly time-boxed on the Zwift Ride. Alternate sweet-spot and VO₂ blocks by cycle week. FTP 254W. Cap it with an 8-minute core circuit on the mat.',
+    tags: ['45–55 min', 'Home day · Zwift', 'Finish: 8-min core'],
     rides: [
       {
         variant: 'indoor',
         pill: 'Sweet Spot · Weeks A / C',
-        title: '3 × 12 min @ 195–205W (88–92% FTP)',
-        body: '5 min easy, 5 min build, then 3 × 12 min at sweet spot with 4 min easy between. Best bang-for-buck aerobic power — raises FTP without wrecking recovery. Cadence 85–95.',
+        title: '3 × 12 min @ 224–234W (88–92% FTP)',
+        body: '5 min easy, 5 min build, then 3 × 12 min at sweet spot with 4 min easy between. Best bang-for-buck aerobic power — raises FTP without wrecking recovery. Ride the blocks in level mode, not ERG: at this intensity a fading cadence sends ERG piling force onto dying legs. Hold the watts yourself. Cadence 85–95.',
       },
       {
         variant: 'indoor',
         pill: 'VO₂ · Week B',
-        title: '5 × 3 min @ 240–260W (108–117% FTP)',
-        body: 'After a 12-min build: 5 × 3 min hard, 3 min easy spin between. Top-end power and a big calorie hit in a short window. Short and brutal — perfect for the weekday slot.',
+        title: '5 × 3 min @ 275–295W (108–116% FTP)',
+        body: 'After a 12-min build: 5 × 3 min hard, 3 min easy spin between. Top-end power and a big calorie hit in a short window. Level mode, not ERG — the ERG spiral is most brutal exactly here. Short and savage; perfect for the weekday slot.',
       },
       {
         variant: 'fallback',
         pill: 'Fallback',
         title: '40 min Zone 2 + core',
-        body: 'Low recovery or short on time: steady ~140–160W and just bank the aerobic minutes. Either way finish with the mat core circuit — hollow holds, side planks, dead bugs.',
+        body: 'Low recovery or short on time: steady ~145–180W and just bank the aerobic minutes (ERG is fine at this intensity). Either way finish with the mat core circuit — hollow holds, side planks, dead bugs.',
       },
     ],
   },
@@ -129,24 +132,49 @@ export const PROGRAM: WorkoutDay[] = [
   {
     key: '3',
     short: 'Wed',
-    name: 'Dawn Nine + Arms',
-    type: 'Golf',
-    chip: 'chip-green',
-    color: 'green',
-    eyebrow: 'Golf AM · Arms PM',
-    title: 'Dawn Nine + Arms',
-    sub: 'Two-part day. Dawn: tee off at first light and walk a fast nine — showered by 7:30, range as the backup. Evening: a ~25-min arms and delts pump at home — the pure shape work: biceps, triceps, side and rear delts.',
-    tags: ['~75–90 min walking AM', '~25 min pump PM', 'Weekday · home by 7:30'],
+    name: 'Gym Lower',
+    type: 'Power',
+    chip: 'chip-amber',
+    color: 'amber',
+    eyebrow: 'Away · Gym · Lower + Trunk',
+    title: 'Building Gym: Lower',
+    sub: 'The first away morning and the week’s one heavy day, in the full gym downstairs. The May DEXA was blunt: legs and trunk lost the most lean while riding the most — Z2 volume doesn’t hold muscle, load does. Real machines and real weight do what 50-lb dumbbells can’t. Evening: the ~25-min arms & delts pump back upstairs. Start ~5:50 — the commute is an elevator — showered by 7:30.',
+    tags: ['~50 min gym AM', '~25 min pump PM', 'Away day · building gym'],
     exercises: [
       {
-        name: 'AM · Walk & play — fast 9',
-        sets: '~75–90 min',
-        note: 'Tee off ~5:30. Carry or push — skip the cart; the walking is the point. Brisk pace between shots so it doubles as Zone 1–2 steps. Roughly 7–8k steps and 300–500 kcal before most people are up. If a full swing ever tugs the healing side, bias the range and short game until it settles.',
+        name: 'AM · Warm-up',
+        sets: '~5 min',
+        note: 'Easy spin on a gym bike or brisk incline walk, leg swings and hip openers, then two light feeder sets of the first lift. The day’s only job is quality reps through a full range — earn them.',
       },
       {
-        name: 'AM · Range + short game (backup)',
-        sets: '~45 min',
-        note: 'Course backed up or weather turning? A bucket working through the bag, then chipping and putting. All the skill, none of the time risk — call it at 7:00 and still make 7:30.',
+        name: 'AM · Leg Press',
+        sets: '4 × 8–10',
+        note: 'The squat-pattern anchor, chosen over the barbell on purpose: a bar on the back demands the exact abducted, externally-rotated arm position the healing shoulder hates. Press with the legs, load without compromise. Controlled depth, knees tracking the toes, no slamming lockouts. Add 5–10 lb a week — this is the progressive-overload lever the apartment can’t offer.',
+        videoQuery: 'leg press 45 degree machine form',
+      },
+      {
+        name: 'AM · Romanian Deadlift',
+        sets: '3 × 8–10',
+        note: 'Barbell from the rack or the heaviest DBs on the row — grip at your sides keeps the shoulder neutral either way. Hips back to a deep hamstring stretch, flat back, drive forward. The hinge that the swing, the pedal stroke and the golf swing all borrow from.',
+        videoQuery: 'barbell romanian deadlift form',
+      },
+      {
+        name: 'AM · Bulgarian Split Squat',
+        sets: '3 × 8–10/leg',
+        note: 'Rear foot on a bench, DBs at your sides. Single-leg strength is the cycling carryover — and it exposes the left/right gap that flat pedaling hides. Famously sore-making: start modest, add slowly.',
+        videoQuery: 'bulgarian split squat dumbbell form',
+      },
+      {
+        name: 'AM · Leg Curl + Calf Raise',
+        sets: '3 × 10–12 + 12–15',
+        note: 'Superset. Riding trains hip extension for thousands of reps and knee flexion for none — hamstring curls are the posterior chain’s insurance policy. Calves: pause at the stretch, full squeeze at the top. Slow negatives on both.',
+        videoQuery: 'seated leg curl machine form',
+      },
+      {
+        name: 'AM · Cable Crunch + Back Extension',
+        sets: '3 × 12 + 12',
+        note: 'Superset. The trunk lost 3.7 lb of lean between scans — this is the direct fix. Cable crunch: hips still, pull ribs to pelvis. Back extension: hinge, don’t hyperextend; hug a plate once 12 gets easy.',
+        videoQuery: 'cable crunch and back extension form',
       },
       {
         name: 'PM · Cuff primer',
@@ -185,14 +213,14 @@ export const PROGRAM: WorkoutDay[] = [
   {
     key: '4',
     short: 'Thu',
-    name: 'Upper Pull + Legs',
+    name: 'Upper Pull',
     type: 'Strength',
     chip: 'chip-blue',
     color: 'blue',
-    eyebrow: 'Strength · Pull + Leg Essentials',
-    title: 'Upper Pull + Legs',
-    sub: 'The back day — rows carry everything now that there’s no bar or pulldown — plus the week’s one condensed leg block. Fifteen minutes of leg essentials is deliberate: the bikes train your legs 3–4× a week already. Optional easy spin after.',
-    tags: ['~40 min lift + optional spin', 'Weekday · home by 7:30', 'DBs + mat'],
+    eyebrow: 'Home · Strength · Pull',
+    title: 'Upper Pull',
+    sub: 'The back day — rows carry everything with no bar or pulldown at home. Legs moved downstairs to Wednesday, so this is pure pull now, plus a short heavy-swing finisher for hip power. Home morning, dumbbells and the mat. Optional easy spin after.',
+    tags: ['~35 min lift + optional spin', 'Home day · DBs + mat', 'Showered by 7:30'],
     exercises: [
       {
         name: 'Bent-Over DB Row',
@@ -203,7 +231,7 @@ export const PROGRAM: WorkoutDay[] = [
       {
         name: 'Single-Arm DB Row',
         sets: '3 × 10/side',
-        note: 'Free hand braced on the knee (no bench needed), flat back, pull the DB to the hip. Load one DB heavier than the pair allows — this is where the back gets its heaviest work.',
+        note: 'Free hand braced on the knee (no bench needed), flat back, pull the DB to the hip. Load one DB heavier than the pair allows — this is where the back gets its heaviest home work.',
         videoQuery: 'single arm dumbbell row knee braced form',
       },
       {
@@ -219,21 +247,9 @@ export const PROGRAM: WorkoutDay[] = [
         videoQuery: 'dumbbell shrug form tutorial',
       },
       {
-        name: 'Legs · Goblet Squat',
-        sets: '3 × 10',
-        note: 'One heavy DB at the chest, deep and upright. First of three leg-essential moves — squat pattern covered in one exercise, no full leg day required.',
-        videoQuery: 'goblet squat form tutorial',
-      },
-      {
-        name: 'Legs · DB Romanian Deadlift',
-        sets: '3 × 10',
-        note: 'Hips back, DBs down the thighs to a deep hamstring stretch, drive forward. 3-sec negatives make 2×50 honest. The hinge, done.',
-        videoQuery: 'dumbbell romanian deadlift form tutorial',
-      },
-      {
-        name: 'Legs · Heavy DB Swing',
+        name: 'Heavy DB Swing (finisher)',
         sets: '2 × 15',
-        note: 'One DB at ~40–50 lb, both hands. Hike, snap the hips, let it float to chest height — arms passive. Hip power and a heart-rate spike to close the block. Mind the clearance in a small room.',
+        note: 'One DB at ~40–50 lb, both hands. Hike, snap the hips, let it float to chest height — arms passive. Hip power and a heart-rate spike to close the session; light enough after Wednesday’s hinging that it helps more than it costs. Mind the clearance in a small room.',
         videoQuery: 'dumbbell swing form tutorial hip hinge',
       },
     ],
@@ -242,7 +258,7 @@ export const PROGRAM: WorkoutDay[] = [
         variant: 'indoor',
         pill: 'Optional Spin · Indoor',
         title: '15–20 min easy if time allows',
-        body: 'Easy Zone 2 flush, ~120–145W, upright and relaxed on the Zwift Ride. Optional — the lift is the priority. Skip it without guilt to make 7:30.',
+        body: 'Easy Zone 2 flush, ~140–165W, upright and relaxed on the Zwift Ride. Optional — the lift is the priority. Skip it without guilt to make 7:30.',
       },
     ],
   },
@@ -251,32 +267,32 @@ export const PROGRAM: WorkoutDay[] = [
   {
     key: '5',
     short: 'Fri',
-    name: 'Outdoor Endurance',
+    name: 'Ride or Nine',
     type: 'Ride',
     chip: 'chip-cyan',
     color: 'cyan',
-    eyebrow: 'Ride · Outdoor Endurance',
-    title: 'Outdoor Endurance',
-    sub: 'Get outside on the Tarmac before work — 60–75 minutes of mostly Zone 2 with whatever terrain the route gives you. This is where the aerobic base and the calorie burn live. Dawn start, home to shower by 7:30.',
-    tags: ['60–75 min', 'Weekday · home by 7:30', 'Outdoor'],
+    eyebrow: 'Away · Ride or Golf',
+    title: 'Outdoor Ride — or the Dawn Nine',
+    sub: 'The second away morning, and it’s a choice: 60–75 min of outdoor Zone 2 on the Tarmac (the default while the century build is on), or a dawn nine when golf wins the argument. Either way it’s a dawn start and home to shower by 7:30.',
+    tags: ['60–75 min', 'Away day · ride or golf', 'Home by 7:30'],
     rides: [
       {
         variant: 'outdoor',
         pill: 'Outdoor · Default',
         title: '60–75 min Zone 2 on the Tarmac SL8',
-        body: 'Roll out ~5:40. Mostly Zone 2 — HR 120–148, ~123–167W — with natural surges over bridges and rollers. Steady, could-hold-a-conversation breathing. Loop close to home so you’re back to shower by ~7:15.',
-      },
-      {
-        variant: 'indoor',
-        pill: 'Indoor · Backup',
-        title: '50 min Zwift Zone 2 / tempo',
-        body: 'Rain or too dark: steady Zone 2 with a few 3–5 min tempo lifts (170–190W). Not as fun as outside, but the minutes still count.',
+        body: 'Roll out ~5:40. Mostly Zone 2 — HR 120–148, ~142–190W — with natural surges over bridges and rollers. Steady, could-hold-a-conversation breathing. Loop close to home so you’re back to shower by ~7:15. Deliberately easy: it keeps the legs fresh for Saturday.',
       },
       {
         variant: 'fallback',
-        pill: 'Fallback',
-        title: '30 min recovery spin',
-        body: 'Legs cooked from Tuesday’s intervals? Easy 30 min at ~60% FTP, conversational. Still beats skipping.',
+        pill: 'The Trade · Dawn Nine',
+        title: 'Tee off ~5:30 — walk a fast nine',
+        body: 'Carry or push, brisk between shots: ~7–8k steps and 300–500 kcal of real Zone 1–2 work. Range + short game if the sheet is backed up — call it at 7:00 and still make 7:30. Trade freely in August; from September on, bias this slot to the bike — the century needs the miles more than par needs the practice.',
+      },
+      {
+        variant: 'indoor',
+        pill: 'Indoor · Weather backup',
+        title: '50 min Zwift Zone 2 / tempo',
+        body: 'Rain or too dark: steady Zone 2 with a few 3–5 min tempo lifts (195–220W). Doesn’t need the away slot at all — bank it at home and give the morning back.',
       },
     ],
   },
@@ -289,22 +305,22 @@ export const PROGRAM: WorkoutDay[] = [
     type: 'Ride',
     chip: 'chip-cyan',
     color: 'cyan',
-    eyebrow: 'Ride · Long',
+    eyebrow: 'Ride · Long · Century Build',
     title: 'Long Ride',
-    sub: 'The signature ride of the week and your single biggest calorie burn. It’s the weekend, so the 7:30 rule is off — just be back by around 10. Outdoor by default; build the duration slowly and keep it fun.',
-    tags: ['1.5–2.5 hr', 'Weekend · back by ~10', 'Outdoor'],
+    sub: 'The signature ride of the week and the engine of the century goal — every Saturday from here is a rung on the ladder to 100 miles. Weekend rules: back by around 10 now, and pre-negotiate the later mornings as the rides grow through fall. Outdoor by default.',
+    tags: ['2–4½ hr · builds weekly', 'Weekend · fuel on the bike', 'Outdoor'],
     rides: [
       {
         variant: 'outdoor',
         pill: 'Outdoor · Default',
-        title: '1.5–2.5 hr on the Tarmac SL8',
-        body: 'Primarily Zone 2 with terrain — HR 120–148, ~123–167W. Build gradually: if last week was 90 min, make this 100. Stop for coffee. Over 90 min, take 50–80 g carbs/hr so you don’t bonk and cost yourself the rest of the day.',
+        title: 'Zone 2 on the Tarmac SL8 — add 15–20 min a week',
+        body: 'Primarily Zone 2 with terrain — HR 120–148, ~142–190W. From ~2 hr now toward a 4½–5 hr capstone in October; every 4th Saturday cut to ~60% and absorb. Over 2 hr, take 60–90 g carbs/hr — fueling is a skill the century will examine, so practice it now. Full schedule: About → Century Countdown.',
       },
       {
         variant: 'indoor',
         pill: 'Indoor · Backup',
-        title: '75–90 min Zwift group ride or long sweet-spot',
-        body: 'If the weather is genuinely out: a Zwift group ride or a long steady effort. Duration matters more than intensity on this day.',
+        title: '90 min – 2 hr Zwift group ride or long sweet-spot',
+        body: 'If the weather is genuinely out: a group ride holds long durations honestly. Duration matters more than intensity today — but once the build passes 3 hr, don’t let two long-ride Saturdays in a row go virtual if the road is at all rideable.',
       },
     ],
   },
@@ -319,13 +335,13 @@ export const PROGRAM: WorkoutDay[] = [
     color: 'green',
     eyebrow: 'Golf · Recovery',
     title: 'Golf + Recovery',
-    sub: 'The easy day, and it stays easy: a relaxed round — nine, or a full eighteen if the morning is open — then cuff maintenance and a proper mobility block at home. No lifting today; four upper sessions during the week earn a real recovery day. Back by around 10 (later if you play 18).',
+    sub: 'The easy day, and it stays easy: a relaxed round — nine, or a full eighteen if the morning is open — then cuff maintenance and a proper mobility block at home. No lifting today; three lift days plus the pump during the week earn a real recovery day. Back by around 10 (later if you play 18).',
     tags: ['Relaxed round + mobility', 'Weekend · flexible'],
     exercises: [
       {
         name: 'Play — relaxed 9 or 18',
         sets: 'walk it',
-        note: 'No clock pressure today. Walk the round for the steps and the head-space — low intensity is exactly what the day after a long ride wants. If your Whoop recovery is red, keep it to nine or take a true rest day. Sleep beats any extra session.',
+        note: 'No clock pressure today. Walk the round for the steps and the head-space — low intensity is exactly what the day after a long ride wants. If your recovery score is red, keep it to nine or take a true rest day. Sleep beats any extra session.',
       },
       {
         name: 'Cuff maintenance',
@@ -347,7 +363,7 @@ export const PROGRAM: WorkoutDay[] = [
       {
         name: 'Optional easy spin',
         sets: '20–30 min',
-        note: 'Want a touch more movement? A very easy Zone 1 spin (~60% FTP) helps the legs shed Saturday’s ride. Totally optional — recovery pace only.',
+        note: 'Want a touch more movement? A very easy Zone 1 spin (~150W, 60% FTP) helps the legs shed Saturday’s ride. Totally optional — recovery pace only.',
       },
     ],
   },

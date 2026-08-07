@@ -18,57 +18,73 @@ export function AboutPanel({ active }: { active: boolean }) {
 
         <div className="section-title">Goal</div>
         <p className="prose">
-          Stay lean and athletic at <b>185–190 lb</b> — as low a body fat as you
-          can hold your ~138 lb of lean mass at. Three sports, each doing what
-          it’s best at: <b>weightlifting</b> aimed squarely at the upper body —
-          back, shoulders, chest, arms — because that’s what builds visible
-          shape; <b>cycling</b> (indoor and outdoor) as the aerobic engine, the
-          biggest calorie burn, and the de-facto leg training; and <b>golf</b>{' '}
-          for the skill, the steps, and the head-space. You’re ~199 lb today, so
-          the near-term job is a slow, muscle-sparing cut.
+          Two targets by year-end: <b>~188 lb with the ~138 lb of lean mass
+          held</b>, and a <b>comfortable 100-mile ride</b>. Three sports, each
+          doing what it’s best at: <b>weightlifting</b> for the upper-body
+          shape the bikes can’t build — and now for the legs and trunk the
+          DEXA says were slipping; <b>cycling</b> (indoor and outdoor) as the
+          aerobic engine, the biggest calorie burn, and the road to the
+          century; and <b>golf</b> for the skill, the steps, and the
+          head-space. You’re ~197 lb today, so the near-term job is a slow,
+          muscle-sparing cut.
         </p>
 
         <div className="section-title">How This Is Built</div>
         <p className="prose">
+          <b>Home mornings vs away mornings.</b> Three weekday dawns are
+          apartment-bound now — she’s at the 6 a.m. class, you’re on kid duty —
+          so those days run entirely on the dumbbells, the mat and the Zwift
+          Ride. Two weekday mornings you can leave: one goes to the{' '}
+          <b>building gym</b>, one to the <b>road or the tee</b>. Weekends are
+          open as before. Wed/Fri are placeholders — slide the away days to
+          whichever mornings she’s home and keep the pattern: gym mid-week,
+          ride-or-golf next to the weekend.
+        </p>
+        <p className="prose">
           <b>Combined mornings.</b> Most days stack two things — a lift plus an
-          easy spin, golf plus mobility — so all three sports fit one week
+          easy spin, gym plus an evening pump — so all three sports fit one week
           instead of fighting over it. It’s also how you already train.
         </p>
         <p className="prose">
           <b>Built around your clock.</b> Weekday sessions are sized to finish
           and shower by <b>7:30</b>; the long ride and the relaxed round live on
-          the weekend, where you just need to be back by around <b>10</b>.
+          the weekend, where you just need to be back by around <b>10</b> — with
+          the long-ride mornings stretching past that by fall, pre-negotiated.
         </p>
         <p className="prose">
-          <b>Upper body first.</b> Four short home sessions, three of them
-          upper: push (Mon), arms &amp; delts pump (Wed PM), pull (Thu) — chest
-          2×, back 2×, delts 3×, arms 3× a week, the frequency that builds
-          shape. Legs get one ~15-min essentials block inside Thursday, not a
-          day of their own — the bikes already train them 3–4× a week, and
-          honestly, leg day was the one you dreaded. Short enough that skipping
-          never feels justified.
+          <b>Upper body at home, legs downstairs.</b> The dumbbells keep the
+          upper-body frequency that builds shape — chest 2×, back 2×, delts 3×,
+          arms 3× a week — but legs are no longer subcontracted to the bikes.
+          The May DEXA was unambiguous: <b>legs and trunk lost the most lean</b>{' '}
+          while riding the most, because Zone 2 volume doesn’t hold muscle in a
+          deficit — load does. Wednesday’s heavy gym morning (leg press, RDL,
+          split squats, trunk work) is the fix a 50-lb dumbbell ceiling can’t
+          be.
         </p>
         <p className="prose">
           <b>The shoulder is in Phase B.</b> The{' '}
           <b>2026-06-16 dislocation</b> is past its 6-week mark and pain-free,
           so pressing is back — via the floor press, light and slow, with cuff
-          work opening every session. Overhead comes last. See{' '}
+          work opening every session. Overhead comes last, and the gym day is
+          deliberately shoulder-neutral. See{' '}
           <b>Shoulder — Return to Load</b> below.
         </p>
         <p className="prose">
           <b>Cycling, indoor and outdoor.</b> One hard indoor interval day
-          (weather-proof, time-boxed), one outdoor endurance ride, one long
-          weekend ride, plus easy flush spins after lifting. FTP is 222W.
+          (weather-proof and kid-duty-proof), one outdoor endurance slot, one
+          long weekend ride growing toward the century, plus easy flush spins
+          after lifting. FTP is <b>254W</b> (retested 2026-08-02) — every watt
+          target in the app is built off it.
         </p>
         <p className="prose">
-          <b>Golf counts.</b> Two slots — a fast dawn nine mid-week and a relaxed
-          recovery round on the weekend. Walked, it’s real Zone 1–2 volume, not a
-          day off.
+          <b>Golf counts.</b> One guaranteed slot (the relaxed Sunday round)
+          plus the Friday trade against the outdoor ride. Walked, it’s real
+          Zone 1–2 volume, not a day off.
         </p>
 
         <div className="section-title">Apartment Dumbbell Setup</div>
         <p className="prose">
-          The whole strength program runs on <b>two loadable dumbbell handles
+          Home-day strength runs on <b>two loadable dumbbell handles
           (~10 lb each)</b> with <b>6×10 lb + 4×5 lb plates</b>, a mat, and a
           small patch of floor. Practical ceiling: <b>~50 lb per hand</b> — and
           both handles can sit at 50 at once (10+10 on each side of one, 10+5+5
@@ -76,6 +92,19 @@ export function AboutPanel({ active }: { active: boolean }) {
           lives on the floor; no bands, so cuff work uses light plates; no bar
           or pulldown, so rows carry the back. Single-leg and single-arm
           variations, tempo, and pauses are what make 50 lb heavy.
+        </p>
+
+        <div className="section-title">The Building Gym</div>
+        <p className="prose">
+          Wednesday’s away morning uses the full gym downstairs — racks,
+          machines, cables, real plates — and it exists in this program for one
+          reason: <b>progressive overload for legs and trunk</b>, the regions
+          the dumbbells can’t load and the DEXA says need it. The commute is an
+          elevator, so a 50-minute session still beats the 7:30 shower.
+          Shoulder rules ride along: grip at your sides, nothing overhead, no
+          back-squat rack position until Phase C clears. If the gym morning
+          dies, the old at-home leg block (goblet squat, DB RDL, heavy swings)
+          is the fallback.
         </p>
 
         <div className="section-title">Week at a Glance</div>
