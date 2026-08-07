@@ -11,9 +11,9 @@ export interface FuelStat {
 
 export const FUEL_STATS: FuelStat[] = [
   { label: 'Daily Calories', desc: '~250 kcal below estimated TDEE', value: '~2,700' },
-  { label: 'Protein', desc: '1.1 g per lb — non-negotiable on a cut', value: '220 g' },
+  { label: 'Protein', desc: '~1 g per lb — non-negotiable on a cut', value: '190 g' },
   { label: 'Fat', desc: 'Floor of ~0.4 g/lb for hormones', value: '75–80 g', muted: true },
-  { label: 'Carbs (baseline)', desc: 'Varies by training load — see below', value: '285 g', muted: true },
+  { label: 'Carbs (baseline)', desc: 'Varies by training load — see below', value: '~315 g', muted: true },
 ];
 
 export interface CarbRow {
@@ -23,13 +23,13 @@ export interface CarbRow {
 }
 
 export const CARBS_BY_DAY: CarbRow[] = [
-  { day: 'Mon', amount: '~285 g', rest: '— upper push + spin' },
-  { day: 'Tue', amount: '~320 g', rest: '— hard indoor intervals' },
-  { day: 'Wed', amount: '~285 g', rest: '— golf AM + arms pump PM' },
-  { day: 'Thu', amount: '~300 g', rest: '— pull day + leg essentials' },
-  { day: 'Fri', amount: '~300–340 g', rest: '— outdoor ride, scale with length' },
-  { day: 'Sat', amount: '~340–420 g', rest: '— long ride, scale with duration' },
-  { day: 'Sun', amount: '~230 g', rest: '— golf + recovery' },
+  { day: 'Mon', amount: '~300 g', rest: '— upper push + spin' },
+  { day: 'Tue', amount: '~330 g', rest: '— hard indoor intervals' },
+  { day: 'Wed', amount: '~330 g', rest: '— heavy gym lower AM + pump PM' },
+  { day: 'Thu', amount: '~300 g', rest: '— pull day + optional spin' },
+  { day: 'Fri', amount: '~300–340 g', rest: '— ride or golf, scale with length' },
+  { day: 'Sat', amount: '~350–450 g', rest: '— long ride, scale with duration' },
+  { day: 'Sun', amount: '~250 g', rest: '— golf + recovery' },
 ];
 
 export interface InfoCard {
@@ -42,7 +42,7 @@ export const AROUND_TRAINING: InfoCard[] = [
   {
     name: 'Pre-Session Meal',
     sets: '60–90 min',
-    note: '~30–40 g carbs + ~25 g protein before a lift or the hard Tuesday intervals. Oatmeal + whey, rice + chicken, or similar. Light enough to move on. Dawn rides and golf can go fasted or on a banana + coffee.',
+    note: '~30–40 g carbs + ~25 g protein before a lift, the Tuesday intervals, or the Wednesday gym day. Oatmeal + whey, rice + chicken, or similar. Light enough to move on. Dawn rides and golf can go fasted or on a banana + coffee.',
   },
   {
     name: 'Post-Session Meal',
@@ -51,25 +51,25 @@ export const AROUND_TRAINING: InfoCard[] = [
   },
   {
     name: 'Long-Ride Fueling',
-    sets: '50–80 g/hr',
-    note: 'Saturday rides over 90 min: take carbs on the bike — bars, gels, or a sports drink. Bonking on a 2-hr Z2 ride sets recovery back days and wrecks the rest of the weekend.',
+    sets: '60–90 g/hr',
+    note: 'Saturday rides over 2 hr: take carbs on the bike — bars, gels, or a sports drink — from the first hour, not when you fade. As the century build stretches past 3 hr this stops being optional; bonking a 4-hr ride wrecks the whole weekend and the next week’s training.',
   },
 ];
 
 export const CHECK_YOURSELF: InfoCard[] = [
   {
     name: 'Weekly',
-    note: 'Starting ~199 lb. The 7-day average weight should trend down ~0.3–0.4 lb. Stalled 2+ weeks → drop calories 100–150. Losing >0.6 lb/week → eat more; that pace will cost lean mass.',
+    note: 'Starting ~197 lb. The 7-day average weight should trend down ~0.3–0.45 lb. Stalled 2+ weeks → drop calories 100–150. Losing >0.6 lb/week → eat more; that pace will cost lean mass.',
   },
   {
     name: 'DEXA',
-    sets: 'Jul/Aug 2026',
-    note: 'Primary check: lean mass holds at ~138 lb. If lean drops more than ~1 lb between scans, the deficit is too aggressive — bump calories 150–200 and re-check. Two lift days + high protein exist to keep this number flat.',
+    sets: 'Aug 2026',
+    note: 'The scan is due this month and it’s the deciding vote: lean mass holds at ~138 lb, with legs and trunk — the regions that lost last time — flat or up. Lean down again → the deficit is too aggressive; bump calories 150–200 and re-check. Three lift days + 190 g protein + creatine exist to keep this number flat.',
   },
   {
     name: 'Target',
-    sets: '185–190 lb',
-    note: 'Hold 185–190 lb as lean as possible — target ~188 by 2026-12-31 at ~138 lb lean / ~42 lb fat / 8 lb bone ≈ 22% body fat. From ~199 that’s ~11 lb of fat over the back half of the year — slow and muscle-sparing on purpose.',
+    sets: '188 lb',
+    note: 'Hold 185–190 lb as lean as possible — target ~188 by 2026-12-31 at ~138 lb lean / ~42 lb fat / 8 lb bone ≈ 22% body fat. From ~197 that’s ~9 lb over ~21 weeks, ~0.43 lb/week — slow and muscle-sparing on purpose.',
   },
 ];
 
@@ -81,12 +81,12 @@ export interface WeekRow {
 }
 
 export const WEEK_AT_GLANCE: WeekRow[] = [
-  { day: 'Mon', desc: 'Upper push — floor press rotation, delts, triceps (+ spin)' },
-  { day: 'Tue', desc: 'Indoor intervals (Zwift, FTP 222) + mat core' },
-  { day: 'Wed', desc: 'Golf dawn speed-9 AM · arms & delts pump PM' },
-  { day: 'Thu', desc: 'Upper pull — rows, rear delts, traps + 15-min leg essentials' },
-  { day: 'Fri', desc: 'Outdoor endurance ride (Z2, 60–75 min)' },
-  { day: 'Sat', desc: 'Long outdoor ride (1.5–2.5 hr, back by ~10)' },
+  { day: 'Mon', desc: 'Home · Upper push — floor press rotation, delts, triceps (+ spin)' },
+  { day: 'Tue', desc: 'Home · Indoor intervals (Zwift, FTP 254) + mat core' },
+  { day: 'Wed', desc: 'Away · Building gym: heavy lower + trunk AM · arms pump PM' },
+  { day: 'Thu', desc: 'Home · Upper pull — rows, rear delts, traps + swing finisher' },
+  { day: 'Fri', desc: 'Away · Outdoor Z2 ride (default) or dawn nine' },
+  { day: 'Sat', desc: 'Long ride — century build, 2–4½ hr and growing' },
   { day: 'Sun', desc: 'Golf relaxed round + cuff maintenance + mobility' },
 ];
 
@@ -108,11 +108,11 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
         h4: 'Where this sits',
         body: (
           <>
-            Shoulder dislocation on <b>2026-06-16</b>, ~6-week rehab. As of early
-            August it’s <b>pain-free and past the 6-week mark → Phase B is
-            active</b>. Cycling and golf continued throughout; only loaded
-            lifting paused. This isn’t medical advice — let your PT gate each
-            step up.
+            Shoulder dislocation on <b>2026-06-16</b>. Early August is week 7–8:{' '}
+            <b>pain-free, Phase B active</b>, with the Phase C gate opening
+            around mid-August if the floor press keeps feeling solid. Cycling
+            and golf continued throughout; only loaded lifting paused. This
+            isn’t medical advice — let your PT gate each step up.
           </>
         ),
       },
@@ -126,7 +126,21 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
       },
       {
         h4: 'Phase C — next (wks 9–12)',
-        body: 'Once the floor press is solid and pain-free for a few weeks, add the half-kneeling single-arm press (the gated card on Monday) — the overhead comeback step now that the landmine went with the gym. Strict two-arm overhead pressing comes after that, and only once fully stable.',
+        body: 'Once the floor press is solid and pain-free for a few weeks, add the half-kneeling single-arm press (the gated card on Monday) — the overhead comeback step. Strict two-arm overhead pressing comes after that, and only once fully stable.',
+      },
+      {
+        h4: 'The gym day and the shoulder',
+        body: (
+          <>
+            Wednesday downstairs is <b>shoulder-neutral by design</b>: leg press
+            instead of back squat on purpose, because the low-bar rack grip is
+            the abducted, externally-rotated position that re-dislocates
+            shoulders. Grip stays at your sides on everything. And yes, the gym
+            has benches and shoulder machines — <b>they stay off-limits</b>{' '}
+            until the home pressing progression clears Phase C. The equipment
+            doesn’t gate the return; the shoulder does.
+          </>
+        ),
       },
       {
         h4: 'Non-negotiables',
@@ -149,13 +163,16 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
         body: 'Week A: Neutral-Grip DB Floor Press · Week B: Standard-Grip DB Floor Press · Week C: Single-Arm Floor Press. The one rotating main lift — floor-protected range while the shoulder finishes rebuilding.',
       },
       {
-        h4: 'Where the legs went',
+        h4: 'Legs moved downstairs',
         body: (
           <>
-            No squat rotation anymore — legs are one condensed block inside
-            Thursday: <b>goblet squat, DB RDL, heavy DB swing</b>, ~15 minutes.
-            The bikes train the legs 3–4× a week; the dumbbells are for the
-            upper body, which the bikes can’t touch.
+            The old 15-min Thursday leg block is retired as the main leg work.
+            The May DEXA showed <b>legs −2.0 lb and trunk −3.7 lb of lean</b>{' '}
+            despite riding 3–4× a week — Z2 volume doesn’t hold muscle in a
+            deficit; load does. Wednesday’s building-gym day (leg press, RDL,
+            split squats, curls, trunk) is the fix. The old block — goblet
+            squat, DB RDL, heavy swings — survives as the <b>at-home fallback</b>{' '}
+            for weeks the gym morning dies.
           </>
         ),
       },
@@ -176,40 +193,94 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
     items: [
       {
         h4: 'Tuesday — Indoor Intervals',
-        body: 'The one hard, structured session. Sweet spot 3 × 12 min @ 195–205W (weeks A/C) or VO₂ 5 × 3 min @ 240–260W (week B). FTP 222W. Weather-proof and time-boxed for the weekday slot.',
+        body: 'The one hard, structured session, at home on the Zwift Ride. Sweet spot 3 × 12 min @ 224–234W (weeks A/C) or VO₂ 5 × 3 min @ 275–295W (week B). Weather-proof, kid-duty-proof, and time-boxed for the weekday slot.',
       },
       {
-        h4: 'Friday — Outdoor Endurance',
-        body: '60–75 min mostly Zone 2 on the Tarmac SL8 — HR 120–148, ~123–167W. Dawn start, home by 7:30. The base-building, calorie-burning ride.',
+        h4: 'The ERG rule',
+        body: (
+          <>
+            ERG mode is for warm-ups, easy spins and Zone 2 <b>only</b>. Sweet
+            spot and VO₂ blocks ride in level mode: when fatigue drops your
+            cadence, ERG answers by raising the force, and the spiral buries
+            the interval. Hold the watts yourself.
+          </>
+        ),
+      },
+      {
+        h4: 'Friday — Outdoor Endurance (the default)',
+        body: '60–75 min mostly Zone 2 on the Tarmac SL8 — HR 120–148, ~142–190W. Dawn start, home by 7:30. Kept deliberately easy so Saturday’s long ride gets fresh legs. This slot trades with the dawn nine; from September, the bike should win most weeks.',
       },
       {
         h4: 'Saturday — Long Ride',
-        body: '1.5–2.5 hr outdoor, weekend, back by ~10. Build duration slowly. This is where most of the cycling fitness — and the biggest single calorie burn — lives.',
+        body: '2–4½ hr outdoor and growing — the century build lives here. Zone 2 (~142–190W), +15–20 min a week, every 4th week cut back. See Century Countdown below for the full schedule.',
       },
       {
         h4: 'Easy Flush Spins',
-        body: '15–20 min Zone 2 (~120–145W) right after Monday’s lift, and optionally Thursday’s. Clears the legs and adds a little burn without adding fatigue. First thing to cut against the 7:30 clock.',
+        body: '15–20 min Zone 2 (~140–165W) right after Monday’s lift, and optionally Thursday’s. Clears the legs and adds a little burn without adding fatigue. First thing to cut against the 7:30 clock.',
       },
       {
         h4: 'FTP',
-        body: 'Currently 222W. Re-test every 6–8 weeks via a Zwift ramp test and update the interval targets above.',
+        body: 'Currently 254W (Garmin, retested 2026-08-02 — up from 222 this spring; every watt target in the app was rebuilt off the new number). Re-test every 6–8 weeks via a Zwift ramp test — a century block this long will move it again, and stale zones make hard days too easy and easy days too hard.',
       },
     ],
   },
   {
-    title: 'Golf & the Clock',
+    title: 'Century Countdown',
     items: [
       {
-        h4: 'Weekday window — by 7:30',
-        body: 'Wednesday is a dawn tee time and a fast, moving nine — walked, for the Zone 1–2 steps. If the tee sheet is slow, the range + short-game area is the backup so you still shower by 7:30.',
+        h4: 'The goal',
+        body: (
+          <>
+            A comfortable <b>100-mile ride by year-end</b>. Comfort is built,
+            not summoned: the Saturday ride grows ~15–20 min a week from
+            today’s ~2 hr to a 4½–5 hr capstone, and then the century is just
+            one more rung — not a leap.
+          </>
+        ),
       },
       {
-        h4: 'Weekend window — back by ~10',
-        body: 'Sunday is the relaxed slot: nine or a full eighteen, no clock pressure. Low intensity the day after the long ride makes it double as active recovery, paired with cuff maintenance and a real mobility block once you’re home.',
+        h4: 'August — Build',
+        body: 'Saturdays 2 → 3 hr (35–50 mi), Zone 2 with terrain. Every 4th week cut to ~60% and absorb. Keep Tuesday intervals honest — FTP is what makes 100 miles at Zone 2 feel easy.',
       },
       {
-        h4: 'Why it’s in the plan',
-        body: 'Two golf slots, because it’s the sport you actually get up for and the walking is genuine easy aerobic volume. Balance across golf, cycling and lifting is the whole point of the redesign.',
+        h4: 'September — Extend',
+        body: 'Saturdays 3 → 4 hr (50–65 mi). Rehearse century-day fueling for real: 60–90 g carbs/hr, the bottles and food you’ll actually carry. These rides will start outrunning the back-by-10 rule — pre-negotiate those mornings on the family calendar.',
+      },
+      {
+        h4: 'October — Peak',
+        body: 'The capstone: 4½–5 hr / 70–80 mi by mid-to-late October. If it goes well, the century window opens — a crisp late-October or November morning beats gambling on December weather.',
+      },
+      {
+        h4: 'Century day + fallback',
+        body: 'Easy week before: Tuesday becomes a few short openers, Friday a gentle spin. Ride it at conversational Zone 2 (~142–175W), eat every 30 minutes from the start, and stop when you need to — a comfortable century with two café stops still counts. If weather kills the window, the deadline is 12-31 and an indoor century counts if it must.',
+      },
+    ],
+  },
+  {
+    title: 'Golf & the Away-Day Math',
+    items: [
+      {
+        h4: 'Why golf shares a slot now',
+        body: (
+          <>
+            Three weekday mornings are apartment-bound, and one of the two away
+            mornings went to the gym — the DEXA made that call, not preference.
+            So weekday golf now <b>shares Friday with the outdoor ride</b>{' '}
+            instead of owning Wednesday. Sunday is untouched.
+          </>
+        ),
+      },
+      {
+        h4: 'Friday — the trade',
+        body: 'Same drill as the old Wednesday: tee off ~5:30, a fast walked nine (~7–8k steps), range + short game as the backup, home by 7:30. Take it freely in August; from September, bias Fridays to the bike and let the century have the miles — it gives the slot back in November.',
+      },
+      {
+        h4: 'Sunday — the relaxed slot',
+        body: 'Nine or a full eighteen, no clock pressure. Low intensity the day after the long ride makes it double as active recovery, paired with cuff maintenance and a real mobility block once you’re home.',
+      },
+      {
+        h4: 'Why it stays in the plan',
+        body: 'Because it’s the sport you actually get up for, and walked golf is genuine easy aerobic volume. Balance across golf, cycling and lifting is still the point — the ratio just tilts toward the bike until the century is banked.',
       },
     ],
   },
@@ -229,20 +300,28 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
         ),
       },
       {
-        h4: 'At the 50 lb Ceiling',
-        body: 'Both handles max at ~50 lb (that combination uses every plate). When a lift owns 50s at the top of its range, the load lever is gone — so pull the other ones: 3-sec negatives, pause reps, 1½ reps, single-limb versions, shorter rest. Rep quality is the progression, not the number on the handle.',
+        h4: 'At the 50 lb Ceiling (home days)',
+        body: 'Both handles max at ~50 lb (that combination uses every plate). When a home lift owns 50s at the top of its range, the load lever is gone — so pull the other ones: 3-sec negatives, pause reps, 1½ reps, single-limb versions, shorter rest. Rep quality is the progression, not the number on the handle.',
+      },
+      {
+        h4: 'Downstairs, the ceiling is gone',
+        body: 'The gym day runs the same double progression but with real steps — 5–10 lb a week on the leg press and RDL. Those two are meant to get genuinely heavy over the fall; that is the entire reason an away morning is spent on them. Log the top set every week so the trend is visible.',
+      },
+      {
+        h4: 'Why Tue + Wed stack back-to-back',
+        body: 'Hard intervals Tuesday, heavy legs Wednesday — deliberately adjacent. Consolidating the stress keeps Thursday and Friday genuinely easy, so Saturday’s long ride starts on recovered legs. If Wednesday’s warm-up sets feel like concrete, that’s a signal to take next Tuesday as the Z2 fallback — not a reason to skip the gym.',
       },
       {
         h4: 'Combining on Low-Time Days',
-        body: 'The stacked days flex. Tight on time before 7:30? Lift only and drop the spin; ride the intervals and skip the core; hit the range instead of playing nine. The Wednesday arms pump floats — bump it to any free evening if that one dies. If Thursday runs long, the leg block is the part to trim. Do the primary, shed the add-on — never skip the whole day.',
+        body: 'The stacked days flex: do the primary, shed the add-on — never skip the whole day. Tight before 7:30? Lift only and drop the spin; ride the intervals, skip the core. Gym morning dies (sick kid, schedule flip)? Run the at-home fallback leg block — goblet squats, DB RDLs, heavy swings, ~15 min — and slide the away day elsewhere in the week if one’s still free. The arms pump floats to any evening.',
       },
       {
         h4: 'Recovery Management',
-        body: 'Monitor Whoop weekly. If recovery trends down 5+ days, soften Tuesday’s intervals to steady Zone 2 first, then trim Saturday’s duration. Monday’s squat and one outdoor ride are the last things to cut. A red day → Sunday becomes a full rest day.',
+        body: 'Watch the recovery scores weekly — sleep score and body battery have both dipped lately, so this is live. Trending down 5+ days → soften Tuesday to Zone 2 first, then trim Saturday’s duration. The Wednesday gym day and the Saturday long ride are the last things to cut — they serve the two goals directly. A red morning → Sunday becomes a full rest day.',
       },
       {
         h4: 'Next Check-In',
-        body: 'DEXA scan in July or August 2026 — the deciding vote on whether the deficit is holding lean mass.',
+        body: 'August 2026 DEXA — due now. The deciding vote on the whole design: lean holds at ~138 lb with legs and trunk flat or up = the deficit and the new leg day are working. Pair it with the planned fasted morning panel.',
       },
     ],
   },
