@@ -12,9 +12,9 @@ export interface DetailExercise {
   name: string;
   sets?: string;
   note?: string;
-  rotation?: { week: string; variation: string }[];
-  /** Set when a rotation exercise has been resolved to the variation done. */
-  week?: string;
+  /** Superset group letter; exercises sharing one are done back to back. */
+  superset?: string;
+  rest?: string;
 }
 
 export interface DetailRideOption {
@@ -57,12 +57,8 @@ function buildDetail(): Record<string, DayDetail> {
         const e: DetailExercise = { name: ex.name };
         if (ex.sets) e.sets = ex.sets;
         if (ex.note) e.note = ex.note;
-        if (ex.rotation) {
-          e.rotation = ex.rotation.rows.map((r) => ({
-            week: r.tag,
-            variation: `${r.name} ${r.desc}`,
-          }));
-        }
+        if (ex.superset) e.superset = ex.superset;
+        if (ex.rest) e.rest = ex.rest;
         return e;
       });
     }

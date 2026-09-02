@@ -2,24 +2,22 @@ export type WorkoutType = 'Strength' | 'Ride' | 'Power' | 'Golf' | 'Rest';
 export type RefType = 'Log' | 'Reference';
 export type DayColor = 'blue' | 'cyan' | 'amber' | 'violet' | 'green' | 'dim';
 
-/** A row in a main-lift's 3-week rotation box. */
-export interface RotationRow {
-  tag: string; // "A" | "B" | "C"
-  name: string; // bolded lift name
-  desc: string; // the rest of the line, starting with the em-dash
-}
-
-export interface Rotation {
-  title: string;
-  rows: RotationRow[];
-}
-
 export interface Exercise {
   name: string;
-  /** Sets × reps notation, e.g. "5 × 5". Omitted on the rare card without it. */
+  /** Sets × reps notation, e.g. "4 × 5". Omitted on the rare card without it. */
   sets?: string;
+  /**
+   * One line, four slots: setup · the cue · tempo · progression. Under ~25
+   * words. Rationale lives in the About panel, not here.
+   */
   note: string;
-  rotation?: Rotation;
+  /**
+   * Superset group letter ("A", "B", …). Consecutive exercises sharing a
+   * letter render as one paired block (A1, A2) done back to back.
+   */
+  superset?: string;
+  /** Rest prescription, e.g. "3 min" for an anchor lift, "60–75 s" for a pair. */
+  rest?: string;
   /** YouTube search query; the "How to" link is built from it. */
   videoQuery?: string;
 }
@@ -67,9 +65,9 @@ export interface LogEntry {
   workoutName: string;
   type: string;
   color: DayColor;
-  /** For rotation days: the specific variation done, e.g. "Back Squat". */
+  /** @deprecated Legacy (pre-Sept-2026 rotation program). Kept for old logs. */
   variation?: string;
-  /** The rotation tag (A/B/C) for the variation above. */
+  /** @deprecated Legacy rotation tag (A/B/C). Kept for old logs. */
   variationTag?: string;
   /* Optional session metrics (Phase 3). All backward-compatible — older logs
      simply omit them. Strength/Power use the top-set fields; rides use

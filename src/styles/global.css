@@ -502,48 +502,51 @@ body {
   fill: currentColor;
 }
 
-/* ───────────── ROTATION ───────────── */
-.rotation {
-  margin-top: 12px;
-  padding: 12px 14px;
-  background: var(--amber-bg);
-  border: 1px solid rgba(245, 158, 11, 0.2);
-  border-radius: var(--radius-sm);
+/* ───────────── SUPERSET ─────────────
+   A paired block: header strip, then the member cards (A1, A2) flush inside a
+   colored rail so the pairing reads at a glance. */
+.superset {
+  margin-top: 14px;
+  padding: 0 0 0 12px;
+  border-left: 3px solid var(--blue);
 }
-.rotation-title {
+.superset-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  padding: 2px 0 0;
+}
+.superset-tag {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--amber);
-  margin-bottom: 8px;
+  color: var(--blue);
 }
-.rotation-row {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 6px 0;
-  font-size: 13px;
-  color: var(--text);
-  line-height: 1.5;
+.superset-rule {
+  font-size: 12px;
+  color: var(--text-muted);
 }
-.rotation-row + .rotation-row {
-  border-top: 1px solid rgba(245, 158, 11, 0.1);
+.superset .card {
+  margin-top: 8px;
 }
-.rotation-tag {
-  flex-shrink: 0;
-  background: var(--amber);
-  color: #1a0e00;
-  font-weight: 800;
-  padding: 2px 7px;
+.card-label {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 1px 6px;
   border-radius: 5px;
+  background: var(--blue);
+  color: #fff;
   font-size: 10px;
+  font-weight: 800;
   letter-spacing: 0.5px;
-  text-transform: uppercase;
+  vertical-align: 2px;
 }
-.rotation-text b {
-  color: var(--text);
-  font-weight: 700;
+.card-rest {
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0;
 }
 
 /* ───────────── RIDE / REST CARDS ───────────── */
@@ -774,18 +777,49 @@ body {
   color: var(--text);
 }
 
-/* Reused colors for sets accent based on day */
-.day-cyan .card-sets {
+/* Reused colors for sets / superset accents based on day */
+.day-cyan .card-sets,
+.day-cyan .superset-tag {
   color: var(--cyan);
 }
-.day-amber .card-sets {
+.day-amber .card-sets,
+.day-amber .superset-tag {
   color: var(--amber);
 }
-.day-violet .card-sets {
+.day-violet .card-sets,
+.day-violet .superset-tag {
   color: var(--violet);
 }
-.day-green .card-sets {
+.day-green .card-sets,
+.day-green .superset-tag {
   color: var(--green);
+}
+.day-cyan .superset {
+  border-color: var(--cyan);
+}
+.day-amber .superset {
+  border-color: var(--amber);
+}
+.day-violet .superset {
+  border-color: var(--violet);
+}
+.day-green .superset {
+  border-color: var(--green);
+}
+.day-cyan .card-label {
+  background: var(--cyan);
+  color: #06232a;
+}
+.day-amber .card-label {
+  background: var(--amber);
+  color: #1a0e00;
+}
+.day-violet .card-label {
+  background: var(--violet);
+}
+.day-green .card-label {
+  background: var(--green);
+  color: #062b1f;
 }
 
 /* ───────────── AUTH (header) ───────────── */

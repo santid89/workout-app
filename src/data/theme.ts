@@ -2,10 +2,10 @@ import type { DayColor, DayMeta } from '@/types';
 
 /** The 7 loggable workout days, keyed '1'..'7'. */
 export const DAYS: DayMeta[] = [
-  { key: '1', short: 'Mon', name: 'Upper Push', type: 'Strength', chip: 'chip-blue', color: 'blue' },
+  { key: '1', short: 'Mon', name: 'Lower A', type: 'Strength', chip: 'chip-amber', color: 'amber' },
   { key: '2', short: 'Tue', name: 'Indoor Intervals', type: 'Ride', chip: 'chip-cyan', color: 'cyan' },
-  { key: '3', short: 'Wed', name: 'Gym Lower', type: 'Power', chip: 'chip-amber', color: 'amber' },
-  { key: '4', short: 'Thu', name: 'Upper Pull', type: 'Strength', chip: 'chip-blue', color: 'blue' },
+  { key: '3', short: 'Wed', name: 'Upper', type: 'Strength', chip: 'chip-blue', color: 'blue' },
+  { key: '4', short: 'Thu', name: 'Lower B', type: 'Strength', chip: 'chip-amber', color: 'amber' },
   { key: '5', short: 'Fri', name: 'Ride or Nine', type: 'Ride', chip: 'chip-cyan', color: 'cyan' },
   { key: '6', short: 'Sat', name: 'Long Ride', type: 'Ride', chip: 'chip-cyan', color: 'cyan' },
   { key: '7', short: 'Sun', name: 'Golf + Recovery', type: 'Golf', chip: 'chip-green', color: 'green' },
