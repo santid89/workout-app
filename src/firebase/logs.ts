@@ -14,7 +14,6 @@ import {
 } from 'firebase/firestore';
 import { getDbOrNull, errCode } from './app';
 import { PROGRAM_DETAIL } from '@/data/programDetail';
-import { resolveVariation } from '@/data/rotation';
 import type { LogEntry, LogMetrics } from '@/types';
 
 export interface NewLog extends LogMetrics {
@@ -23,8 +22,6 @@ export interface NewLog extends LogMetrics {
   workoutName: string;
   type: string;
   color: string;
-  variation?: string;
-  variationTag?: string;
 }
 
 /** The optional metric fields, in the order they're written to Firestore. */
@@ -91,7 +88,6 @@ export function subscribeLogs(
 export async function addLog(uid: string, log: NewLog): Promise<void> {
   const db = getDbOrNull();
   if (!db) throw new Error('Firebase not configured');
-  // Firestore rejects undefined fields, so only include variation when set.
   const doc: Record<string, unknown> = {
     date: log.date,
     workoutKey: log.workoutKey,
@@ -100,8 +96,6 @@ export async function addLog(uid: string, log: NewLog): Promise<void> {
     color: log.color,
     createdAt: serverTimestamp(),
   };
-  if (log.variation) doc.variation = log.variation;
-  if (log.variationTag) doc.variationTag = log.variationTag;
   // Include any optional metrics the user filled in (skip empty/undefined).
   for (const k of METRIC_KEYS) {
     const v = log[k];
@@ -176,15 +170,7 @@ export async function syncShareExport(
       summary: isRide ? null : (d?.summary ?? null),
     };
     if (!isRide && d?.tags && d.tags.length) s.tags = d.tags;
-    if (!isRide && d?.exercises) {
-      // Resolve the umbrella "(rotation)" lift to the single variation done.
-      const v = resolveVariation(l.workoutKey, l.date, l.variationTag);
-      s.exercises = d.exercises.map((ex) =>
-        ex.rotation && v
-          ? { name: v.name, sets: ex.sets, note: ex.note, week: v.tag }
-          : ex
-      );
-    }
+    if (!isRide && d?.exercises) s.exercises = d.exercises;
     if (isRide && d?.rideOptions) s.rideOptions = d.rideOptions;
     if (!isRide && d?.recovery) s.recovery = d.recovery;
     // Carry any logged metrics through to the export (e.g. for Claude).

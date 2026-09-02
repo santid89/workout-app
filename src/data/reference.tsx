@@ -23,10 +23,10 @@ export interface CarbRow {
 }
 
 export const CARBS_BY_DAY: CarbRow[] = [
-  { day: 'Mon', amount: '~300 g', rest: '— upper push + spin' },
+  { day: 'Mon', amount: '~320 g', rest: '— heavy lower: squat' },
   { day: 'Tue', amount: '~330 g', rest: '— hard indoor intervals' },
-  { day: 'Wed', amount: '~330 g', rest: '— heavy gym lower AM + pump PM' },
-  { day: 'Thu', amount: '~300 g', rest: '— pull day + optional spin' },
+  { day: 'Wed', amount: '~300 g', rest: '— upper push / pull' },
+  { day: 'Thu', amount: '~320 g', rest: '— heavy lower: deadlift' },
   { day: 'Fri', amount: '~300–340 g', rest: '— ride or golf, scale with length' },
   { day: 'Sat', amount: '~350–450 g', rest: '— long ride, scale with duration' },
   { day: 'Sun', amount: '~250 g', rest: '— golf + recovery' },
@@ -42,7 +42,7 @@ export const AROUND_TRAINING: InfoCard[] = [
   {
     name: 'Pre-Session Meal',
     sets: '60–90 min',
-    note: '~30–40 g carbs + ~25 g protein before a lift, the Tuesday intervals, or the Wednesday gym day. Oatmeal + whey, rice + chicken, or similar. Light enough to move on. Dawn rides and golf can go fasted or on a banana + coffee.',
+    note: '~30–40 g carbs + ~25 g protein before a gym morning or the Tuesday intervals. Oatmeal + whey, rice + chicken, or similar. Light enough to move on. Dawn rides and golf can go fasted or on a banana + coffee.',
   },
   {
     name: 'Post-Session Meal',
@@ -63,13 +63,18 @@ export const CHECK_YOURSELF: InfoCard[] = [
   },
   {
     name: 'DEXA',
-    sets: 'Aug 2026',
-    note: 'The scan is due this month and it’s the deciding vote: lean mass holds at ~138 lb, with legs and trunk — the regions that lost last time — flat or up. Lean down again → the deficit is too aggressive; bump calories 150–200 and re-check. Three lift days + 190 g protein + creatine exist to keep this number flat.',
+    sets: 'Sept 2026',
+    note: 'The deciding vote: lean mass holds at ~138 lb, with legs and trunk — the regions that lost last time — flat or up. Lean down again → the deficit is too aggressive; bump calories 150–200 and re-check. Three heavy gym days + 190 g protein + creatine exist to keep this number flat.',
   },
   {
     name: 'Target',
     sets: '188 lb',
-    note: 'Hold 185–190 lb as lean as possible — target ~188 by 2026-12-31 at ~138 lb lean / ~42 lb fat / 8 lb bone ≈ 22% body fat. From ~197 that’s ~9 lb over ~21 weeks, ~0.43 lb/week — slow and muscle-sparing on purpose.',
+    note: 'Hold 185–190 lb as lean as possible — target ~188 by 2026-12-31 at ~138 lb lean / ~42 lb fat / 8 lb bone ≈ 22% body fat. From ~197 that’s ~9 lb over ~17 weeks, ~0.5 lb/week — slow and muscle-sparing on purpose.',
+  },
+  {
+    name: 'After the century',
+    sets: 'Nov →',
+    note: 'The deficit holds until the century is banked. From November, move to maintenance (~2,950 kcal) with protein unchanged: a rugby build needs lean mass to go up, and that only happens once the cut and the long rides stop competing for it. Re-check DEXA in January.',
   },
 ];
 
@@ -81,11 +86,11 @@ export interface WeekRow {
 }
 
 export const WEEK_AT_GLANCE: WeekRow[] = [
-  { day: 'Mon', desc: 'Home · Upper push — floor press rotation, delts, triceps (+ spin)' },
+  { day: 'Mon', desc: 'Gym · Lower A — back squat + 4 supersets (posterior chain, quads, trunk)' },
   { day: 'Tue', desc: 'Home · Indoor intervals (Zwift, FTP 254) + mat core' },
-  { day: 'Wed', desc: 'Away · Building gym: heavy lower + trunk AM · arms pump PM' },
-  { day: 'Thu', desc: 'Home · Upper pull — rows, rear delts, traps + swing finisher' },
-  { day: 'Fri', desc: 'Away · Outdoor Z2 ride (default) or dawn nine' },
+  { day: 'Wed', desc: 'Gym · Upper — bench + 4 push/pull supersets' },
+  { day: 'Thu', desc: 'Gym · Lower B — deadlift + 3 supersets (glutes, traps & neck, carries)' },
+  { day: 'Fri', desc: 'Outdoor Z2 ride (default) or dawn nine' },
   { day: 'Sat', desc: 'Long ride — century build, 2–4½ hr and growing' },
   { day: 'Sun', desc: 'Golf relaxed round + cuff maintenance + mobility' },
 ];
@@ -102,87 +107,77 @@ export interface AccordionData {
 
 export const ABOUT_ACCORDIONS: AccordionData[] = [
   {
-    title: 'Shoulder — Return to Load',
+    title: 'The Lifting Plan',
+    items: [
+      {
+        h4: 'The target',
+        body: (
+          <>
+            A rugby build: <b>legs, glutes, back thickness, traps and neck</b>,
+            with a dense chest on top. That comes from heavy compound lifts and
+            a lot of pulling, so two of the three gym days are lower-body and
+            every day is anchored by a barbell lift.
+          </>
+        ),
+      },
+      {
+        h4: 'Session template',
+        body: 'Same shape every lift day, about 50 minutes: one anchor lift as straight sets with 3 min rest, then three or four supersets of three rounds each with 60–75 sec between rounds. The anchor is never superset — heavy squats and deadlifts need full rest.',
+      },
+      {
+        h4: 'Supersets',
+        body: 'A1 and A2 are done back to back, then rest, then the next round. Pairs are antagonists (push with pull) or unrelated regions (hinge with lunge, calves with trunk), so neither lift steals from the other. Direct arm work lives inside the Wednesday pairs — there is no separate pump session.',
+      },
+      {
+        h4: 'Progression',
+        body: (
+          <>
+            <b>Anchors:</b> add the stated load when every set is clean; miss
+            twice, drop 10% and rebuild. <b>Supersets:</b> add weight when all
+            rounds hit the top of the range. Log the anchor top set every week
+            so the trend is visible.
+          </>
+        ),
+      },
+      {
+        h4: 'The 4-week block',
+        body: 'Weeks 1–3 build. Week 4 is the cut-back, matching the long-ride cut-back: anchors at 3 × 5 with 85%, supersets at two rounds, Tuesday intervals become Zone 2.',
+      },
+      {
+        h4: 'The gym',
+        body: 'Rack and barbell, bench, dumbbells, cables, leg press, leg curl, pull-up bar. Where a lift usually wants special kit the notes give the plain-gym version and what to swap in if it exists: trap bar for the deadlift, a neck harness for the plate work.',
+      },
+    ],
+  },
+  {
+    title: 'Shoulder — Phase C',
     items: [
       {
         h4: 'Where this sits',
         body: (
           <>
-            Shoulder dislocation on <b>2026-06-16</b>. Early August is week 7–8:{' '}
-            <b>pain-free, Phase B active</b>, with the Phase C gate opening
-            around mid-August if the floor press keeps feeling solid. Cycling
-            and golf continued throughout; only loaded lifting paused. This
-            isn’t medical advice — let your PT gate each step up.
+            Shoulder dislocation on <b>2026-06-16</b>. September is week 11–12:{' '}
+            <b>little to no pain, Phase C active</b>. Barbell bench and the bar
+            on the back are allowed; strict overhead is the last gate. Not
+            medical advice — let your PT gate each step up.
           </>
         ),
       },
       {
-        h4: 'Phase A — done',
-        body: 'Weeks 0–6: rotator-cuff + scapular work only, no pressing, nothing overhead, while legs, core, cycling and golf carried the week. Its habits stay: every press session still opens with the cuff warm-up (side-lying external rotations + prone Y-T-W), and Sunday keeps a maintenance dose.',
+        h4: 'Gates',
+        body: 'Landmine press until 8 reps/side are pain-free for 3 weeks, then strict barbell overhead press replaces it in the Wednesday A superset. Any sharp pain on a press: dumbbell version that session, no debate. Bar position bothers the shoulder on squats: front squat, cross-arm grip.',
       },
       {
-        h4: 'Phase B — now (wks 6–9)',
-        body: 'The floor press rotation on Monday is the comeback lift: light (~20–25 lb/hand), higher reps, slow progression, floor-protected range. Rows, curls and triceps work are unrestricted; lateral raises stay light, to shoulder height, pain-free range only. Nothing overhead yet. Any sharp pain or instability → back to Phase A for a week.',
-      },
-      {
-        h4: 'Phase C — next (wks 9–12)',
-        body: 'Once the floor press is solid and pain-free for a few weeks, add the half-kneeling single-arm press (the gated card on Monday) — the overhead comeback step. Strict two-arm overhead pressing comes after that, and only once fully stable.',
-      },
-      {
-        h4: 'The gym day and the shoulder',
-        body: (
-          <>
-            Wednesday downstairs is <b>shoulder-neutral by design</b>: leg press
-            instead of back squat on purpose, because the low-bar rack grip is
-            the abducted, externally-rotated position that re-dislocates
-            shoulders. Grip stays at your sides on everything. And yes, the gym
-            has benches and shoulder machines — <b>they stay off-limits</b>{' '}
-            until the home pressing progression clears Phase C. The equipment
-            doesn’t gate the return; the shoulder does.
-          </>
-        ),
+        h4: 'What stays',
+        body: 'The cuff warm-up opens every Wednesday and Sunday keeps a maintenance dose. Face pulls and lateral raises are in the plan for the joint as much as for the look.',
       },
       {
         h4: 'Non-negotiables',
         body: (
           <>
             Pain-free range, always. Re-dislocation risk is highest with the arm{' '}
-            <b>abducted and externally rotated</b> (the throwing / “cocked”
-            position) — respect it. Sharp pain or a feeling of instability means
-            stop and regress. Get a PT’s sign-off before anything overhead.
-          </>
-        ),
-      },
-    ],
-  },
-  {
-    title: '3-Week Rotation Schedule',
-    items: [
-      {
-        h4: 'Mon — Floor Press',
-        body: 'Week A: Neutral-Grip DB Floor Press · Week B: Standard-Grip DB Floor Press · Week C: Single-Arm Floor Press. The one rotating main lift — floor-protected range while the shoulder finishes rebuilding.',
-      },
-      {
-        h4: 'Legs moved downstairs',
-        body: (
-          <>
-            The old 15-min Thursday leg block is retired as the main leg work.
-            The May DEXA showed <b>legs −2.0 lb and trunk −3.7 lb of lean</b>{' '}
-            despite riding 3–4× a week — Z2 volume doesn’t hold muscle in a
-            deficit; load does. Wednesday’s building-gym day (leg press, RDL,
-            split squats, curls, trunk) is the fix. The old block — goblet
-            squat, DB RDL, heavy swings — survives as the <b>at-home fallback</b>{' '}
-            for weeks the gym morning dies.
-          </>
-        ),
-      },
-      {
-        h4: 'Cycle Start',
-        body: (
-          <>
-            Week A begins the week of <b>2026-05-25</b>. Track the current week
-            in your log. After Week C, restart at Week A. Accessories stay the
-            same each week — only the main lift rotates.
+            <b>abducted and externally rotated</b> — respect it. Sharp pain or
+            instability means stop and regress.
           </>
         ),
       },
@@ -193,7 +188,7 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
     items: [
       {
         h4: 'Tuesday — Indoor Intervals',
-        body: 'The one hard, structured session, at home on the Zwift Ride. Sweet spot 3 × 12 min @ 224–234W (weeks A/C) or VO₂ 5 × 3 min @ 275–295W (week B). Weather-proof, kid-duty-proof, and time-boxed for the weekday slot.',
+        body: 'The one hard, structured session, at home on the Zwift Ride. Sweet spot 3 × 12 min @ 224–234W in weeks 1–2, VO₂ 5 × 3 min @ 275–295W in week 3, Zone 2 in the cut-back week 4. Weather-proof and time-boxed for the weekday slot.',
       },
       {
         h4: 'The ERG rule',
@@ -213,10 +208,6 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
       {
         h4: 'Saturday — Long Ride',
         body: '2–4½ hr outdoor and growing — the century build lives here. Zone 2 (~142–190W), +15–20 min a week, every 4th week cut back. See Century Countdown below for the full schedule.',
-      },
-      {
-        h4: 'Easy Flush Spins',
-        body: '15–20 min Zone 2 (~140–165W) right after Monday’s lift, and optionally Thursday’s. Clears the legs and adds a little burn without adding fatigue. First thing to cut against the 7:30 clock.',
       },
       {
         h4: 'FTP',
@@ -257,22 +248,11 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
     ],
   },
   {
-    title: 'Golf & the Away-Day Math',
+    title: 'Golf',
     items: [
       {
-        h4: 'Why golf shares a slot now',
-        body: (
-          <>
-            Three weekday mornings are apartment-bound, and one of the two away
-            mornings went to the gym — the DEXA made that call, not preference.
-            So weekday golf now <b>shares Friday with the outdoor ride</b>{' '}
-            instead of owning Wednesday. Sunday is untouched.
-          </>
-        ),
-      },
-      {
         h4: 'Friday — the trade',
-        body: 'Same drill as the old Wednesday: tee off ~5:30, a fast walked nine (~7–8k steps), range + short game as the backup, home by 7:30. Take it freely in August; from September, bias Fridays to the bike and let the century have the miles — it gives the slot back in November.',
+        body: 'Tee off ~5:30, a fast walked nine (~7–8k steps), range + short game as the backup, home by 7:30. From September, bias Fridays to the bike and let the century have the miles — it gives the slot back in November.',
       },
       {
         h4: 'Sunday — the relaxed slot',
@@ -285,43 +265,23 @@ export const ABOUT_ACCORDIONS: AccordionData[] = [
     ],
   },
   {
-    title: 'Progression & Recovery',
+    title: 'Recovery & Scheduling',
     items: [
       {
-        h4: 'Double Progression (the DB rule)',
-        body: (
-          <>
-            Every lift has a rep range. Start at the bottom, add reps session to
-            session; when <b>all sets</b> hit the top of the range cleanly, add
-            weight and reset to the bottom. Plate steps per hand: 10 (empty) →
-            20 → 30 → 40 → 50 lb; a single pair of 5s buys the half-step when a
-            full jump is too big.
-          </>
-        ),
+        h4: 'Why the week is shaped this way',
+        body: 'Heavy squat Monday, intervals Tuesday, upper Wednesday, heavy deadlift Thursday. The two heavy lower days sit three days apart, and Friday is deliberately easy so Saturday’s long ride starts on recovered legs. If Thursday’s warm-up sets feel like concrete, take Friday as the indoor Zone 2 backup — not a reason to skip the gym.',
       },
       {
-        h4: 'At the 50 lb Ceiling (home days)',
-        body: 'Both handles max at ~50 lb (that combination uses every plate). When a home lift owns 50s at the top of its range, the load lever is gone — so pull the other ones: 3-sec negatives, pause reps, 1½ reps, single-limb versions, shorter rest. Rep quality is the progression, not the number on the handle.',
+        h4: 'Low-time mornings',
+        body: 'Tight before 7:30? Do the anchor lift and the first two supersets, drop the rest — never skip the whole day. Gym morning dies? Slide the session to the next free weekday and keep the order: squat day before deadlift day.',
       },
       {
-        h4: 'Downstairs, the ceiling is gone',
-        body: 'The gym day runs the same double progression but with real steps — 5–10 lb a week on the leg press and RDL. Those two are meant to get genuinely heavy over the fall; that is the entire reason an away morning is spent on them. Log the top set every week so the trend is visible.',
+        h4: 'Recovery management',
+        body: 'Watch the recovery scores weekly. Trending down 5+ days → soften Tuesday to Zone 2 first, then trim Saturday’s duration. The two heavy lower days and the Saturday long ride are the last things to cut — they serve the two goals directly. A red morning → Sunday becomes a full rest day.',
       },
       {
-        h4: 'Why Tue + Wed stack back-to-back',
-        body: 'Hard intervals Tuesday, heavy legs Wednesday — deliberately adjacent. Consolidating the stress keeps Thursday and Friday genuinely easy, so Saturday’s long ride starts on recovered legs. If Wednesday’s warm-up sets feel like concrete, that’s a signal to take next Tuesday as the Z2 fallback — not a reason to skip the gym.',
-      },
-      {
-        h4: 'Combining on Low-Time Days',
-        body: 'The stacked days flex: do the primary, shed the add-on — never skip the whole day. Tight before 7:30? Lift only and drop the spin; ride the intervals, skip the core. Gym morning dies (sick kid, schedule flip)? Run the at-home fallback leg block — goblet squats, DB RDLs, heavy swings, ~15 min — and slide the away day elsewhere in the week if one’s still free. The arms pump floats to any evening.',
-      },
-      {
-        h4: 'Recovery Management',
-        body: 'Watch the recovery scores weekly — sleep score and body battery have both dipped lately, so this is live. Trending down 5+ days → soften Tuesday to Zone 2 first, then trim Saturday’s duration. The Wednesday gym day and the Saturday long ride are the last things to cut — they serve the two goals directly. A red morning → Sunday becomes a full rest day.',
-      },
-      {
-        h4: 'Next Check-In',
-        body: 'August 2026 DEXA — due now. The deciding vote on the whole design: lean holds at ~138 lb with legs and trunk flat or up = the deficit and the new leg day are working. Pair it with the planned fasted morning panel.',
+        h4: 'Next check-in',
+        body: 'September 2026 DEXA. The deciding vote: lean holds at ~138 lb with legs and trunk flat or up = the deficit and the heavy lower days are working. Then the November switch to maintenance, and a January re-scan to see what the rugby block built.',
       },
     ],
   },

@@ -2,28 +2,35 @@ import type { Exercise } from '@/types';
 import { YouTubeIcon } from '@/lib/icons';
 import { youtubeSearch } from '@/lib/date';
 
-export function ExerciseCard({ exercise }: { exercise: Exercise }) {
-  const { name, sets, note, rotation, videoQuery } = exercise;
+/**
+ * One exercise. `label` is the position inside a superset ("A1", "A2") and is
+ * only passed by the superset block; a stand-alone card shows its own rest.
+ */
+export function ExerciseCard({
+  exercise,
+  label,
+}: {
+  exercise: Exercise;
+  label?: string;
+}) {
+  const { name, sets, note, rest, videoQuery } = exercise;
   return (
     <div className="card">
       <div className="card-top">
-        <span className="card-name">{name}</span>
-        {sets && <span className="card-sets">{sets}</span>}
+        <span className="card-name">
+          {label && <span className="card-label">{label}</span>}
+          {name}
+        </span>
+        {sets && (
+          <span className="card-sets">
+            {sets}
+            {!label && rest && (
+              <span className="card-rest"> · rest {rest}</span>
+            )}
+          </span>
+        )}
       </div>
       <div className="card-note">{note}</div>
-      {rotation && (
-        <div className="rotation">
-          <div className="rotation-title">{rotation.title}</div>
-          {rotation.rows.map((row) => (
-            <div className="rotation-row" key={row.tag}>
-              <span className="rotation-tag">{row.tag}</span>
-              <span className="rotation-text">
-                <b>{row.name}</b> {row.desc}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
       {videoQuery && (
         <a
           className="card-video"

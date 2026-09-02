@@ -3,8 +3,7 @@ import type { Placement, InjectionEntry, DueStatus } from '@/types';
 
 /**
  * Injection-site rotation. Sites cycle in `order`, one per dose, wrapping at the
- * end — the same idea as the 3-week lift rotation in `rotation.ts`, but the
- * position comes from the last thing logged rather than from the calendar.
+ * end. The position comes from the last thing logged, not from the calendar.
  */
 
 /** The starting rotation, seeded on first use. Order is the cycle order. */

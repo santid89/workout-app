@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAppStore } from '@/store/useAppStore';
 import { DAYS } from '@/data/theme';
-import { rotationRows, defaultVariationTag } from '@/data/rotation';
 import { addLog } from '@/firebase/logs';
 import { doSignIn } from '@/lib/actions';
 import { toast } from '@/store/toastStore';
@@ -39,8 +38,6 @@ export function LogModal() {
   const [ctxKey, setCtxKey] = useState(workoutKey);
   const [selected, setSelected] = useState(workoutKey);
   const [day, setDay] = useState(date);
-  const [variationTag, setVariationTag] = useState('');
-  const [variationTouched, setVariationTouched] = useState(false);
   const [saving, setSaving] = useState(false);
 
   // Optional / metric detail.
@@ -59,15 +56,12 @@ export function LogModal() {
       const sel = openIsRide ? WORKOUT_DAYS[0].key : workoutKey;
       setSelected(sel);
       setDay(date);
-      setVariationTag(defaultVariationTag(sel, date) ?? '');
-      setVariationTouched(false);
       setShowDetail(false);
       setMetrics(EMPTY);
       setNote('');
     }
   }, [open, workoutKey, date]);
 
-  const rows = rotationRows(selected);
   const selDay = DAYS.find((x) => x.key === selected);
   // Golf days carry prescribed lifts too (Sunday's cuff + carry work), so
   // they get the top-set metric fields as well.
@@ -77,20 +71,6 @@ export function LogModal() {
     selDay?.type === 'Golf';
   const setMetric = (k: keyof typeof EMPTY, v: string) =>
     setMetrics((m) => ({ ...m, [k]: v }));
-
-  const onWorkoutChange = (key: string) => {
-    setSelected(key);
-    setVariationTag(defaultVariationTag(key, day) ?? '');
-    setVariationTouched(false);
-  };
-
-  const onDateChange = (newDate: string) => {
-    setDay(newDate);
-    // Follow the cycle's default until the user picks a variation themselves.
-    if (!variationTouched) {
-      setVariationTag(defaultVariationTag(selected, newDate) ?? '');
-    }
-  };
 
   const onSave = async () => {
     if (!user) {
@@ -133,9 +113,6 @@ export function LogModal() {
 
       const w = DAYS.find((x) => x.key === selected);
       if (!w) return;
-      const variationRow =
-        rows && variationTag ? rows.find((r) => r.tag === variationTag) : null;
-
       const detail: LogMetrics = {};
       if (isStrength) {
         detail.weight = pos(metrics.weight);
@@ -151,13 +128,10 @@ export function LogModal() {
         workoutName: w.name,
         type: w.type,
         color: w.color,
-        variation: variationRow?.name,
-        variationTag: variationRow?.tag,
         ...detail,
       });
       closeLogModal();
-      const label = variationRow ? `${w.name} (${variationRow.name})` : w.name;
-      toast(`Logged ${label} · ${prettyDate(day)}`, 'success');
+      toast(`Logged ${w.name} · ${prettyDate(day)}`, 'success');
     } catch (e) {
       const err = e as { code?: string; message?: string };
       toast("Couldn't save: " + (err.code || err.message), 'error');
@@ -215,45 +189,22 @@ export function LogModal() {
         </div>
 
         {!isRide && (
-          <>
-            <div className="field">
-              <label className="field-label" htmlFor="logWorkout">
-                Workout
-              </label>
-              <select
-                id="logWorkout"
-                value={selected}
-                onChange={(e) => onWorkoutChange(e.target.value)}
-              >
-                {WORKOUT_DAYS.map((w) => (
-                  <option value={w.key} key={w.key}>
-                    {w.short} · {w.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {rows && (
-              <div className="field">
-                <label className="field-label" htmlFor="logVariation">
-                  Variation
-                </label>
-                <select
-                  id="logVariation"
-                  value={variationTag}
-                  onChange={(e) => {
-                    setVariationTag(e.target.value);
-                    setVariationTouched(true);
-                  }}
-                >
-                  {rows.map((r) => (
-                    <option value={r.tag} key={r.tag}>
-                      {r.tag} · {r.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-          </>
+          <div className="field">
+            <label className="field-label" htmlFor="logWorkout">
+              Workout
+            </label>
+            <select
+              id="logWorkout"
+              value={selected}
+              onChange={(e) => setSelected(e.target.value)}
+            >
+              {WORKOUT_DAYS.map((w) => (
+                <option value={w.key} key={w.key}>
+                  {w.short} · {w.name}
+                </option>
+              ))}
+            </select>
+          </div>
         )}
 
         <div className="field">
@@ -265,7 +216,7 @@ export function LogModal() {
             id="logDate"
             max={todayStr()}
             value={day}
-            onChange={(e) => onDateChange(e.target.value)}
+            onChange={(e) => setDay(e.target.value)}
           />
         </div>
 

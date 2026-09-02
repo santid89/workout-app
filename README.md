@@ -41,8 +41,10 @@ npm run format   # prettier
 ```
 
 **Editing the program:** the whole weekly routine is structured data in
-[`src/data/program.ts`](src/data/program.ts) (exercises, sets/reps, rotations,
-ride blocks). Nutrition and the About page live in
+[`src/data/program.ts`](src/data/program.ts) (exercises, sets/reps, superset
+groups, rest, ride blocks). Consecutive exercises sharing a `superset` letter
+render as one A1/A2 block. Keep exercise notes to one line: setup, the cue,
+tempo, progression. Nutrition and the About page live in
 [`src/data/reference.tsx`](src/data/reference.tsx). Edit the data, not markup.
 
 ### Running against local emulators
@@ -137,8 +139,7 @@ a flat list can't give you: which site is up next, and whether you're due.
 - **Rotation.** Sites cycle in order. "Next" is simply one past whatever you
   logged last, so a skipped or out-of-order dose self-corrects instead of
   throwing the cycle off. The logic lives in
-  [`src/data/placements.ts`](src/data/placements.ts) and mirrors the lift
-  rotation in [`src/data/rotation.ts`](src/data/rotation.ts).
+  [`src/data/placements.ts`](src/data/placements.ts).
 - **Managing sites.** Add, rename, and reorder from **Manage placements &
   schedule**. Sites are **retired, never deleted** — a retired site drops out of
   the rotation but every dose logged against it stays readable.
@@ -218,14 +219,14 @@ object**. Parsed, it looks like:
       "date": "2026-06-12",
       "day": "1",
       "weekday": "Mon",
-      "workout": "Lower Power",
+      "workout": "Lower A",
       "type": "Strength",
-      "focus": "Strength · Lower",
-      "summary": "Heavy compound legs…",
-      "tags": ["~45–50 min", "Optional Z2 spin · 20–30 min"],
+      "focus": "Gym · Lower A · Squat",
+      "summary": "Back squat first…",
+      "tags": ["~50 min", "Building gym", "Anchor + 4 supersets"],
       "exercises": [
-        // rotation lifts resolve to the single variation done that session
-        { "name": "Back Squat", "sets": "5 × 5", "note": "Heavy…", "week": "A" }
+        { "name": "Back Squat", "sets": "4 × 5", "rest": "3 min", "note": "High bar…" },
+        { "name": "Romanian Deadlift", "sets": "3 × 8", "superset": "A", "rest": "60–75 s", "note": "…" }
       ]
     }
   ],
@@ -236,10 +237,9 @@ object**. Parsed, it looks like:
 So to consume it, fetch the URL and `JSON.parse` the `fields.json.stringValue`.
 Each session carries its full exercise detail inline (ride days use
 `rideOptions`, the recovery day uses `recovery`), and the whole `program` is
-included once for context. Rotation main lifts (squat / bench / deadlift)
-resolve to the single variation done that session (`name` + `week`), while the
-top-level `program` map keeps all three variations for reference. The variation
-is picked when logging (defaulting to the current 3-week-cycle week). You can paste the copied link into a Claude chat and
+included once for context. Exercises that share a `superset` letter are done
+back to back. Older sessions may carry a legacy `variation` field from the
+pre-September-2026 rotation program. You can paste the copied link into a Claude chat and
 ask things like *"here's my workout log API — how many sessions did I do this
 month, and am I keeping up with the program?"*
 
